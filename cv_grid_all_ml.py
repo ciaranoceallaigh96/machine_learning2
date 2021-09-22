@@ -384,7 +384,7 @@ pipeline_keras = Pipeline([('model', regressor_keras)])
 from sklearn.model_selection import cross_val_score
 nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
 grid_result = nn_grid.fit(x_train, y_train)
-plot_search_results(grid_result)
+plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
 print(grid_result.cv_results_)
 test_nmae_results = ['split0_test_neg_mean_absolute_error', 'split1_test_neg_mean_absolute_error', 'split2_test_neg_mean_absolute_error','split3_test_neg_mean_absolute_error','split4_test_neg_mean_absolute_error','split5_test_neg_mean_absolute_error','split6_test_neg_mean_absolute_error','split7_test_neg_mean_absolute_error','split8_test_neg_mean_absolute_error','split9_test_neg_mean_absolute_error']
