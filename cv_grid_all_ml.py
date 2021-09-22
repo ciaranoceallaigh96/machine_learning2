@@ -17,6 +17,7 @@ import numpy as np
 import sklearn
 import seaborn as sns
 from sklearn import preprocessing
+from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.preprocessing import StandardScaler
 import datetime
 import time
@@ -314,7 +315,7 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 
 import random
 
-param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad'], 'epochs': [40, 60] }
+param_grid = {'model__learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'model__HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'model__HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'model__units' : [200, 400, 1000], 'model__rate' : [float(0), 0.1, 0.2, 0.5],'model__HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad'], 'model__epochs': [40, 60] }
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
