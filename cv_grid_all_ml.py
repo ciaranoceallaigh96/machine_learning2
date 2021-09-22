@@ -315,7 +315,7 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 
 import random
 
-param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
+param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad'], 'model__epochs': [40, 60] }
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -378,36 +378,3 @@ print(nn_grid.cv_results_)
 print(nn_grid.best_params_)
 joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 
-#print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-#means = grid_result.cv_results_['mean_test_score']
-#stds = grid_result.cv_results_['std_test_score']
-#params = grid_result.cv_results_['params']
-#for mean, stdev, param in zip(means, stds, params):
-#	print("%f (%f) with: %r" % (mean, stdev, param))
-
-#def build_nn(rate=0.1, HP_NUM_HIDDEN_LAYERS=2, HP_OPTIMIZER='Adam', HP_L1_REG=1e-4, HP_L2_REG=1e-8, learning_rate=0.01, kernel_initializer='glorot_uniform', activation='relu', units=400):
-'''
-def algorithm_pipeline(X_train_data, y_train_data, 
-                       model, param_grid, cv=10, scoring_fit='neg_absolute_squared_error',
-                       do_probabilities = False):
-    gs = sklearn.model_selection.GridSearchCV(
-        estimator=model,
-        param_grid=param_grid, 
-        cv=my_cv, 
-        n_jobs=16, 
-        scoring=scoring_fit,
-        verbose=2
-    )
-    fitted_model = gs.fit(X_train_data, y_train_data)
-    
-    if do_probabilities:
-      pred = fitted_model.predict_proba(X_train_data)
-    else:
-      pred = fitted_model.predict(X_train_data)
-    
-    return fitted_model, pred
-
-
-from sklearn.metrics import make_scorer
-my_function = make_scorer(coeff_determination, greater_is_better=True)
-'''
