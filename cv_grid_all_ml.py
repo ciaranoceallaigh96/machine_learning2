@@ -5,7 +5,6 @@
 #model = pickle.load(open('FILEPATH', 'rb')) 
 #dependencies = {'coeff_determination':coeff_determination}
 #model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
-print("THIS SCRIPT WILL WRITE VALIDATION RESULTS TO SEPARATE LOG FILE")
 import sys
 num = sys.argv[1] #script number for saving out
 num_iterations = int(sys.argv[2])
