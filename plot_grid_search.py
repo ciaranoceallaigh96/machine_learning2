@@ -41,3 +41,6 @@ def plot_search_results(grid):
 
     plt.legend()
     plt.show()
+    plt.savefig('try_fig', dpi=300)
+    plt.clf()
+    plt.close()
