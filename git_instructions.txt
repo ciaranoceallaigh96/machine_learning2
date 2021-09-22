@@ -1,0 +1,7 @@
+how to use github
+git clone git@github.com:ciaranoceallaigh96/Node2Vec2.git 
+git pull #download changes from website
+vi README.md #make changes locally
+git add . #add to the upload list
+git commit -m "{Commit Description}" #name changes
+git push #upload to directory
