@@ -5,3 +5,5 @@ vi README.md #make changes locally
 git add . #add to the upload list
 git commit -m "{Commit Description}" #name changes
 git push #upload to directory
+git log #show commit log in bash
+git show {commit code} #plug in the long code to get long-form view of commit
