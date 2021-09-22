@@ -1,4 +1,3 @@
-#fixed THESE SEARCHES ONLY HAD ONE HIDDEN LAYER IN THE CNN GRID. fixed MISTAKE. 
 #performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
 #source ~/venv/bin/activate #in python 3.5.2
 #print a log to a .txt file!
@@ -376,6 +375,6 @@ for train_index, test_index in my_cv.split(X=x_train):
 
 print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
 print(nn_grid.cv_results_)
-print(nn_grid.best_params_)
+print("Best Params: ", nn_grid.best_params_)
 joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 
