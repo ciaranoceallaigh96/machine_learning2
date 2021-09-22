@@ -307,43 +307,12 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 '''
 
 
-'''
-def algorithm_pipeline(X_train_data, y_train_data, 
-                       model, param_grid, cv=10, scoring_fit='neg_absolute_squared_error',
-                       do_probabilities = False):
-    gs = sklearn.model_selection.GridSearchCV(
-        estimator=model,
-        param_grid=param_grid, 
-        cv=my_cv, 
-        n_jobs=16, 
-        scoring=scoring_fit,
-        verbose=2
-    )
-    fitted_model = gs.fit(X_train_data, y_train_data)
-    
-    if do_probabilities:
-      pred = fitted_model.predict_proba(X_train_data)
-    else:
-      pred = fitted_model.predict(X_train_data)
-    
-    return fitted_model, pred
 
 
-from sklearn.metrics import make_scorer
-my_function = make_scorer(coeff_determination, greater_is_better=True)
-'''
+#HP_NUM_EPOCHS = hp.HParam('epochs', hp.Discrete([10,50,100, 200]))
 
-HP_NUM_EPOCHS = hp.HParam('epochs', hp.Discrete([10,50,100, 200]))
-HP_LEARNING_RATE = hp.HParam('learning_rate', hp.Discrete([0.01, 0.001, 0.0001, 0.00001]))
-HP_L1_REG = hp.HParam('reg1', hp.Discrete([1e-4, 1e-2, 0.1, 1e-3]))
-HP_L2_REG = hp.HParam('reg2', hp.Discrete([1e-8, 0.2, 1e-4, 1e-2]))
-HP_INITIIALZATION = hp.HParam('initialization', hp.Discrete(['glorot_uniform', 'glorot_normal', 'he_normal', 'he_uniform']))
-HP_ACTIVATION = hp.HParam('activation', hp.Discrete(['relu', 'tanh']))
-HP_NUM_HIDDEN_LAYERS = hp.HParam('hidden_layers', hp.Discrete([2,3,4, 5]))
-HP_NUM_UNITS = hp.HParam('num_units', hp.Discrete([200, 400, 1000]))
-HP_DROPOUT = hp.HParam('dropout', hp.Discrete([float(0), 0.1, 0.2, 0.4, 0.5]))
-HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['Adam', 'SGD', 'Adagrad']))
-HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([16, 32, 64, 128, 256]))
+#HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([16, 32, 64, 128, 256]))
+
 import random
 
 param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
@@ -352,7 +321,6 @@ METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
 
-#def build_nn(rate=0.1, HP_NUM_HIDDEN_LAYERS=2, HP_OPTIMIZER='Adam', HP_L1_REG=1e-4, HP_L2_REG=1e-8, learning_rate=0.01, kernel_initializer='glorot_uniform', activation='relu', units=400):
 
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
 	opt = HP_OPTIMIZER
@@ -394,12 +362,7 @@ def avg_cv_result(measure):
 r2_avg_list = avg_cv_result(test_r2_results)
 nmae_abg_ist = avg_cv_result(test_nmae_results)
 
-#print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-#means = grid_result.cv_results_['mean_test_score']
-#stds = grid_result.cv_results_['std_test_score']
-#params = grid_result.cv_results_['params']
-#for mean, stdev, param in zip(means, stds, params):
-#	print("%f (%f) with: %r" % (mean, stdev, param))
+
 
 for train_index, test_index in my_cv.split(X=x_train):
 	X_traina, X_testa = x_train[train_index], x_train[test_index]
@@ -414,3 +377,37 @@ print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
 print(nn_grid.cv_results_)
 print(nn_grid.best_params_)
 joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
+
+#print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+#means = grid_result.cv_results_['mean_test_score']
+#stds = grid_result.cv_results_['std_test_score']
+#params = grid_result.cv_results_['params']
+#for mean, stdev, param in zip(means, stds, params):
+#	print("%f (%f) with: %r" % (mean, stdev, param))
+
+#def build_nn(rate=0.1, HP_NUM_HIDDEN_LAYERS=2, HP_OPTIMIZER='Adam', HP_L1_REG=1e-4, HP_L2_REG=1e-8, learning_rate=0.01, kernel_initializer='glorot_uniform', activation='relu', units=400):
+'''
+def algorithm_pipeline(X_train_data, y_train_data, 
+                       model, param_grid, cv=10, scoring_fit='neg_absolute_squared_error',
+                       do_probabilities = False):
+    gs = sklearn.model_selection.GridSearchCV(
+        estimator=model,
+        param_grid=param_grid, 
+        cv=my_cv, 
+        n_jobs=16, 
+        scoring=scoring_fit,
+        verbose=2
+    )
+    fitted_model = gs.fit(X_train_data, y_train_data)
+    
+    if do_probabilities:
+      pred = fitted_model.predict_proba(X_train_data)
+    else:
+      pred = fitted_model.predict(X_train_data)
+    
+    return fitted_model, pred
+
+
+from sklearn.metrics import make_scorer
+my_function = make_scorer(coeff_determination, greater_is_better=True)
+'''
