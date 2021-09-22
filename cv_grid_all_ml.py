@@ -314,8 +314,8 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 #HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([16, 32, 64, 128, 256]))
 
 import random
-
-param_grid = {'model__learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'model__HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'model__HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'model__units' : [200, 400, 1000], 'model__rate' : [float(0), 0.1, 0.2, 0.5],'model__HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad'], 'model__epochs': [40, 60] }
+#Pipeline nessetiates the model__ before the paramters
+param_grid = {'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [25], 'model__batch_size': [32,64]}
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
