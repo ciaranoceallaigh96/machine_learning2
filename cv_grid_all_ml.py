@@ -125,16 +125,17 @@ def plot_results(model, param, group, analysis, name_dict):
         plt.close()
 
 def plot_search_results(grid):
+    #can be chnaged from r2 to neagtive_mean_absolute_error
     """
     Params: 
         grid: A trained GridSearchCV object.
     """
     ## Results from grid search
     results = grid.cv_results_
-    means_test = results['mean_test_score']
-    stds_test = results['std_test_score']
-    means_train = results['mean_train_score']
-    stds_train = results['std_train_score']
+    means_test = results['mean_test_r2']
+    stds_test = results['std_test_r2']
+    means_train = results['mean_train_r2']
+    stds_train = results['std_train_r2']
 
     ## Getting indexes of values per hyper-parameter
     masks=[]
@@ -383,10 +384,12 @@ regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batc
 pipeline_keras = Pipeline([('model', regressor_keras)])
 from sklearn.model_selection import cross_val_score
 nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
+
 grid_result = nn_grid.fit(x_train, y_train)
+
+print(grid_result.cv_results_)
 plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
-print(grid_result.cv_results_)
 test_nmae_results = ['split0_test_neg_mean_absolute_error', 'split1_test_neg_mean_absolute_error', 'split2_test_neg_mean_absolute_error','split3_test_neg_mean_absolute_error','split4_test_neg_mean_absolute_error','split5_test_neg_mean_absolute_error','split6_test_neg_mean_absolute_error','split7_test_neg_mean_absolute_error','split8_test_neg_mean_absolute_error','split9_test_neg_mean_absolute_error']
 test_r2_results = ['split0_test_r2','split1_test_r2','split2_test_r2','split3_test_r2','split4_test_r2','split5_test_r2','split6_test_r2','split7_test_r2','split8_test_r2','split9_test_r2']
 def avg_cv_result(measure):
