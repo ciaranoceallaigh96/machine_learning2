@@ -151,6 +151,7 @@ def plot_search_results(grid):
     fig.text(0.04, 0.5, 'MEAN SCORE', va='center', rotation='vertical')
     pram_preformace_in_best = {}
     for i, p in enumerate(masks_names):
+        print(i, p)
         m = np.stack(masks[:i] + masks[i+1:])
         pram_preformace_in_best
         best_parms_mask = m.all(axis=0)
@@ -162,7 +163,7 @@ def plot_search_results(grid):
         e_2 = np.array(stds_train[best_index])
         ax[i].errorbar(x, y_1, e_1, linestyle='--', marker='o', label='test')
         ax[i].errorbar(x, y_2, e_2, linestyle='-', marker='^',label='train' )
-        ax[i].set_xlabel(p.upper(), fontsize='x-small')
+        ax[i].set_xlabel(p.upper())
 
     plt.legend()
     plt.show()
@@ -360,7 +361,7 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 
 import random
 #Pipeline nessetiates the model__ before the paramters
-param_grid = {'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3, 5],'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [25], 'model__batch_size': [32,64]}
+param_grid = {'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [10,15], 'model__batch_size': [32,64]}
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -388,7 +389,7 @@ nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_
 grid_result = nn_grid.fit(x_train, y_train)
 
 print(grid_result.cv_results_)
-plot_search_results(nn_grid)
+#plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
 test_nmae_results = ['split0_test_neg_mean_absolute_error', 'split1_test_neg_mean_absolute_error', 'split2_test_neg_mean_absolute_error','split3_test_neg_mean_absolute_error','split4_test_neg_mean_absolute_error','split5_test_neg_mean_absolute_error','split6_test_neg_mean_absolute_error','split7_test_neg_mean_absolute_error','split8_test_neg_mean_absolute_error','split9_test_neg_mean_absolute_error']
 test_r2_results = ['split0_test_r2','split1_test_r2','split2_test_r2','split3_test_r2','split4_test_r2','split5_test_r2','split6_test_r2','split7_test_r2','split8_test_r2','split9_test_r2']
