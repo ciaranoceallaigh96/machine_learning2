@@ -162,11 +162,11 @@ def plot_search_results(grid):
         e_2 = np.array(stds_train[best_index])
         ax[i].errorbar(x, y_1, e_1, linestyle='--', marker='o', label='test')
         ax[i].errorbar(x, y_2, e_2, linestyle='-', marker='^',label='train' )
-        ax[i].set_xlabel(p.upper())
+        ax[i].set_xlabel(p.upper(), fontsize='x-small')
 
     plt.legend()
     plt.show()
-    plt.savefig('try_fig', dpi=300)
+    plt.savefig('try_fig2', dpi=300)
     plt.clf()
     plt.close()
 
@@ -360,7 +360,7 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 
 import random
 #Pipeline nessetiates the model__ before the paramters
-param_grid = {'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [25], 'model__batch_size': [32,64]}
+param_grid = {'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3, 5],'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [25], 'model__batch_size': [32,64]}
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
