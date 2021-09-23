@@ -4,6 +4,7 @@ git pull #download changes from website
 vi README.md #make changes locally
 git add . #add to the upload list
 git commit -m "{Commit Description}" #name changes
+git commit #for a longer commit with header and body this will open vim
 git push #upload to directory
 git log #show commit log in bash
 git show {commit code} #plug in the long code to get long-form view of commit
