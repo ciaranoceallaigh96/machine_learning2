@@ -293,13 +293,14 @@ y_train = scaler.transform(y_train)
 n_snps = x_train.shape[1]
 my_cv = sklearn.model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 #################################################SVM####SVM#####SVM####################################################################
-'''
+
+
 print("Performing SVM")
 c_param = [0, 1]
 gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
 
 
-#epsilon_param = [float(x) for x in np.linspace(0.1, 1, 10)]
+epsilon_param = [float(x) for x in np.linspace(0.1, 1, 10)]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
 kernel_param = ['poly', 'rbf']
 degree = [1,2,3]
@@ -350,14 +351,47 @@ print("Mean Best rr_grid R2 score is : ", rr_grid.best_score_)
 print(rr_grid.cv_results_)
 print(rr_grid.best_params_)
 joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
-'''
 
 
+##################################RandomForest####################RANDOMFOREST############################
+
+print("Performing Random Forests")
+n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
+max_features = ['auto', 'sqrt', 'log2'] # Maximum number of levels in tree
+max_depth = [int(x) for x in np.linspace(1, 100, num = 20)]
+max_depth.append(None) # Minimum number of samples required to split a node
+#min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
+min_samples_split = [2,3,4, 10, 100] # Minimum number of samples required at each leaf node
+#min_samples_leaf = [int(x) for x in np.linspace(1, 2000, num = 200)] ; min_samples_leaf.extend((2,4,8,16, 32, 64)) # Method of selecting samples for training each tree
+min_samples_leaf = [1,2,3, 10, 100]
+bootstrap = [True, False]
+max_leaf_nodes = [100, 700, 800] ; max_leaf_nodes.append(x_train.shape[0])
+max_samples = [float(x) for x in np.linspace(0.1, 0.9, num = 9)]
+#{'max_depth': 46, 'max_leaf_nodes': 695, 'n_estimators': 2778, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'min_samples_split': 2, 'bootstrap': False, 'max_samples': 0.5}
+random_grid = {'n_estimators': n_estimators,
+               'max_features': max_features,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               'bootstrap': bootstrap, 'max_samples':max_samples, 'max_leaf_nodes':max_leaf_nodes}
 
 
-#HP_NUM_EPOCHS = hp.HParam('epochs', hp.Discrete([10,50,100, 200]))
+print(random_grid)
+rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"Maximum Leaf Nodes", "n_estimators":"Number of Estimators", "n_snps":"Number of SNPs","max_features":"Maximum Number of Features", "max_depth":"Maximum Depth", "min_samples_split":"Minimum Number of Samples to Split", "min_samples_leaf":"Minimum Number of Samples in Leaf"}
+rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 
-#HP_BATCH_SIZE = hp.HParam('batch_size', hp.Discrete([16, 32, 64, 128, 256]))
+rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
+
+
+rf = RandomForestRegressor()
+rf_grid = GridSearchCV(estimator=rf, scoring=['r2', 'neg_mean_absolute_error', return_train_score=True, param_grid=random_grid, cv = my_cv, verbose=2, n_jobs=16, refit='r2') 
+rf_grid.fit(x_train, y_train.ravel())
+print("Mean Best rf_grid R2 score is : ", rf_grid.best_score_)		
+print(rf_grid.cv_results_)
+print(rf_grid.best_params_)
+joblib.dump(rf_grid, 'rf_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
+########################################################################################################################################
+
 
 import random
 #Pipeline nessetiates the model__ before the paramters
