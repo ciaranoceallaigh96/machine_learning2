@@ -387,12 +387,18 @@ from sklearn.model_selection import cross_val_score
 nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
 
 grid_result = nn_grid.fit(x_train, y_train)
-
-print(grid_result.cv_results_)
+grid_result.best_estimator_['model'].model.save('kerasmodel3.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
+#dependencies = {'coeff_determination':coeff_determination}
+#tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
+nn_results_list = []
+nn_results_list.append(grid_result.best_score_); nn_results_list.append(grid_result.best_params_); nn_results_list.append(str(grid_result.score)); nn_results_list.append(grid_result.cv_results_)
+joblib.dump(nn_results_list, "nn_results_list")
+#print(grid_result.cv_results_)
 #plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
 test_nmae_results = ['split0_test_neg_mean_absolute_error', 'split1_test_neg_mean_absolute_error', 'split2_test_neg_mean_absolute_error','split3_test_neg_mean_absolute_error','split4_test_neg_mean_absolute_error','split5_test_neg_mean_absolute_error','split6_test_neg_mean_absolute_error','split7_test_neg_mean_absolute_error','split8_test_neg_mean_absolute_error','split9_test_neg_mean_absolute_error']
 test_r2_results = ['split0_test_r2','split1_test_r2','split2_test_r2','split3_test_r2','split4_test_r2','split5_test_r2','split6_test_r2','split7_test_r2','split8_test_r2','split9_test_r2']
+
 def avg_cv_result(measure):
 	my_var_name = [k for k,v in locals().items() if v == measure][0] #just to print out the name
 	print(my_var_name)
@@ -412,8 +418,7 @@ def avg_cv_result(measure):
 r2_avg_list = avg_cv_result(test_r2_results)
 nmae_abg_ist = avg_cv_result(test_nmae_results)
 
-
-
+'''
 for train_index, test_index in my_cv.split(X=x_train):
 	X_traina, X_testa = x_train[train_index], x_train[test_index]
 	Y_traina, Y_testa = y_train[train_index], y_train[test_index]
@@ -422,9 +427,10 @@ for train_index, test_index in my_cv.split(X=x_train):
 	print(test_preds[:10])
 	print(y_train[:10])
 	print(sklearn.metrics.r2_score(Y_traina, test_preds))
+'''
 
 print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
-print(nn_grid.cv_results_)
+print("nngrid cv_results", nn_grid.cv_results_)
 print("Best Params: ", nn_grid.best_params_)
-joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
+#joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 
