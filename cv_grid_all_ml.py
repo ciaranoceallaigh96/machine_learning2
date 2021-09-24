@@ -314,7 +314,7 @@ n_snps = x_train.shape[1]
 my_cv = sklearn.model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 #################################################SVM####SVM#####SVM####################################################################
 
-
+'''
 print("Performing SVM")
 c_param = [0, 1]
 gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
@@ -412,7 +412,10 @@ print(rf_grid.best_params_)
 joblib.dump(rf_grid, 'rf_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 ########################################################################################################################################
 
+'''
 
+
+'''
 import random
 #Pipeline nessetiates the model__ before the paramters
 param_grid = {'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [10,15], 'model__batch_size': [32,64]}
@@ -454,7 +457,7 @@ print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
 					      
 r2_avg_list = avg_cv_result(test_r2_results, grid_result)
 nmae_abg_ist = avg_cv_result(test_nmae_results, grid_result)
-
+'''
 '''
 for train_index, test_index in my_cv.split(X=x_train):
 	X_traina, X_testa = x_train[train_index], x_train[test_index]
@@ -464,15 +467,12 @@ for train_index, test_index in my_cv.split(X=x_train):
 	print(test_preds[:10])
 	print(y_train[:10])
 	print(sklearn.metrics.r2_score(Y_traina, test_preds))
-'''
 
-print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
-print("nngrid cv_results", nn_grid.cv_results_)
-print("Best Params: ", nn_grid.best_params_)
+#print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
+#print("nngrid cv_results", nn_grid.cv_results_)
+#print("Best Params: ", nn_grid.best_params_)
 #joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
-					      
-					      
-					      
+'''					      
 					      
 					      
 					      
@@ -482,10 +482,10 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'model__epochs':[10],'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8],
-	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
-	      'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__batch_size': [32,64],
-	      'model__filters':[2],'model__strides':[2],'model__pool':[2],'model__kernel':[2]}
+cnn_param_grid = {'model__epochs':[10],'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8],
+	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [1],
+	      'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__batch_size': [32],
+	      'model__filters':[2],'model__strides':[1],'model__pool':[2],'model__kernel':[2]}
 
 METRIC_ACCURACY = 'coeff_determination'
 #tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -495,36 +495,26 @@ METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
 print(x_train.shape)
 #x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
-x_train = x_train.reshape(x_train.shape[0],x_test.shape[1],1)
-x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
-x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
+#x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
+#x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
 #x_test = x_test.reshape(x_test.shape[0], 1, x_test.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
 print(x_train.shape)
-def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
-	opt = HP_OPTIMIZER
-	chosen_opt = getattr(tf.keras.optimizers,opt)
-	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
-	model = Sequential()
-	for i in range(HP_NUM_HIDDEN_LAYERS):
-		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1],)))
-		if rate != 0:
-			model.add(Dropout(rate=rate))
-	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
-	return model
 					      
 def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
-        opt = hparams[HP_OPTIMIZER]
+        opt = HP_OPTIMIZER
         chosen_opt = getattr(tf.keras.optimizers,opt)
-        reg = tf.keras.regularizers.l1_l2(l1=hparams[HP_L1_REG], l2=hparams[HP_L2_REG])
+        reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
+        #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         for i in range(HP_NUM_HIDDEN_LAYERS):
-                model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=HP_ACTIVATION, kernel_regularizer=reg, kernel_initializer=HP_INITIIALZATION, kernel_size=HP_KERNEL_SIZE))
-                model.add(tf.keras.layers.MaxPool1D(pool_size=HP_POOL_SIZE, strides=HP_STRIDES))
-                model.add(Flatten())
+                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1],1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+                model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
+        model.add(Flatten())
         model.add(Dense(1, activation='linear'))
-        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=HP_LEARNING_RATE))
-	return model				      
+        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+        print("Summary ", model.summary())
+        return model				      
         
 					      
 cnn_regressor_keras = KerasRegressor(build_fn = conv_model, epochs=10, verbose=1, batch_size=32)
@@ -532,6 +522,8 @@ cnn_pipeline_keras = Pipeline([('model', cnn_regressor_keras)])
 from sklearn.model_selection import cross_val_score
 cnn_grid = sklearn.model_selection.GridSearchCV(estimator=cnn_pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=cnn_param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
 
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
+print("HERRE", x_train.shape)
 cnn_result = cnn_grid.fit(x_train, y_train)
 cnn_result.best_estimator_['model'].model.save('cnn_kerasmodel3.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
 #dependencies = {'coeff_determination':coeff_determination}
