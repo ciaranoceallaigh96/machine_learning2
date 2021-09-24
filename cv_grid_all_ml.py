@@ -1,3 +1,4 @@
+#Warning : best model selected by NMAE and R2 might not be the same
 #performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
 #source ~/venv/bin/activate #in python 3.5.2
 #print a log to a .txt file!
@@ -483,9 +484,9 @@ from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
 cnn_param_grid = {'model__epochs':[10],'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8],
-	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [1],
+	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
 	      'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__batch_size': [32],
-	      'model__filters':[2],'model__strides':[1],'model__pool':[2],'model__kernel':[2]}
+	      'model__filters':[2],'model__strides':[2],'model__pool':[2],'model__kernel':[2]}
 
 METRIC_ACCURACY = 'coeff_determination'
 #tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -503,11 +504,13 @@ print(x_train.shape)
 					      
 def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
         opt = HP_OPTIMIZER
+        if HP_NUM_HIDDEN_LAYERS == 1 :
+                print("HP_NUM_HIDDEN_LAYERS is equal to 1; this could cause building problems")
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
-        for i in range(HP_NUM_HIDDEN_LAYERS):
+        for i in range(HP_NUM_HIDDEN_LAYERS-1):
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1],1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
         model.add(Flatten())
