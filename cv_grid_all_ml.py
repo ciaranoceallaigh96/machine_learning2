@@ -315,16 +315,16 @@ n_snps = x_train.shape[1]
 my_cv = sklearn.model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 #################################################SVM####SVM#####SVM####################################################################
 
-'''
+
 print("Performing SVM")
-c_param = [0, 1]
-gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
+c_param = [1]
+gamma_param = [1]
 
 
-epsilon_param = [float(x) for x in np.linspace(0.1, 1, 10)]
-loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
-kernel_param = ['poly', 'rbf']
-degree = [1,2,3]
+epsilon_param = [1]
+loss_param = ['epsilon_insensitive']
+kernel_param = ['poly']
+degree = [1]
 svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
@@ -351,7 +351,7 @@ print(lin_rbg_grid.best_params_)
 joblib.dump(lin_rbg_grid, 'lin_rbg_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 
 
-alpha = [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100]
+alpha = [0.0001]
 alpha_dict = {'alpha':alpha}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
@@ -377,17 +377,17 @@ joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 ##################################RandomForest####################RANDOMFOREST############################
 
 print("Performing Random Forests")
-n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
-max_features = ['auto', 'sqrt', 'log2'] # Maximum number of levels in tree
-max_depth = [int(x) for x in np.linspace(1, 100, num = 20)]
+n_estimators = [20] # Number of features to consider at every split
+max_features = ['auto'] # Maximum number of levels in tree
+max_depth = [20]
 max_depth.append(None) # Minimum number of samples required to split a node
 #min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
-min_samples_split = [2,3,4, 10, 100] # Minimum number of samples required at each leaf node
+min_samples_split = [2] # Minimum number of samples required at each leaf node
 #min_samples_leaf = [int(x) for x in np.linspace(1, 2000, num = 200)] ; min_samples_leaf.extend((2,4,8,16, 32, 64)) # Method of selecting samples for training each tree
-min_samples_leaf = [1,2,3, 10, 100]
-bootstrap = [True, False]
-max_leaf_nodes = [100, 700, 800] ; max_leaf_nodes.append(x_train.shape[0])
-max_samples = [float(x) for x in np.linspace(0.1, 0.9, num = 9)]
+min_samples_leaf = [1]
+bootstrap = [True]
+max_leaf_nodes = [100] ; max_leaf_nodes.append(x_train.shape[0])
+max_samples = [0.5]
 #{'max_depth': 46, 'max_leaf_nodes': 695, 'n_estimators': 2778, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'min_samples_split': 2, 'bootstrap': False, 'max_samples': 0.5}
 random_grid = {'n_estimators': n_estimators,
                'max_features': max_features,
@@ -419,7 +419,7 @@ joblib.dump(rf_grid, 'rf_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl
 '''
 import random
 #Pipeline nessetiates the model__ before the paramters
-param_grid = {'model__learning_rate' : [0.01, 0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [10,15], 'model__batch_size': [32,64]}
+param_grid = {'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8], 'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],'model__units' : [500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__epochs': [15], 'model__batch_size': [64]}
 METRIC_ACCURACY = coeff_determination
 
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -450,7 +450,7 @@ grid_result.best_estimator_['model'].model.save('kerasmodel3.h5', include_optimi
 #tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
 nn_results_list = []
 nn_results_list.append(grid_result.best_score_); nn_results_list.append(grid_result.best_params_); nn_results_list.append(str(grid_result.score)); nn_results_list.append(grid_result.cv_results_)
-joblib.dump(nn_results_list, "nn_results_list")
+joblib.dump(nn_results_list, "nn_results_list.pkl")
 #print(grid_result.cv_results_)
 #plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
@@ -458,8 +458,8 @@ print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
 					      
 r2_avg_list = avg_cv_result(test_r2_results, grid_result)
 nmae_abg_ist = avg_cv_result(test_nmae_results, grid_result)
-'''
-'''
+
+
 for train_index, test_index in my_cv.split(X=x_train):
 	X_traina, X_testa = x_train[train_index], x_train[test_index]
 	Y_traina, Y_testa = y_train[train_index], y_train[test_index]
@@ -473,7 +473,7 @@ for train_index, test_index in my_cv.split(X=x_train):
 #print("nngrid cv_results", nn_grid.cv_results_)
 #print("Best Params: ", nn_grid.best_params_)
 #joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
-'''					      
+					      
 					      
 					      
 					      
@@ -485,7 +485,7 @@ from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 cnn_param_grid = {'model__epochs':[10],'model__learning_rate' : [0.01],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [1e-8],
 	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh', 'relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
-	      'model__units' : [200, 500], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__batch_size': [32],
+	      'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['Adam'], 'model__batch_size': [32,64],
 	      'model__filters':[2],'model__strides':[2],'model__pool':[2],'model__kernel':[2]}
 
 METRIC_ACCURACY = 'coeff_determination'
@@ -533,7 +533,7 @@ cnn_result.best_estimator_['model'].model.save('cnn_kerasmodel3.h5', include_opt
 #tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
 cnn_results_list = []
 cnn_results_list.append(cnn_result.best_score_); cnn_results_list.append(cnn_result.best_params_); cnn_results_list.append(str(cnn_result.score)); cnn_results_list.append(cnn_result.cv_results_)
-joblib.dump(cnn_results_list, "cnn_results_list")
+joblib.dump(cnn_results_list, "cnn_results_list.pkl")
 #print(grid_result.cv_results_)
 #plot_search_results(nn_grid)
 print("Mean Best cnn_grid R2 score is : ", cnn_result.best_score_)
