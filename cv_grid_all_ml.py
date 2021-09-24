@@ -373,7 +373,15 @@ print(rr_grid.cv_results_)
 print(rr_grid.best_params_)
 joblib.dump(rr_grid, 'rr_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 
+avg_baseline = []
+for train_index, test_index in my_cv.split(X=x_train):
+	X_traina, X_testa = x_train[train_index], x_train[test_index]
+	Y_traina, Y_testa = y_train[train_index], y_train[test_index]
+	baseline_model = baseline(X_traina, Y_traina)
+	avg_baseline.append(baseline_model.score(X_testa, Y_testa))
 
+print(avg_baseline)
+print("Mean Best baseline R2 score is : ", avg_baseline)
 ##################################RandomForest####################RANDOMFOREST############################
 
 print("Performing Random Forests")
