@@ -7,7 +7,7 @@
 #model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
 import sys
 num = sys.argv[1] #script number for saving out
-num_iterations = int(sys.argv[2])
+nahnah = str(sys.argv[2]) #nothing rn
 data = str(sys.argv[3])
 snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
@@ -454,12 +454,12 @@ from sklearn.model_selection import cross_val_score
 nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
 
 grid_result = nn_grid.fit(x_train, y_train)
-grid_result.best_estimator_['model'].model.save('kerasmodel3.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
+grid_result.best_estimator_['model'].model.save('kerasmodel'+ '_' + snps + '_'+ phenotype + '_' + num + '.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
 #dependencies = {'coeff_determination':coeff_determination}
 #tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
 nn_results_list = []
 nn_results_list.append(grid_result.best_score_); nn_results_list.append(grid_result.best_params_); nn_results_list.append(str(grid_result.score)); nn_results_list.append(grid_result.cv_results_)
-joblib.dump(nn_results_list, "nn_results_list.pkl")
+joblib.dump(nn_results_list, "nn_results_list" + '_' + snps + '_'+ phenotype + '_' + num + ".pkl")
 #print(grid_result.cv_results_)
 #plot_search_results(nn_grid)
 print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
@@ -537,12 +537,12 @@ cnn_grid = sklearn.model_selection.GridSearchCV(estimator=cnn_pipeline_keras, re
 x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
 print("HERRE", x_train.shape)
 cnn_result = cnn_grid.fit(x_train, y_train)
-cnn_result.best_estimator_['model'].model.save('cnn_kerasmodel3.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
+cnn_result.best_estimator_['model'].model.save('cnn_kerasmodel'+ '_' + snps + '_'+ phenotype + '_' + num + '.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
 #dependencies = {'coeff_determination':coeff_determination}
 #tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
 cnn_results_list = []
 cnn_results_list.append(cnn_result.best_score_); cnn_results_list.append(cnn_result.best_params_); cnn_results_list.append(str(cnn_result.score)); cnn_results_list.append(cnn_result.cv_results_)
-joblib.dump(cnn_results_list, "cnn_results_list.pkl")
+joblib.dump(cnn_results_list, "cnn_results_list"+ '_' + snps + '_'+ phenotype + '_' + num + ".pkl")
 #print(grid_result.cv_results_)
 #plot_search_results(nn_grid)
 print("Mean Best cnn_grid R2 score is : ", cnn_result.best_score_)
