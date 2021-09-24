@@ -413,7 +413,7 @@ rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','
 
 
 rf = RandomForestRegressor()
-rf_grid = sklearn.model_selection.GridSearchCV(estimator=rf, scoring=['r2', 'neg_mean_absolute_error', return_train_score=True, param_grid=random_grid, cv = my_cv, verbose=2, n_jobs=16, refit='r2') 
+rf_grid = sklearn.model_selection.GridSearchCV(estimator=rf, scoring=['r2', 'neg_mean_absolute_error'], return_train_score=True, param_grid=random_grid, cv = my_cv, verbose=2, n_jobs=16, refit='r2') 
 rf_grid.fit(x_train, y_train.ravel())
 print("Mean Best rf_grid R2 score is : ", rf_grid.best_score_)		
 print(rf_grid.cv_results_)
