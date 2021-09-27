@@ -15,3 +15,7 @@ for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64  --reml --
 
 for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids /
 --blup-snp /external_storage/ciaran/greml/blup_solutions_cv_"$i"_FT16.indi.blp --out snp_blup_solutions_cv_"$i"_FT16 ; done
+
+for i in {1..5}; do shuf snp_blup_solutions_cv_"$i"_FT16.snp.blp | head -n 10000 | awk '{print $1}' > snp_blup_solutions_cv_"$i"_FT16.snp.blp.10k.shuf.txt ; done
+
+
