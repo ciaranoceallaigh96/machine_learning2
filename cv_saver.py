@@ -14,7 +14,7 @@ for train_index, test_index in my_cv.split(X=data):
   with open(('test_split_cv_' + str(count) '.txt'), 'w') as f2:
     for item in test_index:
       f2.write("%s\n" % item)
-  count +=1
+  count += 1
   
   
   
