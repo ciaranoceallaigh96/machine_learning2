@@ -18,10 +18,10 @@ count = 0 #establish count for saving out cv
 for train_index, test_index in my_cv.split(X=data):
 	with open('train_split_cv_' + str(count+1) + '.txt', 'w') as f:
 		for item in train_index:
-			f.write("%s\n" % item)
+			f.write("%s\n" % data[item,0])
 	with open('test_split_cv_' + str(count+1) + '.txt', 'w') as f2:
 		for item in test_index:
-			f2.write("%s\n" % item)
+			f2.write("%s\n" % data[item,0])
 	count += 1
   
   
