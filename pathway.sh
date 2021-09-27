@@ -1,0 +1,5 @@
+python machine_learning2/cv_saver.py 5 /home/ciaran/completed_big_matrix_binary_new_snps_ids.fam > cv_saver.log
+
+
+for i in {1..5}; do plink2 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --indep-pairwise 250 5 0.05 --mac 6 --out /external_s
+torage/ciaran/greml/indep_snps_full_dataset_new_snp_ids_cv_"$i" --keep ~/arabadopsis/2021/train_split_cv_"$i".txt ; done
