@@ -7,9 +7,9 @@ for i in range(1,len(sys.argv)):
 	print(sys.argv[i])
 
 
-my_cv = sklearn.model_selection.KFold(n_splits=int(sys.argv[1]), shuffle=True, random_state=42)
+my_cv = sklearn.model_selection.KFold(n_splits=int(sys.argv[1]), shuffle=True, random_state=42, skiprows=1)
 data = np.loadtxt(sys.argv[2], usecols=[0,1], dtype='str')
-print("Assuming there is no header...")
+print("Assuming there is a header...")
 
 cv_obj = my_cv.split(X=data)
 
