@@ -1,8 +1,14 @@
 import numpy as np
 import sklearn.model_selection
+import sys
+for i in range(1,len(sys.argv)):
+	print(sys.argv[i])
+
 
 my_cv = sklearn.model_selection.KFold(n_splits=sys.argv[1], shuffle=True, random_state=42)
 data = np.loadtxt(sys.argv[2], usecols=[0,1], dtype='str')
+print("Assuming there is no header...")
+
 cv_obj = my_cv.split(X=data)
 
 count = 0 #establish count for saving out cv
