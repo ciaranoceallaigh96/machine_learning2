@@ -12,3 +12,6 @@ for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64 --bfile /h
 for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64  --reml --grm /external_storage/ciaran/greml/completed_big_matrix_binary_grm_cv_sep_"$i" /
 --reml-pred-rand --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16 --out /external_storage/ciaran/greml/blup_solutions_cv_"$i"_FT16 /
 --keep  ~/arabadopsis/2021/train_split_cv_"$i".txt --remove /home/ciaran/arabadopsis/completed_big_matrix_binary_new_snps_fail_ids; done
+
+for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids /
+--blup-snp /external_storage/ciaran/greml/blup_solutions_cv_"$i"_FT16.indi.blp --out snp_blup_solutions_cv_"$i"_FT16 ; done
