@@ -37,4 +37,7 @@ for i in {1..5}; do plink1.9 --recode A --bfile /home/ciaran/completed_big_matri
 --keep /home/ciaran/arabadopsis/2021/test_split_cv_"$i".txt \
 --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del --out cv"$i"_FT16_greml_shuf_10k ; done
 
-
+####Damn
+###
+#So for the shuffled snps i only need the one snpset for eveything and i can do cross-validation on it
+##but when youre talking about feature selection; when do you do 
