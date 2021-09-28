@@ -18,4 +18,11 @@ for i in {1..5}; do /external_storage/eoin/GCTA_manual_install/gcta64 --bfile /h
 
 for i in {1..5}; do shuf snp_blup_solutions_cv_"$i"_FT16.snp.blp | head -n 10000 | awk '{print $1}' > snp_blup_solutions_cv_"$i"_FT16.snp.blp.10k.shuf.txt ; done
 
+sed 's/-//g' snp_blup_solutions_cv_2_FT16.snp.blp > snp_blup_solutions_cv_2_FT16.snp.blp.modulus
+sed -i 's/e/e-/g' snp_blup_solutions_cv_2_FT16.snp.blp.noneg #return the e- values back
+sort -g -k 3,3 snp_blup_solutions_cv_2_FT16.snp.blp.noneg > snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted
+tail -n 10000 snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted | awk '{print $1}' > snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted.top10k
 
+plink2 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --score  snp_blup_solutions_cv_2_FT16.snp.blp 1 2 3 /
+--pheno ~/arabadopsis/phenotypes/values_FT16.8424.80.del --out try_2 /
+--extract snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted.top10k --keep ~/arabadopsis/2021/test_split_cv_2.txt
