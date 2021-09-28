@@ -38,6 +38,3 @@ for i in {1..5}; do plink1.9 --recode A --bfile /home/ciaran/completed_big_matri
 --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del --out cv"$i"_FT16_greml_shuf_10k ; done
 
 
-for i in {1..5}; do plink1.9 --recode A --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --extract snp_blup_solutions_cv_"$i"_FT16.snp.blp.10k.shuf.txt 
---keep /home/ciaran/arabadopsis/2021/train_split_cv_"$i".txt \
---pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del --out cv"$i"_FT16_greml_shuf_10k_train ; done 
