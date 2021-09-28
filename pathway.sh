@@ -26,3 +26,7 @@ tail -n 10000 snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted | awk '{print
 plink2 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --score  snp_blup_solutions_cv_2_FT16.snp.blp 1 2 3 /
 --pheno ~/arabadopsis/phenotypes/values_FT16.8424.80.del --out try_2 /
 --extract snp_blup_solutions_cv_2_FT16.snp.blp.modulus.gsorted.top10k --keep ~/arabadopsis/2021/test_split_cv_2.txt
+
+for i in {1..5}; do plink2 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --score  snp_blup_solutions_cv_"$i"_FT16.snp.blp 1 2 3 \
+--pheno ~/arabadopsis/phenotypes/values_FT16.8424.80.del --out scores_cv"$i"_FT16_greml_shuf \
+--extract snp_blup_solutions_cv_"$i"_FT16.snp.blp.10k.shuf.txt --keep ~/arabadopsis/2021/test_split_cv_"$i".txt ; done
