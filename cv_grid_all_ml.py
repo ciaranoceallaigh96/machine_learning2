@@ -331,6 +331,18 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
+SVM_NCV = NestedCV(model=LinearSVR(), params_grid=svm_random_grid, outer_kfolds=3, inner_kfolds=5, n_jobs = 2,cv_options={'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV.fit(x_train, y_train.ravel())
+
+def ncv_results(analysis, ncv_object):
+	print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
+	print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
+	print("Variance of %s is %s " % (analysis, ncv_object.variance))
+	with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
+		pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
+	
+ncv_results('SVM', SVM_NCV)	
+'''
 lin_svm = LinearSVR() # loss='hinge throws up an error, should come back it it
 rbg_svm = SVR()
 svm_name_dict = {"C":"C Parameter","gamma":"Gamma Parameter", "epsilon":"Epsilon", "loss":"Loss Function", "kernel":"Kernel", "degree": "Polynomical Degree"}
