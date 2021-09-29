@@ -6,12 +6,14 @@
 #dependencies = {'coeff_determination':coeff_determination}
 #model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
 import sys
+sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
 num = sys.argv[1] #script number for saving out
 nahnah = str(sys.argv[2]) #nothing rn
 data = str(sys.argv[3])
 snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
 set_size = int(sys.argv[6]) #how many SNPs
+from nested_cv import NestedCV
 import statistics
 import numpy as np
 import sklearn
