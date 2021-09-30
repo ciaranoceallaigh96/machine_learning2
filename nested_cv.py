@@ -15,12 +15,13 @@ for i in range(1, k_outer):
   for j in range(1, k_inner):
     X_inner_train, y_inner_train = cv.split
     X_inner_test, y_inner_test = 
-    
+    features = gwas(X_inner_train, y_inner_train)
     for combo in param_grid:
       model.fit(X_train_inner, y_train_inner)
       model.score(X_test_inner, y_test_inner)
       
   best_combo = choose_best_combo 
+  features = gwas(X_train_outer, y_train_outer)
   model.fit(X_train_outer, y_train_outer)
   result = model.score(X_test_outer, y_test_outer)
   outer_scores.append(result)
