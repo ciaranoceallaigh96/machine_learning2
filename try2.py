@@ -31,7 +31,7 @@ from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
-import pickle
+#import pickle
 from sklearn.ensemble import RandomForestRegressor #based in part on https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
 from statistics import mean
 import os
@@ -54,6 +54,8 @@ from tensorboard.plugins.hparams import api as hp
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
 from tensorboard.plugins.hparams import api as hp
 import random
+sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
+import dill as pickle
 for i in range(1,len(sys.argv)):
 	print(sys.argv[i])
 
@@ -332,16 +334,16 @@ print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
 SVM_NCV = NestedCV(model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel())
+#SVM_NCV.fit(x_train, y_train.ravel())
 
 def ncv_results(analysis, ncv_object):
 	print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
 	print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
 	print("Variance of %s is %s " % (analysis, ncv_object.variance))
-	with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
-		pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
+	#with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
+		#pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 	
-ncv_results('SVM', SVM_NCV)	
+#ncv_results('SVM', SVM_NCV)	
 '''
 lin_svm = LinearSVR() # loss='hinge throws up an error, should come back it it
 rbg_svm = SVR()
@@ -434,7 +436,7 @@ print(rf_grid.cv_results_)
 print(rf_grid.best_params_)
 joblib.dump(rf_grid, 'rf_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
 ########################################################################################################################################
-
+'''
 
 
 
@@ -443,12 +445,15 @@ import random
 #Pipeline nessetiates the model__ before the paramters
 param_grid = {'model__learning_rate' : [0.01, 0.001],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [0.2], 
 	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
-	      'model__units' : [200,500], 'model__rate' : [float(0),0.3],'model__HP_OPTIMIZER' : ['SGD'], 'model__epochs': [200], 'model__batch_size': [32,64]}
+	      'model__units' : [200,500], 'model__rate' : [float(0),0.3],'model__HP_OPTIMIZER' : ['SGD'], 'model__epochs': [50], 'model__batch_size': [32,64]}
+
+
+param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
+
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
-'''
-
+#tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
 
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
@@ -464,105 +469,16 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
 	return model
 
-'''
-regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
-pipeline_keras = Pipeline([('model', regressor_keras)])
+
+#regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
+#pipeline_keras = Pipeline([('model', regressor_keras)])
+model = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
+
 from sklearn.model_selection import cross_val_score
-nn_grid = sklearn.model_selection.GridSearchCV(estimator=pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
-
-grid_result = nn_grid.fit(x_train, y_train)
-grid_result.best_estimator_['model'].model.save('kerasmodel'+ '_' + snps + '_'+ phenotype + '_' + num + '.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
-#dependencies = {'coeff_determination':coeff_determination}
-#tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
-nn_results_list = []
-nn_results_list.append(grid_result.best_score_); nn_results_list.append(grid_result.best_params_); nn_results_list.append(str(grid_result.score)); nn_results_list.append(grid_result.cv_results_)
-joblib.dump(nn_results_list, "nn_results_list" + '_' + snps + '_'+ phenotype + '_' + num + ".pkl")
-#print(grid_result.cv_results_)
-#plot_search_results(nn_grid)
-print("Mean Best brazil_grid R2 score is : ", grid_result.best_score_)
-
-					      
-r2_avg_list = avg_cv_result(test_r2_results, grid_result)
-nmae_abg_ist = avg_cv_result(test_nmae_results, grid_result)
-'''
-'''
-for train_index, test_index in my_cv.split(X=x_train):
-	X_traina, X_testa = x_train[train_index], x_train[test_index]
-	Y_traina, Y_testa = y_train[train_index], y_train[test_index]
-	test_preds = nn_grid.best_estimator_.predict(X_traina)
-	test_preds = np.nan_to_num(test_preds, nan=0.0, posinf=0.0, neginf=0.0) #stops an infinte/NA error in sklearn R2 calculatio
-	print(test_preds[:10])
-	print(y_train[:10])
-	print(sklearn.metrics.r2_score(Y_traina, test_preds))
-
-#print("Mean Best nn_grid R2 score is : ", nn_grid.best_score_)
-#print("nngrid cv_results", nn_grid.cv_results_)
-#print("Best Params: ", nn_grid.best_params_)
-#joblib.dump(nn_grid, 'nn_grid' + '_' + snps + '_'+ phenotype + '_' + num + '.pkl') #joblib.load
-				      
-					      
-					      
-					      
-print("Performing a convulutional neural network")
-from tensorboard.plugins.hparams import api as hp
-import random
-from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'model__epochs':[200],'model__learning_rate' : [0.01,0.001],'model__HP_L1_REG' : [0.1],'model__HP_L2_REG' : [0.2],
-	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
-	      'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['SGD'], 'model__batch_size': [32],
-	      'model__filters':[1,2],'model__strides':[1,2],'model__pool':[1,2],'model__kernel':[1,2]}
-10*2*2*2*2*2*2
-METRIC_ACCURACY = 'coeff_determination'
-#tf.config.threading.set_inter_op_parallelism_threads(64)
-#tf.config.threading.set_intra_op_parallelism_threads(64)
+NN_NCV = NestedCV(model=model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV.fit(x_train, y_train.ravel())
 
 
-#not sure if strides is relevant
-print(x_train.shape)
-#x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
-x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-#x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
-#x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
-#x_test = x_test.reshape(x_test.shape[0], 1, x_test.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
-print(x_train.shape)
-					      
-def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
-        opt = HP_OPTIMIZER
-        if HP_NUM_HIDDEN_LAYERS == 1 :
-                print("HP_NUM_HIDDEN_LAYERS is equal to 1; this could cause building problems")
-        chosen_opt = getattr(tf.keras.optimizers,opt)
-        reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
-        model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
-        for i in range(HP_NUM_HIDDEN_LAYERS-1):
-                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1],1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
-                model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
-        model.add(Flatten())
-        model.add(Dense(1, activation='linear'))
-        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
-        print("Summary ", model.summary())
-        return model				      
-        
-					      
-cnn_regressor_keras = KerasRegressor(build_fn = conv_model, epochs=10, verbose=1, batch_size=32)
-cnn_pipeline_keras = Pipeline([('model', cnn_regressor_keras)])
-from sklearn.model_selection import cross_val_score
-cnn_grid = sklearn.model_selection.GridSearchCV(estimator=cnn_pipeline_keras, return_train_score=True, scoring=['r2','neg_mean_absolute_error'], param_grid=cnn_param_grid, cv=my_cv, refit='neg_mean_absolute_error', n_jobs=16, verbose=2)
-
-x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-print("HERRE", x_train.shape)
-cnn_result = cnn_grid.fit(x_train, y_train)
-cnn_result.best_estimator_['model'].model.save('cnn_kerasmodel'+ '_' + snps + '_'+ phenotype + '_' + num + '.h5', include_optimizer=True) #be sure to add h5 otherwise loading with custom_ojects=dependencies wont work
-#dependencies = {'coeff_determination':coeff_determination}
-#tf.keras.models.load_model('kerasmodel.h5', custom_object=dependencies)
-cnn_results_list = []
-cnn_results_list.append(cnn_result.best_score_); cnn_results_list.append(cnn_result.best_params_); cnn_results_list.append(str(cnn_result.score)); cnn_results_list.append(cnn_result.cv_results_)
-joblib.dump(cnn_results_list, "cnn_results_list"+ '_' + snps + '_'+ phenotype + '_' + num + ".pkl")
-#print(grid_result.cv_results_)
-#plot_search_results(nn_grid)
-print("Mean Best cnn_grid R2 score is : ", cnn_result.best_score_)
-r2_avg_list = avg_cv_result(test_r2_results, cnn_result)
-nmae_abg_ist = avg_cv_result(test_nmae_results, cnn_result)
-
+ncv_results('NN', NN_NCV)
