@@ -15,10 +15,10 @@ def bash_script(self, train_index, test_index, data):
         test_names = data[test_index]
         with open("name_vector_train.txt", 'w') as f:
             for item in train_names:
-                f.write("%s %s\n" % item)
+                f.write("%s %s\n" % (item, item))
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
-                f.write("%s %s\n" % item)        
+                f.write("%s %s\n" % (item, item))        
             
         new_train_data = np.loadtxt("train.raw", skiprows=1, usecols=(5,10006)
         new_test_data = np.loadtxt("test.raw", skiprows=1, usecols=(5,10006)                            
