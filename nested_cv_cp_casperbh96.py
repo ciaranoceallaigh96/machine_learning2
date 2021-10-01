@@ -9,6 +9,26 @@ from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
 
+def bash_script(self, train_index, test_index, data):
+        name_vector = data
+        train_names = data[train_index]
+        test_names = data[test_index]
+        with open("name_vector_train.txt", 'w') as f:
+            for item in train_names:
+                f.write("%s %s\n" % item)
+        with open("name_vector_test.txt", 'w') as f:
+            for item in test_names:
+                f.write("%s %s\n" % item)        
+            
+        new_train_data = np.loadtxt("train.raw", skiprows=1, usecols=(5,10006)
+        new_test_data = np.loadtxt("test.raw", skiprows=1, usecols=(5,10006)                            
+        new_X_train =
+        new_y_train =
+        new_X_test =
+        new_y_test =
+        return new_X_train, new_X_test, new_y_train, new_y_test
+                              
+
 
 class NestedCV():
     '''A general class to handle nested cross-validation for any estimator that
