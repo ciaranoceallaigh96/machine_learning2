@@ -247,17 +247,11 @@ class NestedCV():
                     '\n\t{0}/{1} <-- Current inner fold'.format(j+1, self.inner_kfolds))
                 X_train_inner, X_test_inner = X_train_outer[train_index_inner], X_train_outer[test_index_inner]
                 y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
-                print("Yellow")
                 #if self.recursive_feature_elimination:
                  #       X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                   #                  X_train_inner, y_train_inner, X_test_inner)
                 
-                print(param_func)
-                #results = Parallel(n_jobs=self.n_jobs, backend='multiprocessing')(delayed(self._parallel_fitting)(
-                 #                                   X_train_inner, X_test_inner,
-                  #                                  y_train_inner, y_test_inner,
-                   #                                 param_dict=parameters)
-                    #                        for parameters in param_func)
+
                 results = []
                 for parameters in param_func:
                   print(parameters)
