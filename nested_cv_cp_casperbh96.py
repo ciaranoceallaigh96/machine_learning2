@@ -8,6 +8,7 @@ from sklearn.feature_selection import RFECV
 from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
+set_size = 10006    
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1)
@@ -18,10 +19,7 @@ def load_data(data):
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
 
-def bash_script(self, train_index, test_index, data):
-        name_vector = data
-        train_names = data[train_index]
-        test_names = data[test_index]
+def bash_script(self, train_index, test_index, train_names, test_names):
         with open("name_vector_train.txt", 'w') as f:
             for item in train_names:
                 f.write("%s %s\n" % (item, item))
@@ -29,7 +27,6 @@ def bash_script(self, train_index, test_index, data):
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
         
-        set_size = 10006    
         new_X_train , new_y_train = load_data('train_raw_plink.raw') #made from bash_script.sh
         new_X_test , new_y_test  = load_data('test_raw_plink.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
@@ -249,8 +246,8 @@ class NestedCV():
         else:
             param_func = ParameterGrid(param_grid=self.params_grid)
         
-        outer_cv = KFold(n_splits=self.outer_kfolds, shuffle=True)
-        inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True)
+        outer_cv = KFold(n_splits=self.outer_kfolds, shuffle=True, random_state=42)
+        inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True, random_state=42)
 
         outer_scores = []
         variance = []
@@ -263,6 +260,7 @@ class NestedCV():
                 '\n{0}/{1} <-- Current outer fold'.format(i+1, self.outer_kfolds))
             X_train_outer, X_test_outer = X[train_index], X[test_index]
             y_train_outer, y_test_outer = y[train_index], y[test_index]
+            outer_train_names, inner_test_names = name_list[train_index], name_list[test_index]
             best_inner_params = {}
             best_inner_score = None
             search_scores = []
@@ -273,7 +271,8 @@ class NestedCV():
                     '\n\t{0}/{1} <-- Current inner fold'.format(j+1, self.inner_kfolds))
                 #X_train_inner, X_test_inner = X_train_outer[train_index_inner], X_train_outer[test_index_inner]
                 #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
-                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, data)
+                inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
+                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names)
                 if self.recursive_feature_elimination:
                         X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                                     X_train_inner, y_train_inner, X_test_inner)
@@ -292,7 +291,7 @@ class NestedCV():
 
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
-            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, data)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names)
             self.model.fit(X_train_outer, y_train_outer)
             
             # Get score and prediction
