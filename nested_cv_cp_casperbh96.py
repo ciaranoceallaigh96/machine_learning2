@@ -292,6 +292,7 @@ class NestedCV():
 
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, data)
             self.model.fit(X_train_outer, y_train_outer)
             
             # Get score and prediction
