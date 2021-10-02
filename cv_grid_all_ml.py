@@ -183,6 +183,8 @@ def load_data(data):
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
 
+
+
 def evaluation(model, x, y, group):
         score = model.score(x,y)
         predictions = model.predict(x)
@@ -306,6 +308,7 @@ def avg_cv_result(measure,cv_result):
 	return avg_list	
 
 x_train, y_train = load_data(data)
+name_list = np.loadtxt(data, skiprows=1, usecols=(0,), dtype='str')
 
 scaler = preprocessing.StandardScaler().fit(y_train)
 #pickle.dump(scaler, open('scaler.pkl', 'wb'))
