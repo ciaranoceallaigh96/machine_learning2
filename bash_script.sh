@@ -3,7 +3,7 @@
 rm test_raw_plink* ; train_raw_plink*
 
 #conduct GWAS
-plink2 --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --extract --out nested_cv_gwas_to_delete --keep name_vector_train.txt --pheno $1 
+plink2 --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --out nested_cv_gwas_to_delete --keep name_vector_train.txt --pheno $1 
 
 cat header.txt <(sort -g -k 12,12 'nested_cv_gwas_to_delete."FT16".glm.linear' | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results.gsorted #formatting
 
