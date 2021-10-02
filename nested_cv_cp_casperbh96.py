@@ -9,6 +9,15 @@ from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
 
+def load_data(data):
+        dataset = np.loadtxt(data, skiprows=1)
+        x = dataset[: , 6:set_size]/2
+        y = dataset[: , 5 ]
+        y = y.reshape(-1,1)
+        #print("Performing split of raw data....")
+        #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
+        return x, y #x_train, y_train, x_test, y_test
+
 def bash_script(self, train_index, test_index, data):
         name_vector = data
         train_names = data[train_index]
@@ -19,13 +28,10 @@ def bash_script(self, train_index, test_index, data):
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
-            
-        new_train_data = np.loadtxt("train.raw", skiprows=1, usecols=(5,10006)
-        new_test_data = np.loadtxt("test.raw", skiprows=1, usecols=(5,10006)                            
-        new_X_train =
-        new_y_train =
-        new_X_test =
-        new_y_test =
+        
+        set_size = 10006    
+        new_X_train , new_y_train = load_data('train_raw_plink.raw') #made from bash_script.sh
+        new_X_test , new_y_test  = load_data('test_raw_plink.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
                               
 
@@ -265,8 +271,9 @@ class NestedCV():
             for (j, (train_index_inner, test_index_inner)) in enumerate(inner_cv.split(X_train_outer, y_train_outer)):
                 log.debug(
                     '\n\t{0}/{1} <-- Current inner fold'.format(j+1, self.inner_kfolds))
-                X_train_inner, X_test_inner = X_train_outer[train_index_inner], X_train_outer[test_index_inner]
-                y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
+                #X_train_inner, X_test_inner = X_train_outer[train_index_inner], X_train_outer[test_index_inner]
+                #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
+                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, data)
                 if self.recursive_feature_elimination:
                         X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                                     X_train_inner, y_train_inner, X_test_inner)
