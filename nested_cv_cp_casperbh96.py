@@ -7,6 +7,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.feature_selection import RFECV
 from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
+import os.path
+import time
+import subprocess
+
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
 set_size = 10006    
 
@@ -26,11 +30,16 @@ def bash_script(self, train_index, test_index, train_names, test_names):
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
-        
+        subprocess.run(["/path/to/your/shell/script", "arguments"], shell=True)
+        time.sleep(60)
+        while not os.path.exists('train_raw_plink.raw'):
+                time.sleep(120)
         new_X_train , new_y_train = load_data('train_raw_plink.raw') #made from bash_script.sh
         new_X_test , new_y_test  = load_data('test_raw_plink.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
                               
+
+
 
 
 class NestedCV():
