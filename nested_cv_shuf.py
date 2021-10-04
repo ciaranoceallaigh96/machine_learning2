@@ -31,7 +31,7 @@ def bash_script(train_index, test_index, train_names, test_names):
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
-        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh"], shell=True) 
+        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script_shuf.sh"], shell=True) 
         time.sleep(60)
         while not os.path.exists('train_raw_plink.raw'):
                 time.sleep(20)
