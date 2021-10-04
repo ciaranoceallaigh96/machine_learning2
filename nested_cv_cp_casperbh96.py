@@ -10,9 +10,10 @@ from joblib import Parallel, delayed
 import os.path
 import time
 import subprocess
+import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
-set_size = 10006    
+set_size = 506    
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1)
@@ -30,7 +31,7 @@ def bash_script(self, train_index, test_index, train_names, test_names):
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
-        subprocess.run(["/path/to/your/shell/script", "arguments"], shell=True)
+        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", shell=True) 
         time.sleep(60)
         while not os.path.exists('train_raw_plink.raw'):
                 time.sleep(120)
