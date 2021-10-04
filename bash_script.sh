@@ -12,7 +12,7 @@ echo "red"
 cat header.txt <(sort -g -k 12,12 'nested_cv_gwas_to_delete."FT16".glm.linear' | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results.gsorted #formatting
 echo "blue"
 #clump
-plink1.9 --bfile /home/alexg/hopefully_final/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 1 --clump-p2 1 --clump-r2 0.1 --clump gwas_results.gsorted --out gwas_results_clumped
+plink1.9 --extract blurg.txt --bfile /home/alexg/hopefully_final/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 1 --clump-p2 1 --clump-r2 0.1 --clump gwas_results.gsorted --out gwas_results_clumped
 echo "yellow"
 head -n 10000 gwas_results_clumped.clumped | awk '{print $3}'  > top10ksnps.txt
 #extract top snps

@@ -13,7 +13,7 @@ data = str(sys.argv[3])
 snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
 set_size = int(sys.argv[6]) #how many SNPs
-from nested_cv import NestedCV
+from nested_cv_shuf import NestedCV
 import statistics
 import numpy as np
 import sklearn
@@ -31,7 +31,7 @@ from sklearn.svm import SVR
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
-#import pickle #use dill instead below
+#import pickle #use dill instead
 from sklearn.ensemble import RandomForestRegressor #based in part on https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
 from statistics import mean
 import os
