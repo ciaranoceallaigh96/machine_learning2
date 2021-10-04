@@ -24,14 +24,14 @@ def load_data(data):
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
 
-def bash_script(self, train_index, test_index, train_names, test_names):
+def bash_script(train_index, test_index, train_names, test_names):
         with open("name_vector_train.txt", 'w') as f:
             for item in train_names:
                 f.write("%s %s\n" % (item, item))
         with open("name_vector_test.txt", 'w') as f:
             for item in test_names:
                 f.write("%s %s\n" % (item, item))        
-        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", shell=True) 
+        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh"], shell=True) 
         time.sleep(60)
         while not os.path.exists('train_raw_plink.raw'):
                 time.sleep(120)
@@ -97,7 +97,8 @@ class NestedCV():
             average other than 'binary'
     '''
 
-    def __init__(self, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+    def __init__(self, name_list, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+        self.name_list = name_list
         self.model = model
         self.params_grid = params_grid
         self.outer_kfolds = outer_kfolds
@@ -195,7 +196,7 @@ class NestedCV():
                     self.model.fit(X_train_inner, y_train_inner)
                     print("Red")
                     # Predict and score model
-                    inner_grid_score, inner_pred = self._predict_and_score(X_test_inner, y_test_inner)
+                    inner_grid_score, inner_pred = self._predict_and_score(X_test_inner, y_test_inner.ravel())
 
                     # Cleanup for Keras
                     print("Typer", str(type(self.model).__name__))
@@ -207,7 +208,7 @@ class NestedCV():
 
                     return self._transform_score_format(inner_grid_score), param_dict
 
-    def fit(self, X, y):
+    def fit(self, X, y, name_list):
         '''A method to fit nested cross-validation 
         Parameters
         ----------
@@ -244,7 +245,7 @@ class NestedCV():
 
         self.X = X
         self.y = y
-
+        self.name_list = name_list 
         # If Pandas dataframe or series, convert to array
         if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
             X = X.to_numpy()
@@ -258,7 +259,7 @@ class NestedCV():
         
         outer_cv = KFold(n_splits=self.outer_kfolds, shuffle=True, random_state=42)
         inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True, random_state=42)
-
+        inner_count = 0 ; outer_count = 0
         outer_scores = []
         variance = []
         best_inner_params_list = []  # Change both to by one thing out of key-value pair
@@ -281,6 +282,7 @@ class NestedCV():
                     '\n\t{0}/{1} <-- Current inner fold'.format(j+1, self.inner_kfolds))
                 #X_train_inner, X_test_inner = X_train_outer[train_index_inner], X_train_outer[test_index_inner]
                 #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
+                inner_count += 1 ; print("INNER COUNT NO. ", str(inner_count))
                 inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
                 X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names)
                 if self.recursive_feature_elimination:
@@ -291,21 +293,21 @@ class NestedCV():
                 results = []
                 for parameters in param_func:
                   print(parameters)
-                  results.append(self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner, y_test_inner,param_dict=parameters))
+                  results.append(self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters))
                 search_scores.extend(results)
             
             best_inner_score, best_inner_params = self._best_of_results(search_scores)
             
             best_inner_params_list.append(best_inner_params)
             best_inner_score_list.append(best_inner_score)
-
+            outer_count += 1 ; print("OUTER COUNT NO. ", str(outer_count))
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
             X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names)
-            self.model.fit(X_train_outer, y_train_outer)
+            self.model.fit(X_train_outer, y_train_outer.ravel())
             
             # Get score and prediction
-            score,pred = self._predict_and_score(X_test_outer, y_test_outer)
+            score,pred = self._predict_and_score(X_test_outer, y_test_outer.ravel())
             outer_scores.append(self._transform_score_format(score))
 
             # Append variance
