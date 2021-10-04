@@ -13,7 +13,7 @@ import subprocess
 import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
-set_size = 506    
+set_size = 5006    
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1)
@@ -34,7 +34,7 @@ def bash_script(train_index, test_index, train_names, test_names):
         subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh"], shell=True) 
         time.sleep(60)
         while not os.path.exists('train_raw_plink.raw'):
-                time.sleep(120)
+                time.sleep(20)
         new_X_train , new_y_train = load_data('train_raw_plink.raw') #made from bash_script.sh
         new_X_test , new_y_test  = load_data('test_raw_plink.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
@@ -167,8 +167,10 @@ class NestedCV():
             pred = self.model.predict(X_test)
         
         if(self.multiclass_average == 'binary'):
+            print(self.metric(y_test, pred))
             return self.metric(y_test, pred), pred
         else:
+            print(self.metric(y_test, pred, average=self.multiclass_average))
             return self.metric(y_test, pred, average=self.multiclass_average), pred
     def _best_of_results(self, results):
         best_score = None

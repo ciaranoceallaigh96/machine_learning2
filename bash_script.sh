@@ -1,11 +1,13 @@
 #!/bin/bash
 
+phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
+
 #phenotype file is first argument e.g /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del
 #cleanup
 rm test_raw_plink* ; rm train_raw_plink*
 
 #conduct GWAS
-plink2 --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --out nested_cv_gwas_to_delete --keep name_vector_train.txt --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del 
+plink2 --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --out nested_cv_gwas_to_delete --keep name_vector_train.txt --pheno $phenofile
 echo "red"
 cat header.txt <(sort -g -k 12,12 'nested_cv_gwas_to_delete."FT16".glm.linear' | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results.gsorted #formatting
 echo "blue"
@@ -14,9 +16,9 @@ plink1.9 --bfile /home/alexg/hopefully_final/completed_big_matrix_binary_new_snp
 echo "yellow"
 head -n 10000 gwas_results_clumped.clumped | awk '{print $3}'  > top10ksnps.txt
 #extract top snps
-plink1.9 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top10ksnps.txt --recode A --out train_raw_plink
+plink1.9 --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top10ksnps.txt --recode A --out train_raw_plink
 
-plink1.9 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top10ksnps.txt --recode A --out test_raw_plink
+plink1.9 --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top10ksnps.txt --recode A --out test_raw_plink
 echo "purple"
 
 
