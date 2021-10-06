@@ -1,3 +1,0 @@
-blue red na NA blue
-30 40 50 60 70 80
-red blue red red NA 

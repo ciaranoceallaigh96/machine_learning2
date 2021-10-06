@@ -54,6 +54,14 @@ from tensorboard.plugins.hparams import api as hp
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
 from tensorboard.plugins.hparams import api as hp
 import random
+if snps == 'shuf' :
+	from nested_cv_shuf import NestedCV
+elif snps == 'top':
+	from nested_cv import NestedCV
+else:
+	print("snnps must be top or shuf")
+	
+
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
 import dill as pickle
 for i in range(1,len(sys.argv)):
@@ -346,6 +354,15 @@ def ncv_results(analysis, ncv_object):
 	with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
 		pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 	
+def nn_results(analysis, ncv_object):
+        print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
+        print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
+        print("Variance of %s is %s " % (analysis, ncv_object.variance))
+        nn_list = [ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
+        with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile:
+                pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
+        ncv_object.model.model.save("model.h5")
+
 #ncv_results('SVM', SVM_NCV)	
 
 import random
@@ -388,4 +405,4 @@ NN_NCV = NestedCV(name_list = name_list, model=model, params_grid=param_grid, ou
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
 
 
-ncv_results('NN', NN_NCV)
+nn_results('NN', NN_NCV)

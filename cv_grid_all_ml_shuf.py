@@ -346,6 +346,17 @@ def ncv_results(analysis, ncv_object):
 	with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
 		pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 	
+
+def nn_results(analysis, ncv_object):
+        print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
+        print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
+        print("Variance of %s is %s " % (analysis, ncv_object.variance))
+        nn_list = [ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
+        with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile:
+                pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
+        print(dir(ncv_object.model.model))
+        ncv_object.model.model.save("model.h5")
+
 #ncv_results('SVM', SVM_NCV)	
 
 import random
@@ -384,8 +395,8 @@ model = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(name_list = name_list, model=model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(name_list = name_list, model=model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
 
 
-ncv_results('NN', NN_NCV)
+nn_results('NN', NN_NCV)
