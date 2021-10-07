@@ -55,6 +55,7 @@ from tensorboard.plugins.hparams import api as hp
 from tensorboard.plugins.hparams import api as hp
 import random
 if snps == 'shuf' :
+	print("Shuf nestedCV in usage")
 	from nested_cv_shuf import NestedCV
 elif snps == 'top':
 	from nested_cv import NestedCV

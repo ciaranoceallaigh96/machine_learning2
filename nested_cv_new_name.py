@@ -12,7 +12,7 @@ import time
 import subprocess
 import sys
 
-print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence")
+print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Top version")
 set_size = 506    
 
 def load_data(data):
@@ -24,23 +24,28 @@ def load_data(data):
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
 
-def bash_script(train_index, test_index, train_names, test_names):
-        with open("name_vector_train.txt", 'w') as f:
-            for item in train_names:
-                f.write("%s %s\n" % (item, item))
-        with open("name_vector_test.txt", 'w') as f:
-            for item in test_names:
-                f.write("%s %s\n" % (item, item))        
-        subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh"], shell=True) 
-        time.sleep(60)
-        while not os.path.exists('train_raw_plink.raw'):
-                time.sleep(120)
-        new_X_train , new_y_train = load_data('train_raw_plink.raw') #made from bash_script.sh
-        new_X_test , new_y_test  = load_data('test_raw_plink.raw')
+
+def bash_script(train_index, test_index, train_names, test_names, outer_count, inner_count, outer=False):
+        if outer==True:
+            foo='out'
+        else:
+            foo='in'
+        if not os.path.exists('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
+            print("SETTING OFF CUSTOM BASH SCRIPT")
+            with open("name_vector_train.txt", 'w') as f:
+                for item in train_names:
+                    f.write("%s %s\n" % (item, item))
+            with open("name_vector_test.txt", 'w') as f:
+                for item in test_names:
+                    f.write("%s %s\n" % (item, item))        
+
+            subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo]) 
+        #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
+        while not os.path.exists('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
+            time.sleep(20)
+        new_X_train , new_y_train = load_data('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw') #made from bash_script.sh
+        new_X_test , new_y_test  = load_data('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
-                              
-
-
 
 
 class NestedCV():
@@ -97,7 +102,8 @@ class NestedCV():
             average other than 'binary'
     '''
 
-    def __init__(self, name_list, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+    def __init__(self, model_name, name_list, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+        self.model_name = model_name
         self.name_list = name_list
         self.model = model
         self.params_grid = params_grid
@@ -266,7 +272,7 @@ class NestedCV():
         variance = []
         best_inner_params_list = []  # Change both to by one thing out of key-value pair
         best_inner_score_list = []
-
+        print("ADBUCE")
         # Split X and y into K-partitions to Outer CV
         for (i, (train_index, test_index)) in enumerate(outer_cv.split(X, y)):
             log.debug(
@@ -286,7 +292,7 @@ class NestedCV():
                 #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
                 inner_count += 1 ; print("INNER COUNT NO. ", str(inner_count))
                 inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
-                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names)
+                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names, outer_count, inner_count)
                 if self.recursive_feature_elimination:
                         X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                                     X_train_inner, y_train_inner, X_test_inner)
@@ -302,10 +308,11 @@ class NestedCV():
             
             best_inner_params_list.append(best_inner_params)
             best_inner_score_list.append(best_inner_score)
+            inner_count = 0
             outer_count += 1 ; print("OUTER COUNT NO. ", str(outer_count))
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
-            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names, outer_count, inner_count)
             self.model.fit(X_train_outer, y_train_outer.ravel())
             
             # Get score and prediction
