@@ -329,7 +329,6 @@ y_train = scaler.transform(y_train)
 n_snps = x_train.shape[1]
 my_cv = sklearn.model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
 #################################################SVM####SVM#####SVM####################################################################
-
 '''
 print("Performing SVM")
 c_param = [1,2]
@@ -344,16 +343,16 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
-SVM_NCV = NestedCV(name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':4, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':4, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
-'''
+
 def ncv_results(analysis, ncv_object):
 	print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
 	print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
 	print("Variance of %s is %s " % (analysis, ncv_object.variance))
 	with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
 		pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
-	
+'''	
 def nn_results(analysis, ncv_object):
         print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
         print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
@@ -366,6 +365,7 @@ def nn_results(analysis, ncv_object):
 #ncv_results('SVM', SVM_NCV)	
 
 import random
+
 #Pipeline nessetiates the model__ before the paramters
 param_grid = {'model__learning_rate' : [0.01, 0.001],'model__HP_L1_REG' : [1e-4],'model__HP_L2_REG' : [0.2], 
 	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['relu'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
@@ -396,13 +396,57 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 #pipeline_keras = Pipeline([('model', regressor_keras)])
-model = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
+nn_model = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(name_list = name_list, model=model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
-
-
 nn_results('NN', NN_NCV)
+
+print("Performing a convulutional neural network")
+from tensorboard.plugins.hparams import api as hp
+import random
+from tensorflow.keras.layers import Dense, Conv1D, Flatten
+cnn_param_grid = {'model__epochs':[200],'model__learning_rate' : [0.01,0.001],'model__HP_L1_REG' : [0.1],'model__HP_L2_REG' : [0.2],
+	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
+	      'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['SGD'], 'model__batch_size': [32],
+	      'model__filters':[1,2],'model__strides':[1,2],'model__pool':[1,2],'model__kernel':[1,2]}
+
+
+cnn_param_grid = {'epochs':[200],'learning_rate' : [0.01,0.001],'HP_L1_REG' : [0.1],'HP_L2_REG' : [0.2],'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [3],'units' : [200], 'rate' : [float(0)],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2],'strides':[1,2],'pool':[1,2],'kernel':[1,2]}
+
+METRIC_ACCURACY = 'coeff_determination'
+#not sure if strides is relevant
+print(x_train.shape)
+#x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
+x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
+#x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
+#x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
+#x_test = x_test.reshape(x_test.shape[0], 1, x_test.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
+print(x_train.shape)
+					      
+def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
+        opt = HP_OPTIMIZER
+        if HP_NUM_HIDDEN_LAYERS == 1 :
+                print("HP_NUM_HIDDEN_LAYERS is equal to 1; this could cause building problems")
+        chosen_opt = getattr(tf.keras.optimizers,opt)
+        reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+        model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
+        #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        for i in range(HP_NUM_HIDDEN_LAYERS-1):
+                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1],1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+                model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
+        model.add(Flatten())
+        model.add(Dense(1, activation='linear'))
+        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+        print("Summary ", model.summary())
+        return model				      
+        
+					      
+cnn_model = KerasRegressor(build_fn = conv_model, epochs=10, verbose=1, batch_size=32)
+CNN_NCV = NestedCV(model_name='cnn_model', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
+nn_results('CNN', CNN_NCV)
+

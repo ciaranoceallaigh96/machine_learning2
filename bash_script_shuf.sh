@@ -1,4 +1,14 @@
 #!/bin/bash
+modeltype=$(cat modeltype.txt)
+if [[ $modeltype != $1 ]];
+then
+  echo "duth"
+  exit
+fi
+
+echo "azul"
+rm modeltype.txt
+echo "$1" > modeltype.txt
 
 phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
 echo "liath"
