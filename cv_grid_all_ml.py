@@ -354,7 +354,7 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':4, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list)
 
 def ncv_results(analysis, ncv_object):
@@ -406,12 +406,12 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 #pipeline_keras = Pipeline([('model', regressor_keras)])
-nn_model = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
+nn_model = KerasRegressor(build_fn = build_nn, epochs=100, verbose=0, batch_size=32)
 
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='NN')
 nn_results('NN', NN_NCV)
 
@@ -425,7 +425,7 @@ cnn_param_grid = {'model__epochs':[200],'model__learning_rate' : [0.01,0.001],'m
 	      'model__filters':[1,2],'model__strides':[1,2],'model__pool':[1,2],'model__kernel':[1,2]}
 
 
-cnn_param_grid = {'epochs':[200],'learning_rate' : [0.01,0.001],'HP_L1_REG' : [0.1],'HP_L2_REG' : [0.2],'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [3],'units' : [200], 'rate' : [float(0)],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2],'strides':[1,2],'pool':[1,2],'kernel':[1,2]}
+cnn_param_grid = {'epochs':[200, 100],'learning_rate' : [0.01,0.001],'HP_L1_REG' : [0.1],'HP_L2_REG' : [0.2],'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [3],'units' : [200], 'rate' : [float(0)],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2],'strides':[1,2],'pool':[1,2],'kernel':[1,2]}
 
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
@@ -455,8 +455,8 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         return model				      
         
 					      
-cnn_model = KerasRegressor(build_fn = conv_model, epochs=10, verbose=1, batch_size=32)
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+cnn_model = KerasRegressor(build_fn = conv_model, epochs=100, verbose=0, batch_size=32)
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='CNN')
 nn_results('CNN', CNN_NCV)
 
