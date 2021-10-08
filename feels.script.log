@@ -1,0 +1,19 @@
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+FT16_cv_br
+nahnah
+feels.raw
+shuf
+FT16cv5k
+26
+2021-10-08 14:06:00
+ADBUCE
+NN
+INNER COUNT NO.  1
+{'rate': 0.2, 'learning_rate': 0.0001, 'HP_L2_REG': 0.2, 'activation': 'relu', 'HP_OPTIMIZER': 'SGD', 'HP_NUM_HIDDEN_LAYERS': 4, 'kernel_initializer': 'glorot_uniform', 'units': 1000, 'HP_L1_REG': 0.01}
+Blue

@@ -13,7 +13,8 @@ import subprocess
 import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Top version")
-set_size = 506    
+set_size = 10006    
+print("Set size set to %s" % set_size)
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1)
@@ -105,7 +106,6 @@ class NestedCV():
     def __init__(self, model_name, name_list, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
         self.model_name = model_name
         self.name_list = name_list
-        self.model_name = model_name
         self.model = model
         self.params_grid = params_grid
         self.outer_kfolds = outer_kfolds

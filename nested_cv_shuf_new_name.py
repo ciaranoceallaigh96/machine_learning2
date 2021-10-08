@@ -13,7 +13,9 @@ import subprocess
 import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Shuf version")
-set_size = 506    
+
+set_size = 10006    
+print("Set size set to %s" % set_size)
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1)
@@ -43,6 +45,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         while not os.path.exists('test_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
         new_X_train , new_y_train = load_data('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw') #made from bash_script.sh
+        print("champ"); print(new_X_train.shape)
         new_X_test , new_y_test  = load_data('test_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
                               
@@ -308,7 +311,7 @@ class NestedCV():
                         X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                                     X_train_inner, y_train_inner, X_test_inner)
                 
-
+                print(X_train_inner.shape); print("Tusa") ; print(y_train_inner.shape) 
                 results = []
                 for parameters in param_func:
                   print(parameters)

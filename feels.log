@@ -1,0 +1,26 @@
+PLINK v1.90b3.31 64-bit (3 Feb 2016)
+Options in effect:
+  --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids
+  --extract feels.snp
+  --out feels
+  --recode A
+  --remove /home/ciaran/arabadopsis/completed_big_matrix_binary_new_snps_fail_ids
+
+Hostname: pg3
+Working directory: /external_storage/ciaran/machine_learning2
+Start time: Fri Oct  8 02:28:45 2021
+
+Random number seed: 1633656525
+1029912 MB RAM detected; reserving 514956 MB for main workspace.
+10709465 variants loaded from .bim file.
+2029 people (2029 males, 0 females) loaded from .fam.
+--extract: 20 variants remaining.
+--remove: 1858 people remaining.
+Using 1 thread (no multithreaded calculations invoked.
+Before main variant filters, 1858 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+20 variants and 1858 people pass filters and QC.
+Note: No phenotypes present.
+--recode A to feels.raw ... done.
+
+End time: Fri Oct  8 02:28:48 2021
