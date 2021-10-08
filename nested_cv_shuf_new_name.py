@@ -218,7 +218,7 @@ class NestedCV():
 
                     return self._transform_score_format(inner_grid_score), param_dict
 
-    def fit(self, X, y, name_list):
+    def fit(self, X, y, name_list, model_name):
         '''A method to fit nested cross-validation 
         Parameters
         ----------
@@ -255,6 +255,7 @@ class NestedCV():
 
         self.X = X
         self.y = y
+        self.model_name = model_name
         self.name_list = name_list 
         # If Pandas dataframe or series, convert to array
         if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
@@ -299,6 +300,10 @@ class NestedCV():
                 inner_count += 1 ; print("INNER COUNT NO. ", str(inner_count))
                 inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
                 X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names,outer_count, inner_count)
+                if model_name == 'CNN':
+                    X_train_inner = X_train_inner.reshape(X_train_inner.shape[0],X_train_inner.shape[1],1)
+                    X_test_inner = X_test_inner.reshape(X_test_inner.shape[0],X_test_inner.shape[1],1)
+
                 if self.recursive_feature_elimination:
                         X_train_inner, X_test_inner = self._fit_recursive_feature_elimination(
                                     X_train_inner, y_train_inner, X_test_inner)
@@ -319,6 +324,9 @@ class NestedCV():
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
             X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names, outer_count, inner_count, outer=True)
+            if model_name == 'CNN':
+                X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
+                X_test_outer = X_test_outer.reshape(X_test_outer.shape[0],X_test_outer.shape[1],1)
             outer = False
             self.model.fit(X_train_outer, y_train_outer.ravel())
             outer_count += 1 
