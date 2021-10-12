@@ -14,7 +14,7 @@ import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Shuf version")
 
-set_size = 10006    
+set_size = 306    
 print("Set size set to %s" % set_size)
 
 def load_data(data):

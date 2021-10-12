@@ -15,6 +15,7 @@
 #from nested_cv import NestedCV
 #with open('NCV_NN.pkl', 'rb') as f:
 #     red = pickle.load(f)
+print("Please remember to set the right set size in the nested_cv code")
 import sys
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
 num = sys.argv[1] #script number for saving out
@@ -175,12 +176,12 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='SVM')
 
 
 ncv_results('SVM', SVM_NCV)	
-RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(), params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(), params_grid=svm_random_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RBG')
 ncv_results('RBG', RBG_NCV)
 
@@ -188,13 +189,13 @@ alpha = [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100]
 alpha_dict = {'alpha':alpha}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
-LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), params_grid=alpha_dict, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 LASS_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='LASS')
 ncv_results('LASS', LASS_NCV)
 
-RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-ncv_results('RIDGE', RIDGE_NCV)
+RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), params_grid=alpha_dict, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RIDGE')
+ncv_results('RIDGE', RIDGE_NCV)
 
 print("Performing Random Forests")
 n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
@@ -220,13 +221,13 @@ rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"M
 rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 
-RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-ncv_results('RF', RF_NCV)
+RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), params_grid=alpha_dict, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RF')
+ncv_results('RF', RF_NCV)
 
-BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-ncv_results('baseline', BASELINE_NCV)
+BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression, params_grid={}, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='baseline')
+ncv_results('baseline', BASELINE_NCV)
 
 import random
 
@@ -261,7 +262,7 @@ nn_model = KerasRegressor(build_fn = build_nn, epochs=100, verbose=0, batch_size
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='NN')
 nn_results('NN', NN_NCV)
 
@@ -306,7 +307,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         
 					      
 cnn_model = KerasRegressor(build_fn = conv_model, epochs=100, verbose=0, batch_size=32)
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':5, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='CNN')
 nn_results('CNN', CNN_NCV)
 
