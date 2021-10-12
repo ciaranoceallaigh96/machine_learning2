@@ -166,3 +166,87 @@ Options in effect:
 2029 people (2029 males, 0 females) loaded from .fam.
 1021 phenotype values present after --pheno.
 purple
+1
+1
+in
+PLINK v2.00a2 32-bit (22 Sep 2018)             www.cog-genomics.org/plink/2.0/
+(C) 2005-2018 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to nested_cv_gwas_out_1_in_1_in.log.
+Options in effect:
+  --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids
+  --glm
+  --keep name_vector_train.txt
+  --mac 20
+  --out nested_cv_gwas_out_1_in_1_in
+  --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del
+
+Start time: Tue Oct 12 18:40:22 2021
+1029912 MiB RAM detected; reserving 2047 MiB for main workspace.
+Using up to 88 threads (change this with --threads).
+2029 samples (0 females, 2029 males; 2029 founders) loaded from
+/home/ciaran/completed_big_matrix_binary_new_snps_ids.fam.
+10709465 variants loaded from
+/home/ciaran/completed_big_matrix_binary_new_snps_ids.bim.
+1 quantitative phenotype loaded (1021 values).
+--keep: 124 samples remaining.
+124 samples (0 females, 124 males; 124 founders) remaining after main filters.
+115 quantitative phenotype values remaining after main filters.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+9267416 variants removed due to allele frequency threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+1442049 variants remaining after main filters.
+--glm linear regression on phenotype 'FT16': 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+Results written to nested_cv_gwas_out_1_in_1_in.FT16.glm.linear .
+End time: Tue Oct 12 18:40:29 2021
+red
+blue
+PLINK v1.90b3.31 64-bit (3 Feb 2016)       https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to gwas_results_clumped_1_in_1_in.log.
+Options in effect:
+  --bfile /home/alexg/hopefully_final/completed_big_matrix_binary_new_snps_ids
+  --clump gwas_results_1_in_1_in.gsorted
+  --clump-kb 250
+  --clump-p1 1
+  --clump-p2 1
+  --clump-r2 0.1
+  --out gwas_results_clumped_1_in_1_in
+  --prune
+
+1029912 MB RAM detected; reserving 514956 MB for main workspace.
+10709465 variants loaded from .bim file.
+2029 people (2029 males, 0 females) loaded from .fam.
+yellow
+PLINK v1.90b3.31 64-bit (3 Feb 2016)       https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to train_raw_plink_1_in_1_in.log.
+Options in effect:
+  --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids
+  --extract top10ksnps_1_in_1_in.txt
+  --keep name_vector_train.txt
+  --out train_raw_plink_1_in_1_in
+  --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del
+  --prune
+  --recode A
+
+1029912 MB RAM detected; reserving 514956 MB for main workspace.
+10709465 variants loaded from .bim file.
+2029 people (2029 males, 0 females) loaded from .fam.
+1021 phenotype values present after --pheno.
+PLINK v1.90b3.31 64-bit (3 Feb 2016)       https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to test_raw_plink_1_in_1_in.log.
+Options in effect:
+  --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids
+  --extract top10ksnps_1_in_1_in.txt
+  --keep name_vector_test.txt
+  --out test_raw_plink_1_in_1_in
+  --pheno /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del
+  --prune
+  --recode A
+
+1029912 MB RAM detected; reserving 514956 MB for main workspace.
+10709465 variants loaded from .bim file.
+2029 people (2029 males, 0 females) loaded from .fam.
+1021 phenotype values present after --pheno.
+purple
