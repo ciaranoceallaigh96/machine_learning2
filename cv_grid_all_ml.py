@@ -149,7 +149,7 @@ def ncv_results(analysis, ncv_object):
         print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
         print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
-        with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
+        with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
                 pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 
 def nn_results(analysis, ncv_object):
@@ -157,9 +157,9 @@ def nn_results(analysis, ncv_object):
         print("Outer scores of %s is %s " % (analysis, ncv_object.outer_scores))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         nn_list = [ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
-        with open('NCV_' + str(analysis) + '.pkl', 'wb') as ncvfile:
+        with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
-        ncv_object.model.model.save("model.h5")
+        ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
 
 '''
