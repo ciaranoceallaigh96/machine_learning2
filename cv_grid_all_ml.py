@@ -162,7 +162,7 @@ def nn_results(analysis, ncv_object):
         ncv_object.model.model.save("model.h5")
 
 
-
+'''
 print("Performing SVM")
 c_param = [1,2]
 gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
@@ -221,11 +221,12 @@ rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"M
 rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 
-RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), params_grid=alpha_dict, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), params_grid=random_grid, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RF')
 ncv_results('RF', RF_NCV)
-
-BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression, params_grid={}, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+'''
+#base_grid = {"fit_intercept":["True"]}
+BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(), params_grid={}, outer_kfolds=2, inner_kfolds=2, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':1, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='baseline')
 ncv_results('baseline', BASELINE_NCV)
 

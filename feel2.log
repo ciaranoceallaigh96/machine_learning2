@@ -600,3 +600,859 @@ Performing Random Forests
 Best Params of RF is {} 
 Outer scores of RF is [] 
 Variance of RF is [] 
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+26
+2021-10-12 15:32:00
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+26
+2021-10-12 17:02:00
+{'alpha': [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100]}
+ADBUCE
+RIDGE
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'alpha': 0.01}
+Blue
+Red
+-1.1525987197550722
+Typer Ridge
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'alpha': 1}
+Blue
+Red
+0.09788633325909812
+Typer Ridge
+OUTER COUNT NO.  1
+champ
+(230, 294)
+0.6900737462058517
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{'alpha': 0.001}
+Blue
+Red
+-0.5546268880834664
+Typer Ridge
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{'alpha': 10}
+Blue
+Red
+-0.036812832877160195
+Typer Ridge
+OUTER COUNT NO.  2
+champ
+(220, 294)
+0.4019874880045049
+Best Params of RIDGE is {'alpha': [1, 10]} 
+Outer scores of RIDGE is [0.6900737462058517, 0.4019874880045049] 
+Variance of RIDGE is [337.1442563941066, 179.31410467781308] 
+Performing Random Forests
+{'n_estimators': [2000, 2142, 2285, 2428, 2571, 2714, 2857, 3000, 3142, 3285, 3428, 3571, 3714, 3857, 4000, 4142, 4285, 4428, 4571, 4714, 4857, 5000, 5142, 5285, 5428, 5571, 5714, 5857, 6000, 6142, 6285, 6428, 6571, 6714, 6857, 7000, 7142, 7285, 7428, 7571, 7714, 7857, 8000, 8142, 8285, 8428, 8571, 8714, 8857, 9000], 'min_samples_leaf': [1, 2, 3, 10, 100], 'bootstrap': [True, False], 'max_samples': [0.1, 0.2, 0.30000000000000004, 0.4, 0.5, 0.6, 0.7000000000000001, 0.8, 0.9], 'min_samples_split': [2, 3, 4, 10, 100], 'max_depth': [1, 6, 11, 16, 21, 27, 32, 37, 42, 47, 53, 58, 63, 68, 73, 79, 84, 89, 94, 100, None], 'max_features': ['auto', 'sqrt', 'log2'], 'max_leaf_nodes': [100, 700, 800, 499]}
+ADBUCE
+RF
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'alpha': 0.5}
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+26
+2021-10-12 17:21:00
+{'alpha': [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100]}
+ADBUCE
+RIDGE
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'alpha': 0.001}
+Blue
+Red
+-1.552646377111465
+Typer Ridge
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'alpha': 0.001}
+Blue
+Red
+-1.414618701493045
+Typer Ridge
+OUTER COUNT NO.  1
+champ
+(230, 294)
+0.7605382064435023
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{'alpha': 10}
+Blue
+Red
+0.07307408100247159
+Typer Ridge
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{'alpha': 1}
+Blue
+Red
+-0.2384360133549832
+Typer Ridge
+OUTER COUNT NO.  2
+champ
+(220, 294)
+0.4019874880045049
+Best Params of RIDGE is {'alpha': [0.001, 10]} 
+Outer scores of RIDGE is [0.7605382064435023, 0.4019874880045049] 
+Variance of RIDGE is [531.4618417373127, 179.31410467781308] 
+Performing Random Forests
+{'max_leaf_nodes': [100, 700, 800, 499], 'n_estimators': [2000, 2142, 2285, 2428, 2571, 2714, 2857, 3000, 3142, 3285, 3428, 3571, 3714, 3857, 4000, 4142, 4285, 4428, 4571, 4714, 4857, 5000, 5142, 5285, 5428, 5571, 5714, 5857, 6000, 6142, 6285, 6428, 6571, 6714, 6857, 7000, 7142, 7285, 7428, 7571, 7714, 7857, 8000, 8142, 8285, 8428, 8571, 8714, 8857, 9000], 'min_samples_leaf': [1, 2, 3, 10, 100], 'max_depth': [1, 6, 11, 16, 21, 27, 32, 37, 42, 47, 53, 58, 63, 68, 73, 79, 84, 89, 94, 100, None], 'max_samples': [0.1, 0.2, 0.30000000000000004, 0.4, 0.5, 0.6, 0.7000000000000001, 0.8, 0.9], 'min_samples_split': [2, 3, 4, 10, 100], 'max_features': ['auto', 'sqrt', 'log2'], 'bootstrap': [True, False]}
+ADBUCE
+RF
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'max_leaf_nodes': 800, 'n_estimators': 4428, 'min_samples_leaf': 10, 'max_depth': 37, 'max_features': 'auto', 'min_samples_split': 10, 'max_samples': 0.8, 'bootstrap': True}
+Blue
+Red
+0.18013873767266786
+Typer RandomForestRegressor
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'max_leaf_nodes': 499, 'n_estimators': 2000, 'min_samples_leaf': 10, 'max_depth': 27, 'max_features': 'auto', 'min_samples_split': 3, 'max_samples': 0.4, 'bootstrap': True}
+Blue
+Red
+-0.025241241043296503
+Typer RandomForestRegressor
+OUTER COUNT NO.  1
+champ
+(230, 294)
+0.3802731340817176
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{'max_leaf_nodes': 700, 'n_estimators': 4571, 'min_samples_leaf': 10, 'max_depth': 89, 'max_features': 'auto', 'min_samples_split': 4, 'max_samples': 0.6, 'bootstrap': False}
+Blue
+Red
+-0.3266542977894382
+Typer RandomForestRegressor
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{'max_leaf_nodes': 100, 'n_estimators': 3571, 'min_samples_leaf': 10, 'max_depth': 42, 'max_features': 'sqrt', 'min_samples_split': 3, 'max_samples': 0.9, 'bootstrap': True}
+Blue
+Red
+-0.060018109843721135
+Typer RandomForestRegressor
+OUTER COUNT NO.  2
+champ
+(220, 294)
+0.05810320093744448
+Best Params of RF is {'max_leaf_nodes': [800, 100], 'n_estimators': [4428, 3571], 'min_samples_leaf': [10], 'max_depth': [37, 42], 'max_samples': [0.8, 0.9], 'min_samples_split': [10, 3], 'max_features': ['auto', 'sqrt'], 'bootstrap': [True]} 
+Outer scores of RF is [0.3802731340817176, 0.05810320093744448] 
+Variance of RF is [118.00570177794502, 5.575280247219651] 
+ADBUCE
+baseline
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{}
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+26
+2021-10-12 17:30:00
+ADBUCE
+baseline
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'fit_intercept': 'True'}
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+26
+2021-10-12 17:33:00
+ADBUCE
+baseline
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{}
+Blue
+Red
+-3.168544662785272e+24
+Typer LinearRegression
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{}
+Blue
+Red
+-1.1459187859093421e+26
+Typer LinearRegression
+OUTER COUNT NO.  1
+champ
+(230, 294)
+0.743646218449836
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{}
+Blue
+Red
+-7.75904640756046e+23
+Typer LinearRegression
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{}
+Blue
+Red
+-1.7750989571053113e+23
+Typer LinearRegression
+OUTER COUNT NO.  2
+champ
+(220, 294)
+0.7158788449523518
+Best Params of baseline is {} 
+Outer scores of baseline is [0.743646218449836, 0.7158788449523518] 
+Variance of baseline is [568.608118784746, 537.4894208556071] 
+ADBUCE
+NN
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'units': 400, 'HP_OPTIMIZER': 'SGD', 'HP_L1_REG': 0.0001, 'kernel_initializer': 'glorot_uniform', 'rate': 0.2, 'learning_rate': 0.0001, 'activation': 'relu', 'HP_NUM_HIDDEN_LAYERS': 2, 'HP_L2_REG': 1e-08}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 400)               8400      
+_________________________________________________________________
+dropout (Dropout)            (None, 400)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 400)               160400    
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 400)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 1)                 401       
+=================================================================
+Total params: 169,201
+Trainable params: 169,201
+Non-trainable params: 0
+_________________________________________________________________
+None
+Please remember to set the right set size in the nested_cv code
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Top version
+Set size set to 306
+Shuf nestedCV in usage
+WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 
+ Edited with permission under liscence 
+ Shuf version
+Set size set to 300
+FT16_cv_br
+nahnah
+feels2.raw
+shuf
+FT16cv5k
+300
+2021-10-12 17:39:00
+ADBUCE
+baseline
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{}
+Blue
+Red
+-3.168544662785272e+24
+Typer LinearRegression
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{}
+Blue
+Red
+-1.1459187859093421e+26
+Typer LinearRegression
+OUTER COUNT NO.  1
+champ
+(230, 294)
+0.743646218449836
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{}
+Blue
+Red
+-7.75904640756046e+23
+Typer LinearRegression
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{}
+Blue
+Red
+-1.7750989571053113e+23
+Typer LinearRegression
+OUTER COUNT NO.  2
+champ
+(220, 294)
+0.7158788449523518
+Best Params of baseline is {} 
+Outer scores of baseline is [0.743646218449836, 0.7158788449523518] 
+Variance of baseline is [568.608118784746, 537.4894208556071] 
+ADBUCE
+NN
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'units': 200, 'rate': 0.2, 'HP_NUM_HIDDEN_LAYERS': 4, 'learning_rate': 0.01, 'HP_OPTIMIZER': 'Adam', 'kernel_initializer': 'glorot_uniform', 'HP_L1_REG': 0.01, 'activation': 'tanh', 'HP_L2_REG': 0.0001}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 200)               59000     
+_________________________________________________________________
+dropout (Dropout)            (None, 200)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 201       
+=================================================================
+Total params: 179,801
+Trainable params: 179,801
+Non-trainable params: 0
+_________________________________________________________________
+None
+Red
+0.045684945690689927
+Typer KerasRegressor
+Hello world
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294)
+Tusa
+(115, 1)
+{'units': 1000, 'rate': 0.2, 'HP_NUM_HIDDEN_LAYERS': 4, 'learning_rate': 0.001, 'HP_OPTIMIZER': 'Adagrad', 'kernel_initializer': 'glorot_uniform', 'HP_L1_REG': 0.001, 'activation': 'relu', 'HP_L2_REG': 0.2}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 1000)              295000    
+_________________________________________________________________
+dropout (Dropout)            (None, 1000)              0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 1000)              0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 1000)              0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 1000)              0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 1001      
+=================================================================
+Total params: 3,299,001
+Trainable params: 3,299,001
+Non-trainable params: 0
+_________________________________________________________________
+None
+Red
+-0.7651344801054556
+Typer KerasRegressor
+Hello world
+OUTER COUNT NO.  1
+champ
+(230, 294)
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 200)               59000     
+_________________________________________________________________
+dropout (Dropout)            (None, 200)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 201       
+=================================================================
+Total params: 179,801
+Trainable params: 179,801
+Non-trainable params: 0
+_________________________________________________________________
+None
+0.7791234763556463
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294)
+Tusa
+(107, 1)
+{'units': 1000, 'rate': 0.0, 'HP_NUM_HIDDEN_LAYERS': 5, 'learning_rate': 0.0001, 'HP_OPTIMIZER': 'Adam', 'kernel_initializer': 'glorot_uniform', 'HP_L1_REG': 0.1, 'activation': 'tanh', 'HP_L2_REG': 0.01}
+Blue
+Model: "sequential_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense_5 (Dense)              (None, 1000)              295000    
+_________________________________________________________________
+dense_6 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dense_7 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dense_8 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dense_9 (Dense)              (None, 1000)              1001000   
+_________________________________________________________________
+dense_10 (Dense)             (None, 1)                 1001      
+=================================================================
+Total params: 4,300,001
+Trainable params: 4,300,001
+Non-trainable params: 0
+_________________________________________________________________
+None
+Red
+-6.763300395328052
+Typer KerasRegressor
+Hello world
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294)
+Tusa
+(113, 1)
+{'units': 200, 'rate': 0.1, 'HP_NUM_HIDDEN_LAYERS': 4, 'learning_rate': 0.01, 'HP_OPTIMIZER': 'SGD', 'kernel_initializer': 'glorot_uniform', 'HP_L1_REG': 0.01, 'activation': 'relu', 'HP_L2_REG': 0.0001}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 200)               59000     
+_________________________________________________________________
+dropout (Dropout)            (None, 200)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 201       
+=================================================================
+Total params: 179,801
+Trainable params: 179,801
+Non-trainable params: 0
+_________________________________________________________________
+None
+Red
+-1.2641865175403297
+Typer KerasRegressor
+Hello world
+OUTER COUNT NO.  2
+champ
+(220, 294)
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense (Dense)                (None, 200)               59000     
+_________________________________________________________________
+dropout (Dropout)            (None, 200)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 200)               40200     
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 200)               0         
+_________________________________________________________________
+dense_4 (Dense)              (None, 1)                 201       
+=================================================================
+Total params: 179,801
+Trainable params: 179,801
+Non-trainable params: 0
+_________________________________________________________________
+None
+0.41506878839660133
+Best Params of NN is {'units': [200], 'rate': [0.2, 0.1], 'HP_L1_REG': [0.01], 'activation': ['tanh', 'relu'], 'learning_rate': [0.01], 'HP_OPTIMIZER': ['Adam', 'SGD'], 'HP_NUM_HIDDEN_LAYERS': [4], 'kernel_initializer': ['glorot_uniform'], 'HP_L2_REG': [0.0001]} 
+Outer scores of NN is [0.7791234763556463, 0.41506878839660133] 
+Variance of NN is [569.6971, 221.50107] 
+Performing a convulutional neural network
+(499, 294)
+(499, 294)
+ADBUCE
+CNN
+INNER COUNT NO.  1
+champ
+(115, 294)
+(115, 294, 1)
+Tusa
+(115, 1)
+{'rate': 0.0, 'HP_L1_REG': 0.1, 'HP_NUM_HIDDEN_LAYERS': 3, 'activation': 'tanh', 'filters': 2, 'units': 200, 'strides': 2, 'pool': 1, 'HP_L2_REG': 0.2, 'kernel_initializer': 'glorot_uniform', 'learning_rate': 0.001, 'epochs': 100, 'kernel': 2, 'HP_OPTIMIZER': 'SGD'}
+Blue
+Model: "sequential_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 147, 2)            6         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 74, 2)             0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 37, 2)             10        
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 19, 2)             0         
+_________________________________________________________________
+flatten (Flatten)            (None, 38)                0         
+_________________________________________________________________
+dense_5 (Dense)              (None, 1)                 39        
+=================================================================
+Total params: 55
+Trainable params: 55
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-5.671984296629637
+Typer KerasRegressor
+Hello world
+INNER COUNT NO.  2
+champ
+(115, 294)
+(115, 294, 1)
+Tusa
+(115, 1)
+{'rate': 0.0, 'HP_L1_REG': 0.1, 'HP_NUM_HIDDEN_LAYERS': 3, 'activation': 'tanh', 'filters': 1, 'units': 200, 'strides': 2, 'pool': 1, 'HP_L2_REG': 0.2, 'kernel_initializer': 'glorot_uniform', 'learning_rate': 0.001, 'epochs': 200, 'kernel': 1, 'HP_OPTIMIZER': 'SGD'}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 147, 1)            2         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 74, 1)             0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 37, 1)             2         
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 19, 1)             0         
+_________________________________________________________________
+flatten (Flatten)            (None, 19)                0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 20        
+=================================================================
+Total params: 24
+Trainable params: 24
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-7.03454620907716
+Typer KerasRegressor
+Hello world
+OUTER COUNT NO.  1
+champ
+(230, 294)
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 147, 2)            6         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 74, 2)             0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 37, 2)             10        
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 19, 2)             0         
+_________________________________________________________________
+flatten (Flatten)            (None, 38)                0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 39        
+=================================================================
+Total params: 55
+Trainable params: 55
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+-4.390367268297589
+INNER COUNT NO.  1
+champ
+(107, 294)
+(107, 294, 1)
+Tusa
+(107, 1)
+{'rate': 0.0, 'HP_L1_REG': 0.1, 'HP_NUM_HIDDEN_LAYERS': 3, 'activation': 'tanh', 'filters': 2, 'units': 200, 'strides': 1, 'pool': 2, 'HP_L2_REG': 0.2, 'kernel_initializer': 'glorot_uniform', 'learning_rate': 0.01, 'epochs': 100, 'kernel': 1, 'HP_OPTIMIZER': 'SGD'}
+Blue
+Model: "sequential_1"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d_2 (Conv1D)            (None, 294, 2)            4         
+_________________________________________________________________
+max_pooling1d_2 (MaxPooling1 (None, 293, 2)            0         
+_________________________________________________________________
+conv1d_3 (Conv1D)            (None, 293, 2)            6         
+_________________________________________________________________
+max_pooling1d_3 (MaxPooling1 (None, 292, 2)            0         
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 584)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 1)                 585       
+=================================================================
+Total params: 595
+Trainable params: 595
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-0.24370804256085665
+Typer KerasRegressor
+Hello world
+INNER COUNT NO.  2
+champ
+(113, 294)
+(113, 294, 1)
+Tusa
+(113, 1)
+{'rate': 0.0, 'HP_L1_REG': 0.1, 'HP_NUM_HIDDEN_LAYERS': 3, 'activation': 'tanh', 'filters': 1, 'units': 200, 'strides': 2, 'pool': 1, 'HP_L2_REG': 0.2, 'kernel_initializer': 'glorot_uniform', 'learning_rate': 0.01, 'epochs': 200, 'kernel': 2, 'HP_OPTIMIZER': 'SGD'}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 147, 1)            3         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 74, 1)             0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 37, 1)             3         
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 19, 1)             0         
+_________________________________________________________________
+flatten (Flatten)            (None, 19)                0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 20        
+=================================================================
+Total params: 26
+Trainable params: 26
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-0.0029742010143700703
+Typer KerasRegressor
+Hello world
+OUTER COUNT NO.  2
+champ
+(220, 294)
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 147, 1)            3         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 74, 1)             0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 37, 1)             3         
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 19, 1)             0         
+_________________________________________________________________
+flatten (Flatten)            (None, 19)                0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 20        
+=================================================================
+Total params: 26
+Trainable params: 26
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+-0.018471373767532162
+Best Params of CNN is {'units': [200], 'activation': ['tanh'], 'HP_NUM_HIDDEN_LAYERS': [3], 'kernel_initializer': ['glorot_uniform'], 'pool': [1], 'rate': [0.0], 'strides': [2], 'filters': [2, 1], 'HP_L1_REG': [0.1], 'learning_rate': [0.001, 0.01], 'HP_OPTIMIZER': ['SGD'], 'epochs': [100, 200], 'kernel': [2], 'HP_L2_REG': [0.2]} 
+Outer scores of CNN is [-4.390367268297589, -0.018471373767532162] 
+Variance of CNN is [3.2236636e-05, 0.0] 
