@@ -14,7 +14,7 @@ import sys
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Shuf version")
 
-set_size = 306    
+set_size = 10006 
 print("Set size set to %s" % set_size)
 
 def load_data(data):
@@ -326,7 +326,7 @@ class NestedCV():
             print("OUTER COUNT NO. ", str(outer_count))
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
-            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, inner_test_names, outer_count, inner_count, outer=True)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, outer_test_names, outer_count, inner_count, outer=True)
             if model_name == 'CNN':
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
                 X_test_outer = X_test_outer.reshape(X_test_outer.shape[0],X_test_outer.shape[1],1)
