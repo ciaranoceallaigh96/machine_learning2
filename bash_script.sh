@@ -24,4 +24,4 @@ plink1.9 --prune --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_bi
 echo "purple"
 
 
-rm name_vector_train.txt ; rm name_vector_test.txt
+#rm name_vector_train.txt ; rm name_vector_test.txt

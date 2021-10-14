@@ -8,6 +8,7 @@
 #
 
 #import tensorflow
+#import numpy as np; import scipy #need to do this before path insert
 #import sys
 #sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
 #import dill as pickle
@@ -15,6 +16,7 @@
 #from nested_cv import NestedCV
 #with open('NCV_NN.pkl', 'rb') as f:
 #     red = pickle.load(f)
+
 print("Please remember to set the right set size in the nested_cv code")
 import sys
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
@@ -80,10 +82,10 @@ import dill as pickle
 for i in range(1,len(sys.argv)):
 	print(sys.argv[i])
 
-if not os.path.exists('/home/ciaran/arabadopsis/' + phenotype):
-    os.makedirs('/home/ciaran/arabadopsis/' + phenotype)
+if not os.path.exists('/external_storage/ciaran/arabadopsis/' + phenotype):
+    os.makedirs('/external_storage/ciaran/arabadopsis/' + phenotype)
 
-os.chdir('/home/ciaran/arabadopsis/' + phenotype)
+os.chdir('/external_storage/ciaran/arabadopsis/' + phenotype)
 date_object = datetime.datetime.now().replace(second=0,microsecond=0)
 print(date_object)
 
@@ -175,15 +177,16 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='SVM')
+#SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+#SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='SVM')
 
 
-ncv_results('SVM', SVM_NCV)	
+#ncv_results('SVM', SVM_NCV)	
+print("Performing RBG")
 RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(), params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RBG')
 ncv_results('RBG', RBG_NCV)
-
+'''
 alpha = [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100]
 alpha_dict = {'alpha':alpha}
 print(alpha_dict)
@@ -195,7 +198,6 @@ ncv_results('LASS', LASS_NCV)
 RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='RIDGE')
 ncv_results('RIDGE', RIDGE_NCV)
-
 print("Performing Random Forests")
 n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
 max_features = ['auto', 'sqrt', 'log2'] # Maximum number of levels in tree
@@ -309,4 +311,4 @@ cnn_model = KerasRegressor(build_fn = conv_model, epochs=100, verbose=0, batch_s
 CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='CNN')
 nn_results('CNN', CNN_NCV)
-
+'''

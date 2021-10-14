@@ -1,0 +1,195 @@
+Script started on Thu 14 Oct 2021 19:41:01 IST
+bash: alias: NF} $1 | sort -nu | tail -n 1 : not found
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ cat script
+cat: script: No such file or directory
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ cat screen.log
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ cat screen.log[C[C~screen.log/screen.log
+cat: /home/ciaran/screen.log: No such file or directory
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ~/j
+total 480K
+-rw-rw-r-- 1 ciaran ciaran    0 Oct 14 19:41 screen.log
+-rw-rw-r-- 1 ciaran ciaran    0 Oct 14 18:05 rbg_try.log
+-rw-rw-r-- 1 ciaran ciaran  19K Oct 14 17:52 cv_grid_all_ml.py
+-rw-rw-r-- 1 ciaran ciaran 231K Oct 14 00:12 cv_nested_4_4_10k_top_v2_FT16.log
+-rwxrwxr-x 1 ciaran ciaran 1.6K Oct 12 19:49 bash_script.sh
+-rw-rw-r-- 1 ciaran ciaran  14K Oct 12 18:40 feel3.log
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ script screen2.log.screen2.log;screen2.log[1Pscreen2.log/screen2.log
+Script started, file is ./screen2.log
+bash: alias: NF} $1 | sort -nu | tail -n 1 : not found
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ tmux att -t nncat modeltype.txt [4Ptmux att -t nn[1Pls -l -t *.shcat bash_script.sh[1Pipt.sh[3Ptmux att -t nn[Kcat modeltype.txt [4Ptmux att -t nncat modeltype.txt [4Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nnvi modeltype.txt [1@cat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Ptmux att -t nncat modeltype.txt d /home/ciaran/arabadopsis/FT16cv5k[7Pgrep 'home' cv_grid_all_ml.py~/j[Kcd /external_storage/ciaran/machine_learning2tmux att -t nn[Kvi  ~/arabadopsis/FT16cv5k/modeltype.txtcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[26Ptmux att -t nnvi ~/arabadopsis/FT16cv5k/modeltype.txt[25Ptmux att -t nngit add .; git commit -m "moved the site-packages nested_cv.py back to the git repo" ; git push[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctmux att -t nn[Kvi ~/arabadopsis/FT16cv5k/modeltype.txt[25Ptmux att -t nncat ~/arabadopsis/FT16cv5k/modeltype.txtvi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[26Ptmux att -t nncd /external_storage/ciaran/machine_learning2~/j[Kgrep 'home' cv_grid_all_ml.pycd /home/ciaran/arabadopsis/FT16cv5k[18Pat modeltype.txt [4Ptmux att -t nncat modeltype.txt [1Pvi[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nncat modeltype.txt [4Ptmux att -t nncat modeltype.txt [7Ptmux att -t nncat bash_scipt.shript.sh[5Pls -l -t *.shtmux att -t nncat modeltype.txt [4Ptmux att -t nn[Ktmux att -t nncat modeltype.txt [4Ptmux att -t nn[1Pls -l -t *.shcat bash_script.sh[1Pipt.sh[3Ptmux att -t nn[Kcat modeltype.txt [4Ptmux att -t nncat modeltype.txt [4Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nnvi modeltype.txt [1@cat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Ptmux att -t nncat modeltype.txt [1Pvi[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nncat modeltype.txt [4Ptmux att -t nncat modeltype.txt [7Ptmux att -t nncat bash_scipt.shript.sh[5Pls -l -t *.shtmux att -t nncat modeltype.txt [4Ptmux att -t nn[Ktmux att -t nncat modeltype.txt [4Ptmux att -t nn[1Pls -l -t *.shcat bash_script.sh[1Pipt.shript.sh[5Pls -l -t *.shtmux att -t nncat modeltype.txt [4Ptmux att -t nn[K#python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw   t
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ op FT16cv5k 10006[1@#
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ vi cv_grid_all_ml.py
+[?1049h[?1h=[1;44r[34l[34h[?25h[23m[24m[0m[H[J[?25l[44;1H"cv_grid_all_ml.py" 313L, 18665C[1;1H[34m#Warning : best model selected by NMAE and R2 might not be the same
+#performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
+#source ~/venv/bin/activate #in python 3.5.2
+#print a log to a .txt file!
+#model = pickle.load(open('FILEPATH', 'rb')) 
+#dependencies = {'coeff_determination':coeff_determination}
+#model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
+#
+
+#import tensorflow
+#import numpy as np; import scipy #need to do this before path insert
+#import sys
+#sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
+#import dill as pickle
+#sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
+#from nested_cv import NestedCV
+#with open('NCV_NN.pkl', 'rb') as f:
+#     red = pickle.load(f)[0m
+[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)
+[35mimport[0m sys
+sys.path.insert([31m1[0m, [31m'/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv'[0m)
+num = sys.argv[[31m1[0m] [34m#script number for saving out[0m
+spacer = [36mstr[0m(sys.argv[[31m2[0m]) [34m#nothing rn[0m
+data = [36mstr[0m(sys.argv[[31m3[0m]) [34m#needs to be same size as set_size[0m
+snps = [36mstr[0m(sys.argv[[31m4[0m]) [34m#top or shuf[0m
+phenotype = [36mstr[0m(sys.argv[[31m5[0m]) [34m#make a directory for the results[0m
+set_size = [36mint[0m(sys.argv[[31m6[0m]) [34m#how many SNPs[0m
+
+[35mfrom[0m nested_cv [35mimport[0m NestedCV
+[35mimport[0m statistics
+[35mimport[0m numpy [33mas[0m np
+[35mimport[0m sklearn
+[35mimport[0m seaborn [33mas[0m sns
+[35mfrom[0m sklearn [35mimport[0m preprocessing
+[35mfrom[0m sklearn.pipeline [35mimport[0m make_pipeline, Pipeline
+[35mfrom[0m sklearn.preprocessing [35mimport[0m StandardScaler
+[35mimport[0m datetime
+[35mimport[0m time
+[35mfrom[0m statistics [35mimport[0m mean
+[35mimport[0m matplotlib.pyplot [33mas[0m plt
+[35mfrom[0m matplotlib [35mimport[0m style
+[35mfrom[0m sklearn.svm [35mimport[0m LinearSVR
+[35mfrom[0m sklearn.svm [35mimport[0m SVR[44;150H1,1[11CTop[1;1H[34h[?25h[?25l[44;1H[1m-- INSERT --[0m[44;13H[K[44;150H1,1[11CTop[1;1H[34h[?25h[?25li[34m#Warning : best model selected by NMAE and R2 might not be the same[0m[44;152H2[1;2H[34h[?25h[?25l[34m#Warning : best model selected by NMAE and R2 might not be the same[0m[1;68H[K[44;152H1[1;1H[34h[?25h[?25l[44;150H2[2;1H[34h[?25h[?25l[44;150H3[3;1H[34h[?25h[?25l[44;150H4[4;1H[34h[?25h[?25l[44;150H5[5;1H[34h[?25h[?25l[44;150H6[6;1H[34h[?25h[?25l[44;150H7[7;1H[34h[?25h[?25l[44;150H8[8;1H[34h[?25h[?25l[44;150H9[9;1H[34h[?25h[?25l[44;150H10,1[10;1H[34h[?25h[?25l[44;151H1[11;1H[34h[?25h[?25l[44;151H2[12;1H[34h[?25h[?25l[44;151H3[13;1H[34h[?25h[?25l[44;151H4[14;1H[34h[?25h[?25l[44;151H5[15;1H[34h[?25h[?25l[44;151H6[16;1H[34h[?25h[?25l[44;151H7[17;1H[34h[?25h[?25l[44;151H8[18;1H[34h[?25h[?25l[44;151H9[19;1H[34h[?25h[?25l[44;150H20[20;1H[34h[?25h[?25l[44;151H1[21;1H[34h[?25h[?25l[44;151H2[22;1H[34h[?25h[?25l[44;151H3[23;1H[34h[?25h[?25l[44;151H4[24;1H[34h[?25h[?25l[44;151H3[23;1H[34h[?25h[?25l[44;151H2[22;1H[34h[?25h[?25l[44;151H1[21;1H[34h[?25h[?25l[44;151H0[20;1H[34h[?25h[?25l[44;150H19[19;1H[34h[?25h[?25liprint([31m"Please remember to set the right set size in the nested_cv code"[0m)[44;153H2[19;2H[34h[?25h[?25l[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)[19;73H[K[44;153H1[19;1H[34h[?25h[?25l[20;43r[20;1H[L[1;44r[19;1H[K[20;1H[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)[44;150H[K[44;150H20,1[10CTop[20;1H[34h[?25h[?25l[21;43r[21;1H[L[1;44r[20;1H[K[21;1H[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)[44;150H[K[44;150H21,1[10CTop[21;1H[34h[?25h[?25l[22;43r[22;1H[L[1;44r[21;1H[K[22;1H[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)[44;150H[K[44;150H22,1[10CTop[22;1H[34h[?25h[?25l[44;151H1[21;1H[34h[?25h[?25l[44;151H0[20;1H[34h[?25h[?25l[44;150H19[19;1H[34h[?25h[?25lcv_grid_all_ml.py[44;154H8[19;18H[34h[?25h[?25l[19;17H[K[44;154H7[19;17H[34h[?25h[?25l[19;16H[K[44;154H6[19;16H[34h[?25h[?25l[19;15H[K[44;154H5[19;15H[34h[?25h[?25l[19;14H[K[44;154H4[19;14H[34h[?25h[?25l[19;13H[K[44;154H3[19;13H[34h[?25h[?25l[19;12H[K[44;154H2[19;12H[34h[?25h[?25l[19;11H[K[44;154H1[19;11H[34h[?25h[?25l[19;10H[K[44;154H0[19;10H[34h[?25h[?25l[19;9H[K[44;153H9 [19;9H[34h[?25h[?25l[19;8H[K[44;153H8[19;8H[34h[?25h[?25l[19;7H[K[44;153H7[19;7H[34h[?25h[?25l[19;6H[K[44;153H6[19;6H[34h[?25h[?25l[19;5H[K[44;153H5[19;5H[34h[?25h[?25l[19;4H[K[44;153H4[19;4H[34h[?25h[?25l[19;3H[K[44;153H3[19;3H[34h[?25h[?25l[19;2H[K[44;153H2[19;2H[34h[?25h[?25l[19;1H[K[44;153H1[19;1H[34h[?25h[?25l[20;43r[20;1H[L[1;44r[19;1HstdoutOrigin=sys.stdout
+sys.stdout = [36mopen[0m([31m"log.txt"[0m, [31m"w"[0m)[44;150H[K[44;150H20,34[9CTop[20;18H[46m([14C)[34h[?25h[0m[44;1H[K[20;33H[?25l[44;150H20,33[9CTop[20;33H[34h[?25h[?25l[44;150H[K[44;1H:[34h[?25hx[?25l[34h[?25h[?25l"cv_grid_all_ml.py" 317L, 18726C written
+[?1l>[34h[?25h[?1049l(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ vi cv_grid_all_ml.py[2P#op FT16cv5k 10006python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  ttM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctmux att -t nn[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C#python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  tt
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ #python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  ttM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2P#op FT16cv5k 10006python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  ttM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctmux att -t nn[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat modeltype.txt [4Ptmux att -t nn[1Pls -l -t *.shcat bash_script.sh[1Pipt.sh[3Ptmux att -t nn[Kcat modeltype.txt [4Ptmux att -t nncat modeltype.txt [4Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nnvi modeltype.txt [1@cat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[4Ptmux att -t nncat modeltype.txt d /home/ciaran/arabadopsis/FT16cv5k[7Pgrep 'home' cv_grid_all_ml.py~/j[Kcd /external_storage/ciaran/machine_learning2tmux att -t nn[Kvi  ~/arabadopsis/FT16cv5k/modeltype.txtcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[26Ptmux att -t nnvi ~/arabadopsis/FT16cv5k/modeltype.txt[25Ptmux att -t nngit add .; git commit -m "moved the site-packages nested_cv.py back to the git repo" ; git push[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd -[Kp nested_cv.py /external_storage/ciaran/machine_learning2[5@_shuf[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls -l -t [Kcd /external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py[K[1P cv_grid_all_ml.py~/j[Kgit add . ; git commit -m "got rid of shuf version of cv_grid py file because not needed" ; git push[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~/j[Kv cv_grid_all_ml.pyi cv_grid_all_ml.pycd /external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls -l -t [Kcd /external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py[K[1P cv_grid_all_ml.py~/j[Kgit add . ; git commit -m "got rid of shuf version of cv_grid py file because not needed" ; git push[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~/j[Kv cv_grid_all_ml.pyi cv_grid_all_ml.pycd /external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls -l -t [Kcp nested_cv_shuf.py /external_storage/ciaran/machine_learning2[5P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd -[Kgit add .; git commit -m "moved the site-packages nested_cv.py back to the git repo" ; git push[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctmux att -t nn[Kvi ~/arabadopsis/FT16cv5k/modeltype.txt[25Ptmux att -t nncat ~/arabadopsis/FT16cv5k/modeltype.txtvi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[26Ptmux att -t nncd /external_storage/ciaran/machine_learning2~/j[Kgrep 'home' cv_grid_all_ml.pycd /home/ciaran/arabadopsis/FT16cv5k[18Pat modeltype.txt [4Ptmux att -t nncat modeltype.txt [1Pvi[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[3Ptmux att -t nnvi modeltype.txt [3Ptmux att -t nncat modeltype.txt [4Ptmux att -t nncat modeltype.txt [7Ptmux att -t nncat bash_scipt.shript.sh[5Pls -l -t *.shtmux att -t nncat modeltype.txt [4Ptmux att -t nn#python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  ttM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cop FT16cv5k 10006[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py#python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  ttM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cpython cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw to p FT16cv5k 10006
+Traceback (most recent call last):
+  File "cv_grid_all_ml.py", line 19, in <module>
+    stdoutOrigin=sys.stdout 
+NameError: name 'sys' is not defined
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw topp FT16cv5k 10006M[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C#python cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw  t[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?1049h[?1h=[1;44r[34l[34h[?25h[23m[24m[0m[H[J[?25l[44;1H"cv_grid_all_ml.py" 317L, 18726C[1;1H[34m#Warning : best model selected by NMAE and R2 might not be the same
+#performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
+#source ~/venv/bin/activate #in python 3.5.2
+#print a log to a .txt file!
+#model = pickle.load(open('FILEPATH', 'rb')) 
+#dependencies = {'coeff_determination':coeff_determination}
+#model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
+#
+
+#import tensorflow
+#import numpy as np; import scipy #need to do this before path insert
+#import sys
+#sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
+#import dill as pickle
+#sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
+#from nested_cv import NestedCV
+#with open('NCV_NN.pkl', 'rb') as f:
+#     red = pickle.load(f)[0m
+stdoutOrigin=sys.stdout
+sys.stdout = [36mopen[0m([31m"log.txt"[0m, [31m"w"[0m)
+
+
+[36mprint[0m([31m"Please remember to set the right set size in the nested_cv code"[0m)
+[35mimport[0m sys
+sys.path.insert([31m1[0m, [31m'/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv'[0m)
+num = sys.argv[[31m1[0m] [34m#script number for saving out[0m
+spacer = [36mstr[0m(sys.argv[[31m2[0m]) [34m#nothing rn[0m
+data = [36mstr[0m(sys.argv[[31m3[0m]) [34m#needs to be same size as set_size[0m
+snps = [36mstr[0m(sys.argv[[31m4[0m]) [34m#top or shuf[0m
+phenotype = [36mstr[0m(sys.argv[[31m5[0m]) [34m#make a directory for the results[0m
+set_size = [36mint[0m(sys.argv[[31m6[0m]) [34m#how many SNPs[0m
+
+[35mfrom[0m nested_cv [35mimport[0m NestedCV
+[35mimport[0m statistics
+[35mimport[0m numpy [33mas[0m np
+[35mimport[0m sklearn
+[35mimport[0m seaborn [33mas[0m sns
+[35mfrom[0m sklearn [35mimport[0m preprocessing
+[35mfrom[0m sklearn.pipeline [35mimport[0m make_pipeline, Pipeline
+[35mfrom[0m sklearn.preprocessing [35mimport[0m StandardScaler
+[35mimport[0m datetime
+[35mimport[0m time
+[35mfrom[0m statistics [35mimport[0m mean[44;150H1,1[11CTop[1;1H[34h[?25h[?25l[44;150H2[2;1H[34h[?25h[?25l[44;150H3[3;1H[34h[?25h[?25l[44;150H4[4;1H[34h[?25h[?25l[44;150H5[5;1H[34h[?25h[?25l[44;150H6[6;1H[34h[?25h[?25l[44;150H7[7;1H[34h[?25h[?25l[44;150H8[8;1H[34h[?25h[?25l[44;150H9,0-1[9;1H[34h[?25h[?25l[44;150H10,1 [10;1H[34h[?25h[?25l[44;151H1[11;1H[34h[?25h[?25l[44;151H2[12;1H[34h[?25h[?25l[44;151H3[13;1H[34h[?25h[?25l[44;151H4[14;1H[34h[?25h[?25l[44;151H5[15;1H[34h[?25h[?25l[44;151H6[16;1H[34h[?25h[?25l[44;151H7[17;1H[34h[?25h[?25l[44;151H8[18;1H[34h[?25h[?25l[44;151H9[19;1H[34h[?25h[?25l[44;1H[1m-- INSERT --[0m[44;13H[K[44;150H19,1[10CTop[19;1H[34h[?25h[?25l[20;43r[20;1H[L[1;44r[19;1H[K[20;1HstdoutOrigin=sys.stdout[44;150H[K[44;150H20,1[10CTop[20;1H[34h[?25h[?25listdoutOrigin=sys.stdout[44;153H2[20;2H[34h[?25h[?25lmstdoutOrigin=sys.stdout[44;153H3[20;3H[34h[?25h[?25lpstdoutOrigin=sys.stdout[44;153H4[20;4H[34h[?25h[?25lostdoutOrigin=sys.stdout[44;153H5[20;5H[34h[?25h[?25lrstdoutOrigin=sys.stdout[44;153H6[20;6H[34h[?25h[?25ltstdoutOrigin=sys.stdout[44;153H7[20;7H[34h[?25h[?25l[35mimport[0m stdoutOrigin=sys.stdout[44;153H8[20;8H[34h[?25h[?25lsstdoutOrigin=sys.stdout[44;153H9[20;9H[34h[?25h[?25lystdoutOrigin=sys.stdout[44;153H10[20;10H[34h[?25h[?25lsstdoutOrigin=sys.stdout[44;154H1[20;11H[34h[?25h[?25l[21;43r[21;1H[L[1;44r[20;11H[K[21;1HstdoutOrigin=sys.stdout[44;150H[K[44;150H21,1[10CTop[21;1H[34h[?25h[44;1H[K[21;1H[?25l[44;150H21,1[10CTop[21;1H[34h[?25h[?25l[44;150H[K[44;1H:[34h[?25hx[?25l[34h[?25h[?25l"cv_grid_all_ml.py" 319L, 18738C written
+[?1l>[34h[?25h[?1049l(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ vi cv_grid_all_ml.pypython cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw topp FT16cv5k 10006
+
+Traceback (most recent call last):
+  File "cv_grid_all_ml.py", line 59, in <module>
+    import tensorflow as tf
+ModuleNotFoundError: No module named 'tensorflow'
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ 
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ [A[K[Kb[[K[K^C
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ^C
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ^C
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ^C
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ source ~/venv/bin/activate
+(venv) (base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ source ~/venv/bin/activatepython cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k..raw top FT16cv5k 10006M[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cvi cv_grid_all_ml.py[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cpython cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k..raw top FT16cv5k 10006M[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csource ~/venv/bin/activate[K
+[KM[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kvenv deactivate
+No command 'venv' found, did you mean:
+ Command 'env' from package 'coreutils' (main)
+venv: command not found
+(venv) (base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ deactivate
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ deactivate
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+/home/ciaran/anaconda3/bin/deactivate: 5: /home/ciaran/anaconda3/etc/conda/deactivate.d/deactivate-gxx_linux-64.sh: Syntax error: "(" unexpected
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ source deactivate
+DeprecationWarning: 'source deactivate' is deprecated. Use 'conda deactivate'.
+ciaran@pg3:/external_storage/ciaran/machine_learning2$ source ~/venc[Kv/bin/activate
+(venv) ciaran@pg3:/external_storage/ciaran/machine_learning2$ source ~/venv/bin/activate[9Pdeactivate[7Pdeactivatevenv deactivatesource ~/venv/bin/activatepython cv_grid_all_ml.py 2  nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw topp FT16cv5k 10006
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:516: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:517: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:518: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:519: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:520: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/home/ciaran/venv/local/lib/python3.5/site-packages/sklearn/externals/joblib/__init__.py:15: FutureWarning: sklearn.externals.joblib is deprecated in 0.21 and will be removed in 0.23. Please import this functionality directly from joblib, which can be installed with: pip install joblib. If this warning is raised when loading pickled models, you may need to re-serialize those models with scikit-learn 0.21+.
+  warnings.warn(msg, category=FutureWarning)
+/home/ciaran/venv/local/lib/python3.5/site-packages/sklearn/model_selection/_search.py:281: UserWarning: The total space of parameters 24 is smaller than n_iter=50. Running 24 iterations. For exhaustive searches, use GridSearchCV.
+  % (grid_size, self.n_iter, grid_size), UserWarning)
+^C^C^Z
+[1]+  Stopped                 python cv_grid_all_ml.py 2 nahnah /home/ciaran/completed_big_matrix_binary_new_snps_ids_first_10k.raw top FT16cv5k 10006
+(venv) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ^C
+(venv) ciaran@pg3:/external_storage/ciaran/machine_learning2$ ^C
+(venv) ciaran@pg3:/external_storage/ciaran/machine_learning2$ exit 
+exit
+There are stopped jobs.
+(venv) ciaran@pg3:/external_storage/ciaran/machine_learning2$ exit
+exit
+Script done, file is ./screen2.log
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ script ./screen2.log
+Script started, file is ./screen2.log
+bash: alias: NF} $1 | sort -nu | tail -n 1 : not found
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ exit
+exit
+Script done, file is ./screen2.log
+(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ exit
+exit
+
+Script done on Thu 14 Oct 2021 20:00:21 IST
