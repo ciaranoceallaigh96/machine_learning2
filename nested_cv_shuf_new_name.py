@@ -288,7 +288,7 @@ class NestedCV():
                 '\n{0}/{1} <-- Current outer fold'.format(i+1, self.outer_kfolds))
             X_train_outer, X_test_outer = X[train_index], X[test_index]
             y_train_outer, y_test_outer = y[train_index], y[test_index]
-            outer_train_names, inner_test_names = name_list[train_index], name_list[test_index]
+            outer_train_names, outer_test_names = name_list[train_index], name_list[test_index]
             best_inner_params = {}
             best_inner_score = None
             search_scores = []

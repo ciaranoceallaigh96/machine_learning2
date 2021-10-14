@@ -313,4 +313,3 @@ cnn_model = KerasRegressor(build_fn = conv_model, epochs=100, verbose=0, batch_s
 CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='CNN')
 nn_results('CNN', CNN_NCV)
-'''
