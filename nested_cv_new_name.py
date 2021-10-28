@@ -33,7 +33,6 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
             foo='in'
         if not os.path.exists('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             print("SETTING OFF CUSTOM BASH SCRIPT")
-            sleep(300)
             with open("name_vector_train.txt", 'w') as f:
                 for item in train_names:
                     f.write("%s %s\n" % (item, item))
