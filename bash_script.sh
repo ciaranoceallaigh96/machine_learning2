@@ -1,7 +1,8 @@
 #!/bin/bash
 
-phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
-
+#phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
+phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT10.8424.dup.del'
+pheno='FT10'
 #phenotype file is first argument e.g /home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del
 #cleanup
 #rm test_raw_plink* ; rm train_raw_plink*
@@ -11,7 +12,7 @@ echo "$3"
 #conduct GWAS
 plink2 --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --out nested_cv_gwas_out_"$1"_in_"$2"_"$3" --keep name_vector_train.txt --pheno $phenofile
 echo "red"
-cat header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3".FT16.glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
+cat header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
 echo "blue"
 #clump
 plink1.9 --prune --pheno $phenofile --bfile /home/alexg/hopefully_final/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 1 --clump-p2 1 --clump-r2 0.1 --clump gwas_results_"$1"_in_"$2"_"$3".gsorted --out gwas_results_clumped_"$1"_in_"$2"_"$3"
