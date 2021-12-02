@@ -12,7 +12,7 @@ import time
 import subprocess
 import sys
 
-print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under MIT liscence \n Shuf version")
+print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Shuf version")
 
 set_size = 10006 
 print("Set size set to %s" % set_size)

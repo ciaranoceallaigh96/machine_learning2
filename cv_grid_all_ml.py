@@ -299,9 +299,10 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
-                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1]-1,1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+                model.add(Conv1D(filters=filters, strides=strides, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
         model.add(Flatten())
         model.add(Dense(1, activation='linear'))
