@@ -11,6 +11,8 @@ import os.path
 import time
 import subprocess
 import sys
+import sklearn
+from sklearn import preprocessing
 
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Top version")
 set_size = 10006    
@@ -21,6 +23,9 @@ def load_data(data):
         x = dataset[: , 6:set_size]/2
         y = dataset[: , 5 ]
         y = y.reshape(-1,1)
+        scaler = preprocessing.StandardScaler().fit(y_train)
+        y_train = scaler.transform(y_train)
+        y_test = scaler.transform(y_test)
         #print("Performing split of raw data....")
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
@@ -44,6 +49,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
         while not os.path.exists('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
+        print('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
         new_X_train , new_y_train = load_data('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw') #made from bash_script.sh
         new_X_test , new_y_test  = load_data('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
         return new_X_train, new_X_test, new_y_train, new_y_test
