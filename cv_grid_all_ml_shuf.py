@@ -163,7 +163,7 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
-
+'''
 print("Performing SVM")
 c_param = [1,2]
 gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
@@ -233,7 +233,7 @@ BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='base
 ncv_results('baseline', BASELINE_NCV)
 
 import random
-
+'''
 print("Performing Neural Network")
 param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
 
@@ -249,7 +249,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
 	model = Sequential()
 	for i in range(HP_NUM_HIDDEN_LAYERS):
-		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1]-1,)))
+		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1],)))
 		if rate != 0:
 			model.add(Dropout(rate=rate))
 	model.add(Dense(1, activation='linear'))
@@ -258,16 +258,16 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	return model
 
 
-#regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
-#pipeline_keras = Pipeline([('model', regressor_keras)])
+#######regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
+######pipeline_keras = Pipeline([('model', regressor_keras)])
 nn_model = KerasRegressor(build_fn = build_nn, epochs=100, verbose=0, batch_size=32)
 
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='NN')
-nn_results('NN', NN_NCV)
+#NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+#NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='NN')
+#nn_results('NN', NN_NCV)
 
 print("Performing a convulutional neural network")
 from tensorboard.plugins.hparams import api as hp
@@ -300,7 +300,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         #model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
-                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1]-1,1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+                model.add(Conv1D(filters=filters, strides=strides, activation=activation, input_shape=(x_train.shape[1],1), kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
         model.add(Flatten())
         model.add(Dense(1, activation='linear'))

@@ -1,5 +1,6 @@
 #!/bin/bash
-phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
+#phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT16.8424.80.del'
+phenofile='/home/ciaran/arabadopsis/phenotypes/values_FT10.8424.dup.del'
 echo "liath"
 echo "$1"
 echo "$2"
