@@ -82,10 +82,10 @@ import dill as pickle
 for i in range(1,len(sys.argv)):
 	print(sys.argv[i])
 
-if not os.path.exists('/external_storage/ciaran/arabadopsis/' + phenotype):
-    os.makedirs('/external_storage/ciaran/arabadopsis/' + phenotype)
+if not os.path.exists('/external_storage/ciaran/arabadopsis/' + phenotype+ '/' + snps):
+    os.makedirs('/external_storage/ciaran/arabadopsis/' + phenotype+ '/' + snps)
 
-os.chdir('/external_storage/ciaran/arabadopsis/' + phenotype)
+os.chdir('/external_storage/ciaran/arabadopsis/' + phenotype+ '/' + snps)
 date_object = datetime.datetime.now().replace(second=0,microsecond=0)
 print(date_object)
 

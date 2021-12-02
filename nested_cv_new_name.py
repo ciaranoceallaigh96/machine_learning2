@@ -14,7 +14,7 @@ import sys
 import sklearn
 from sklearn import preprocessing
 
-print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Top version")
+print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Flex version")
 set_size = 10006    
 print("Set size set to %s" % set_size)
 
