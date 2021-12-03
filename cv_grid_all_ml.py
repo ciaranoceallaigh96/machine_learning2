@@ -21,12 +21,11 @@ print("Please remember to set the right set size in the nested_cv code")
 import sys
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
 num = sys.argv[1] #script number for saving out
-spacer = str(sys.argv[2]) #nothing rn
+phenfile = str(sys.argv[2]) #txt file with phenotypes
 data = str(sys.argv[3]) #needs to be same size as set_size
 snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
 set_size = int(sys.argv[6]) #how many SNPs
-
 from nested_cv import NestedCV
 import statistics
 import numpy as np
@@ -68,13 +67,14 @@ from tensorboard.plugins.hparams import api as hp
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
 from tensorboard.plugins.hparams import api as hp
 import random
-if snps == 'shuf' :
-	print("Shuf nestedCV in usage")
-	from nested_cv_shuf import NestedCV
-elif snps == 'top':
-	from nested_cv import NestedCV
-else:
-	print("snnps must be top or shuf")
+
+#if snps == 'shuf' :
+#	print("Shuf nestedCV in usage")
+#	from nested_cv_shuf import NestedCV
+#elif snps == 'top':
+#	from nested_cv import NestedCV
+#else:
+#	print("snnps must be top or shuf")
 	
 
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
@@ -163,6 +163,7 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
+'''
 print("Performing SVM")
 c_param = [1,2]
 gamma_param = [float(x) for x in np.linspace(0.1, 1, 4)]
@@ -230,7 +231,7 @@ print("Performing Baseline")
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(), params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, model_name='baseline')
 ncv_results('baseline', BASELINE_NCV)
-
+'''
 import random
 print("Performing Neural Network")
 param_grid = {'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
