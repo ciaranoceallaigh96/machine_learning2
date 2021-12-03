@@ -27,7 +27,7 @@ echo "purple"
 
 #rm name_vector_train.txt ; rm name_vector_test.txt
 
-if [ "$1" == "shuf" ] 
+if [ "$6" == "shuf" ] 
 then
 
 #choose shuf set
@@ -42,7 +42,7 @@ then
 fi
 
 
-if [ "$1" == "top" ]
+if [ "$6" == "top" ]
 then
         pheno="$4"
         phenofile="$5"
@@ -67,7 +67,7 @@ then
 
 fi
 
-if [ "$1" == "no_clump" ]
+if [ "$6" == "no_clump" ]
 then
         pheno="$4"
         phenofile="$5"

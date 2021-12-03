@@ -32,7 +32,7 @@ def load_data(data, set_size):
         return x, y #x_train, y_train, x_test, y_test
 
 
-def bash_script(train_index, test_index, train_names, test_names, outer_count, inner_count, phenfile, set_size, outer=False):
+def bash_script(train_index, test_index, train_names, test_names, outer_count, inner_count, phenfile, set_size, snps, outer=False):
         if outer==True:
             foo='out'
         else:
@@ -46,7 +46,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
                 for item in test_names:
                     f.write("%s %s\n" % (item, item))        
 
-            subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size)]) 
+            subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)]) 
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
         while not os.path.exists('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
@@ -224,7 +224,7 @@ class NestedCV():
 
                     return self._transform_score_format(inner_grid_score), param_dict
 
-    def fit(self, X, y, name_list, model_name, phenfile, set_size):
+    def fit(self, X, y, name_list, model_name, phenfile, set_size, snps):
         '''A method to fit nested cross-validation 
         Parameters
         ----------
@@ -265,6 +265,7 @@ class NestedCV():
         self.name_list = name_list 
         self.phenfile = phenfile
         self.set_size = set_size
+        self.snps = snps
         # If Pandas dataframe or series, convert to array
         if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
             X = X.to_numpy()
@@ -304,7 +305,7 @@ class NestedCV():
                 #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
                 inner_count += 1 ; print("INNER COUNT NO. ", str(inner_count))
                 inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
-                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names, outer_count, inner_count, phenfile, set_size, outer=False)
+                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names, outer_count, inner_count, phenfile, set_size, snps, outer=False)
                 if model_name == 'CNN':
                     X_train_inner = X_train_inner.reshape(X_train_inner.shape[0],X_train_inner.shape[1],1)
                     X_test_inner = X_test_inner.reshape(X_test_inner.shape[0],X_test_inner.shape[1],1)
@@ -327,7 +328,7 @@ class NestedCV():
             print("OUTER COUNT NO. ", str(outer_count))
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
-            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, outer_test_names, outer_count, inner_count, phenfile, set_size, outer=True)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, outer_test_names, outer_count, inner_count, phenfile, set_size, snps, outer=True)
             outer_count += 1
             if model_name == 'CNN':
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)

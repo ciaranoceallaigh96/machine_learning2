@@ -178,13 +178,13 @@ print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
 SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='SVM')
+SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='SVM')
 
 
 ncv_results('SVM', SVM_NCV)	
 print("Performing RBG")
 RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(), params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='RBG')
+RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RBG')
 ncv_results('RBG', RBG_NCV)
 
 print("Performing LASSO")
@@ -193,11 +193,11 @@ alpha_dict = {'alpha':alpha}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
 LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-LASS_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='LASS')
+LASS_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='LASS')
 ncv_results('LASS', LASS_NCV)
 print("Performing Ridge")
 RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='RIDGE')
+RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RIDGE')
 ncv_results('RIDGE', RIDGE_NCV)
 print("Performing Random Forests")
 n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
@@ -224,12 +224,12 @@ rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 
 RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='RF')
+RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RF')
 ncv_results('RF', RF_NCV)
 #base_grid = {"fit_intercept":["True"]}
 print("Performing Baseline")
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(), params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='baseline')
+BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='baseline')
 ncv_results('baseline', BASELINE_NCV)
 '''
 import random
@@ -268,7 +268,7 @@ from sklearn.model_selection import cross_val_score
 
 
 NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='NN')
+NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='NN')
 nn_results('NN', NN_NCV)
 
 print("Performing a convulutional neural network")
@@ -314,5 +314,5 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
 					      
 cnn_model = KerasRegressor(build_fn = conv_model, epochs=100, verbose=0, batch_size=32)
 CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, model_name='CNN')
+CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='CNN')
 nn_results('CNN', CNN_NCV)
