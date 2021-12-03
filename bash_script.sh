@@ -31,6 +31,9 @@ if [ "$6" == "shuf" ]
 then
 
 #choose shuf set
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
 	shuf /external_storage/ciaran/greml/indep_snps_full_dataset_new_snp_ids.prune.in | head -n $5 > shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt
 
 	plink1.9 --pheno $phenofile --prune --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids   --keep name_vector_train.txt --extract shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_shuf_"$1"_in_"$2"_"$3"
@@ -44,8 +47,9 @@ fi
 
 if [ "$6" == "top" ]
 then
-        pheno="$4"
-        phenofile="$5"
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
         #sed "s/'/ /g" name_vector_train.txt | awk '{print $2, $3}' > name_vector_train2.txt; mv name_vector_train2.txt name_vector_train.txt
         #sed "s/'/ /g" name_vector_test.txt | awk '{print $2, $3}' > name_vector_test2.txt; mv name_vector_test2.txt name_vector_test.txt
 #choose top set
@@ -69,8 +73,9 @@ fi
 
 if [ "$6" == "no_clump" ]
 then
-        pheno="$4"
-        phenofile="$5"
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
         #grep -v -n "' '" name_vector_train.txt | cut -d ':' -f 1 > line_file.txt #which lines have been spread over two lines
         #grep -v -n "' '" name_vector_test.txt | cut -d ':' -f 1 > line_file.txt2
 	#for i in $(awk 'NR % 2 == 1' line_file.txt); do sed "$i N;s/\n//" name_vector_train.txt > name_vector_train2.txt; mv name_vector_train2.txt name_vector_train.txt ; done #for the first line in every pair replace the Nth newline with nothing ###weird bug of saving out saves long names over two lines #bug fix 
