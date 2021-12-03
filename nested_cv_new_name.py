@@ -46,7 +46,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
                 for item in test_names:
                     f.write("%s %s\n" % (item, item))        
 
-            subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, phenfile, set_size]) 
+            subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size)]) 
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
         while not os.path.exists('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)

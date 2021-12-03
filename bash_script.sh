@@ -51,7 +51,7 @@ then
 #choose top set
         plink2 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3" --allow-no-sex --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --pheno $phenofile
 
-        cat header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
+        cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
 
         #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
         #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
@@ -80,7 +80,7 @@ then
 #choose top set
         plink2 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3" --allow-no-sex --glm --mac 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids  --keep name_vector_train.txt --pheno $phenofile
 
-        cat header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
+        cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.linear | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted #formatting
 
         #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
         #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
