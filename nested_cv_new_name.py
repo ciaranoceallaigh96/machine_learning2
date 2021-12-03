@@ -37,7 +37,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
             foo='out'
         else:
             foo='in'
-        if not os.path.exists('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
+        if not os.path.exists('train_raw_plink_' + str(snps) + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             print("SETTING OFF CUSTOM BASH SCRIPT")
             with open("name_vector_train.txt", 'w') as f:
                 for item in train_names:
@@ -48,11 +48,11 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
 
             subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)]) 
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
-        while not os.path.exists('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
+        while not os.path.exists('test_raw_plink_' +  str(snps) +  str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
-        print('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
-        new_X_train , new_y_train = load_data('train_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size) #made from bash_script.sh
-        new_X_test , new_y_test  = load_data('test_raw_plink_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size)
+        print('test_raw_plink_' +  str(snps) + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
+        new_X_train , new_y_train = load_data('train_raw_plink_' +  str(snps) + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size) #made from bash_script.sh
+        new_X_test , new_y_test  = load_data('test_raw_plink_' +  str(snps) + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size)
         return new_X_train, new_X_test, new_y_train, new_y_test
 
 
