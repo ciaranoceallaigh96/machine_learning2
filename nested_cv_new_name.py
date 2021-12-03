@@ -25,9 +25,6 @@ def load_data(data, set_size):
         x = dataset[: , 6:(set_size+6)]/2
         y = dataset[: , 5 ]
         y = y.reshape(-1,1)
-        scaler = preprocessing.StandardScaler().fit(y_train)
-        y_train = scaler.transform(y_train)
-        y_test = scaler.transform(y_test)
         #print("Performing split of raw data....")
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
@@ -55,6 +52,9 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         print('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
         new_X_train , new_y_train = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size) #made from bash_script.sh
         new_X_test , new_y_test  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size)
+        scaler = preprocessing.StandardScaler().fit(new_y_train)
+        new_y_train = scaler.transform(new_y_train)
+        new_y_test = scaler.transform(new_y_test)
         return new_X_train, new_X_test, new_y_train, new_y_test
 
 
