@@ -1,3 +1,4 @@
+#takes plink .profile file as first input and cv number as second 
 import sys
 import numpy as np
 print(sys.argv[1])
