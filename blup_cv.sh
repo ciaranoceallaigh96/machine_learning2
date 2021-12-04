@@ -34,5 +34,5 @@ plink1.9 \
 --pheno /home/ciaran/arabadopsis/phenotypes/values_"$pheno" \
 --score /external_storage/ciaran/greml/"$pheno"_gblup_snp_FX_train_only_grm_cv_"$i".snp.blp 1 2 3 \
 ; \
-/external_storage/ciaran/machine_learning2/r2_score.py /external_storage/ciaran/greml/"$pheno"_gblup_train_only_grm_cv_"$i"_test.profile "$i" \
+python /external_storage/ciaran/machine_learning2/r2_score.py /external_storage/ciaran/greml/"$pheno"_gblup_train_only_grm_cv_"$i"_test.profile "$i" \
 ; done

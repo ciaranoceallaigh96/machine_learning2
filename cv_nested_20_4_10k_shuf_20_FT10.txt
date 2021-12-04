@@ -41980,4 +41980,76 @@ Total params: 20,011
 Trainable params: 20,011
 Non-trainable params: 0
 _________________________________________________________________
-Sum
+Summary  None
+Red
+-0.06092578267231463
+Typer KerasRegressor
+Hello world
+{'kernel_initializer': 'glorot_uniform', 'HP_NUM_HIDDEN_LAYERS': 3, 'HP_OPTIMIZER': 'SGD', 'pool': 1, 'kernel': 1, 'learning_rate': 0.01, 'filters': 1, 'units': 200, 'rate': 0.0, 'epochs': 100, 'HP_L2_REG': 0.2, 'strides': 1, 'HP_L1_REG': 0.1, 'activation': 'tanh'}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 10000, 1)          2         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 10000, 1)          0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 10000, 1)          2         
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 10000, 1)          0         
+_________________________________________________________________
+conv1d_2 (Conv1D)            (None, 10000, 1)          2         
+_________________________________________________________________
+max_pooling1d_2 (MaxPooling1 (None, 10000, 1)          0         
+_________________________________________________________________
+flatten (Flatten)            (None, 10000)             0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 10001     
+=================================================================
+Total params: 10,007
+Trainable params: 10,007
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-0.061746096212671686
+Typer KerasRegressor
+Hello world
+{'kernel_initializer': 'glorot_uniform', 'HP_NUM_HIDDEN_LAYERS': 3, 'HP_OPTIMIZER': 'SGD', 'pool': 1, 'kernel': 1, 'learning_rate': 0.001, 'filters': 2, 'units': 200, 'rate': 0.0, 'epochs': 200, 'HP_L2_REG': 0.2, 'strides': 1, 'HP_L1_REG': 0.1, 'activation': 'tanh'}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv1d (Conv1D)              (None, 10000, 2)          4         
+_________________________________________________________________
+max_pooling1d (MaxPooling1D) (None, 10000, 2)          0         
+_________________________________________________________________
+conv1d_1 (Conv1D)            (None, 10000, 2)          6         
+_________________________________________________________________
+max_pooling1d_1 (MaxPooling1 (None, 10000, 2)          0         
+_________________________________________________________________
+conv1d_2 (Conv1D)            (None, 10000, 2)          6         
+_________________________________________________________________
+max_pooling1d_2 (MaxPooling1 (None, 10000, 2)          0         
+_________________________________________________________________
+flatten (Flatten)            (None, 20000)             0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 20001     
+=================================================================
+Total params: 20,017
+Trainable params: 20,017
+Non-trainable params: 0
+_________________________________________________________________
+Summary  None
+Red
+-0.0613870165625654
+Typer KerasRegressor
+Hello world
+{'kernel_initializer': 'glorot_uniform', 'HP_NUM_HIDDEN_LAYERS': 3, 'HP_OPTIMIZER': 'SGD', 'pool': 1, 'kernel': 1, 'learning_rate': 0.01, 'filters': 1, 'units': 200, 'rate': 0.0, 'epochs': 200, 'HP_L2_REG': 0.2, 'strides': 1, 'HP_L1_REG': 0.1, 'activation': 'tanh'}
+Blue
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=========================
