@@ -1,4 +1,5 @@
 #takes plink .profile file as first input and cv number as second 
+#should be the same result as a linear rgression between score and prediction 
 import sys
 import numpy as np
 print(sys.argv[1])
