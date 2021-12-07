@@ -2,8 +2,8 @@
 pheno=$1 #eg FT10 or FT16
 snps=$2 #top or shuf
 for i in {1..4} ; do \
-cut -d ' ' -f 1-2 train_raw_plink_"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/train_ids.txt ; \
-cut -d ' ' -f 1-2 test_raw_plink_"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
+cut -d ' ' -f 1-2 train_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/train_ids.txt ; \
+cut -d ' ' -f 1-2 test_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
 ; \
 /external_storage/eoin/GCTA_manual_install/gcta64 \
 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids \
