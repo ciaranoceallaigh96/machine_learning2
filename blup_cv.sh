@@ -1,3 +1,5 @@
+#Uses SNP set from nested_grid search (top or shuf)
+#
 #WARNING YOU MIGHT NEED TO CHNAGE "$snps"10ksnps_"$i"_in_4_out.txt to "$snps"10ksnps_"$i"_in_4_out.txt
 pheno=$1 #eg FT10 or FT16
 snps=$2 #top or shuf

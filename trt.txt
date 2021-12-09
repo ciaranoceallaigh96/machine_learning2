@@ -1,0 +1,4251 @@
+Red
+0.1108438326082587
+Typer KerasRegressor
+--
+Red
+0.18011355911490168
+Typer KerasRegressor
+--
+Red
+0.3263072895523971
+Typer KerasRegressor
+--
+Red
+0.00400326872415202
+Typer KerasRegressor
+--
+Red
+0.21472383724929944
+Typer KerasRegressor
+--
+Red
+0.2560699670936729
+Typer KerasRegressor
+--
+Red
+0.2822061721686564
+Typer KerasRegressor
+--
+Red
+-0.0068385579534602225
+Typer KerasRegressor
+--
+Red
+0.26538469537135523
+Typer KerasRegressor
+--
+Red
+-0.015298338545828738
+Typer KerasRegressor
+--
+Red
+-0.014713477905964334
+Typer KerasRegressor
+--
+Red
+0.21445803929118312
+Typer KerasRegressor
+--
+Red
+0.3550196244995949
+Typer KerasRegressor
+--
+Red
+-0.01613292831527935
+Typer KerasRegressor
+--
+Red
+-0.013587033741743193
+Typer KerasRegressor
+--
+Red
+0.1541399862553351
+Typer KerasRegressor
+--
+Red
+-0.014284939907110994
+Typer KerasRegressor
+--
+Red
+-0.014697625324838093
+Typer KerasRegressor
+--
+Red
+0.1686330030172073
+Typer KerasRegressor
+--
+Red
+0.015043778418374454
+Typer KerasRegressor
+--
+Red
+-0.014017046518524756
+Typer KerasRegressor
+--
+Red
+-0.010093841584064345
+Typer KerasRegressor
+--
+Red
+-0.027368740821952287
+Typer KerasRegressor
+--
+Red
+0.25343127080731664
+Typer KerasRegressor
+--
+Red
+-3.815639111337532e-05
+Typer KerasRegressor
+--
+Red
+0.24773463864083678
+Typer KerasRegressor
+--
+Red
+0.028317438134855544
+Typer KerasRegressor
+--
+Red
+0.22314036041997054
+Typer KerasRegressor
+--
+Red
+-0.11784298590362008
+Typer KerasRegressor
+--
+Red
+-0.011312302122835405
+Typer KerasRegressor
+--
+Red
+0.05929835467040845
+Typer KerasRegressor
+--
+Red
+-0.27416139243997817
+Typer KerasRegressor
+--
+Red
+0.006491393511026677
+Typer KerasRegressor
+--
+Red
+0.38120578511366554
+Typer KerasRegressor
+--
+Red
+-0.0005216190574817148
+Typer KerasRegressor
+--
+Red
+0.32741423761242094
+Typer KerasRegressor
+--
+Red
+-0.010145566832163277
+Typer KerasRegressor
+--
+Red
+-0.021071334485500914
+Typer KerasRegressor
+--
+Red
+0.28973284968058166
+Typer KerasRegressor
+--
+Red
+0.02342292285077696
+Typer KerasRegressor
+--
+Red
+0.16452622507417236
+Typer KerasRegressor
+--
+Red
+0.009150821677662124
+Typer KerasRegressor
+--
+Red
+0.28329481183025085
+Typer KerasRegressor
+--
+Red
+0.2218516957865595
+Typer KerasRegressor
+--
+Red
+0.21708969397695932
+Typer KerasRegressor
+--
+Red
+0.19409713768214942
+Typer KerasRegressor
+--
+Red
+0.017428149308612584
+Typer KerasRegressor
+--
+Red
+-0.015964887995561172
+Typer KerasRegressor
+--
+Red
+0.30029182417554345
+Typer KerasRegressor
+--
+Red
+0.024940619326338065
+Typer KerasRegressor
+--
+Red
+0.033791930443905493
+Typer KerasRegressor
+--
+Red
+0.24241657368868796
+Typer KerasRegressor
+--
+Red
+-0.01550586272135801
+Typer KerasRegressor
+--
+Red
+0.039363860849942145
+Typer KerasRegressor
+--
+Red
+0.30243195198104356
+Typer KerasRegressor
+--
+Red
+0.3408260893020514
+Typer KerasRegressor
+--
+Red
+-0.015228427993926319
+Typer KerasRegressor
+--
+Red
+0.20482010223544145
+Typer KerasRegressor
+--
+Red
+-0.011641069904542167
+Typer KerasRegressor
+--
+Red
+0.016014889340530636
+Typer KerasRegressor
+--
+Red
+0.18776769796336878
+Typer KerasRegressor
+--
+Red
+-0.015092117140529382
+Typer KerasRegressor
+--
+Red
+0.07759156890723673
+Typer KerasRegressor
+--
+Red
+0.12301395894033107
+Typer KerasRegressor
+--
+Red
+-0.016773400178729636
+Typer KerasRegressor
+--
+Red
+-0.10728788070123252
+Typer KerasRegressor
+--
+Red
+-0.0160688355121561
+Typer KerasRegressor
+--
+Red
+-0.014591552514864103
+Typer KerasRegressor
+--
+Red
+0.17703394573887876
+Typer KerasRegressor
+--
+Red
+0.00529906004606584
+Typer KerasRegressor
+--
+Red
+0.01123675624992726
+Typer KerasRegressor
+--
+Red
+-0.022731994119242538
+Typer KerasRegressor
+--
+Red
+0.2894356815129989
+Typer KerasRegressor
+--
+Red
+-0.011197017585257596
+Typer KerasRegressor
+--
+Red
+0.3370598207858949
+Typer KerasRegressor
+--
+Red
+-0.015412690952215424
+Typer KerasRegressor
+--
+Red
+-0.1272938293129111
+Typer KerasRegressor
+--
+Red
+-0.01742998489036207
+Typer KerasRegressor
+--
+Red
+0.3891642004007516
+Typer KerasRegressor
+--
+Red
+0.1682676678945133
+Typer KerasRegressor
+--
+Red
+-0.021419276866997183
+Typer KerasRegressor
+--
+Red
+0.024711789279762475
+Typer KerasRegressor
+--
+Red
+-0.022223549039268153
+Typer KerasRegressor
+--
+Red
+0.05740315929039852
+Typer KerasRegressor
+--
+Red
+0.3306684696958885
+Typer KerasRegressor
+--
+Red
+-0.000594059698511451
+Typer KerasRegressor
+--
+Red
+0.29524502553274823
+Typer KerasRegressor
+--
+Red
+-0.01608676109408602
+Typer KerasRegressor
+--
+Red
+0.07698919054185394
+Typer KerasRegressor
+--
+Red
+-0.0087059546753816
+Typer KerasRegressor
+--
+Red
+0.21192569442136533
+Typer KerasRegressor
+--
+Red
+0.1498589439884792
+Typer KerasRegressor
+--
+Red
+0.17548550224419368
+Typer KerasRegressor
+--
+Red
+0.2565472657712051
+Typer KerasRegressor
+--
+Red
+-0.014807068484710584
+Typer KerasRegressor
+--
+Red
+-0.019560858834425376
+Typer KerasRegressor
+--
+Red
+0.0005297717852488226
+Typer KerasRegressor
+--
+Red
+-0.014336424804207715
+Typer KerasRegressor
+--
+Red
+0.22507258141940234
+Typer KerasRegressor
+--
+Red
+-0.01282009180837762
+Typer KerasRegressor
+--
+Red
+-0.01871835056462756
+Typer KerasRegressor
+--
+Red
+0.3737107495263178
+Typer KerasRegressor
+--
+Red
+-0.02087862438436039
+Typer KerasRegressor
+--
+Red
+-0.020435210165260953
+Typer KerasRegressor
+--
+Red
+-0.019183251485927144
+Typer KerasRegressor
+--
+Red
+-0.05759313558532875
+Typer KerasRegressor
+--
+Red
+-0.017980150027618214
+Typer KerasRegressor
+--
+Red
+-0.013950817091252787
+Typer KerasRegressor
+--
+Red
+0.4476819168360143
+Typer KerasRegressor
+--
+Red
+-0.01878689810773082
+Typer KerasRegressor
+--
+Red
+0.4333773803057066
+Typer KerasRegressor
+--
+Red
+0.0035452112761585886
+Typer KerasRegressor
+--
+Red
+0.31706594838149793
+Typer KerasRegressor
+--
+Red
+-0.01589605086461776
+Typer KerasRegressor
+--
+Red
+-0.03303902591185337
+Typer KerasRegressor
+--
+Red
+-0.019839728516525268
+Typer KerasRegressor
+--
+Red
+-0.02001451533636378
+Typer KerasRegressor
+--
+Red
+-0.04080326843670812
+Typer KerasRegressor
+--
+Red
+0.470832313327577
+Typer KerasRegressor
+--
+Red
+-0.013713116252623836
+Typer KerasRegressor
+--
+Red
+0.4712503407811832
+Typer KerasRegressor
+--
+Red
+-0.018118769555881764
+Typer KerasRegressor
+--
+Red
+0.11890890649527408
+Typer KerasRegressor
+--
+Red
+-0.035586642068221375
+Typer KerasRegressor
+--
+Red
+-0.019169956439941016
+Typer KerasRegressor
+--
+Red
+0.04781775531359855
+Typer KerasRegressor
+--
+Red
+-0.002043136888396857
+Typer KerasRegressor
+--
+Red
+-0.019121441108267634
+Typer KerasRegressor
+--
+Red
+0.35932228549680656
+Typer KerasRegressor
+--
+Red
+0.37901269921117087
+Typer KerasRegressor
+--
+Red
+0.44045072310499456
+Typer KerasRegressor
+--
+Red
+0.38864773018022947
+Typer KerasRegressor
+--
+Red
+0.005958840285095968
+Typer KerasRegressor
+--
+Red
+-0.008555138727309064
+Typer KerasRegressor
+--
+Red
+-0.024846501471400995
+Typer KerasRegressor
+--
+Red
+0.16807567845213045
+Typer KerasRegressor
+--
+Red
+0.3817594632266089
+Typer KerasRegressor
+--
+Red
+-0.0001239361247067361
+Typer KerasRegressor
+--
+Red
+0.01773864059229069
+Typer KerasRegressor
+--
+Red
+0.43864080725424304
+Typer KerasRegressor
+--
+Red
+0.46312369960127664
+Typer KerasRegressor
+--
+Red
+0.23634030479673596
+Typer KerasRegressor
+--
+Red
+0.4597424376237005
+Typer KerasRegressor
+--
+Red
+0.27555103470757736
+Typer KerasRegressor
+--
+Red
+-0.008918036419055086
+Typer KerasRegressor
+--
+Red
+0.3765349228580901
+Typer KerasRegressor
+--
+Red
+0.004444310237603388
+Typer KerasRegressor
+--
+Red
+0.028310255765227832
+Typer KerasRegressor
+--
+Red
+0.40821111577762204
+Typer KerasRegressor
+--
+Red
+0.42024547669518564
+Typer KerasRegressor
+--
+Red
+0.14172615792867338
+Typer KerasRegressor
+--
+Red
+0.01904248110505291
+Typer KerasRegressor
+--
+Red
+0.0025555790895079866
+Typer KerasRegressor
+--
+Red
+0.002580537573103725
+Typer KerasRegressor
+--
+Red
+0.442299000636282
+Typer KerasRegressor
+--
+Red
+0.043674302569751466
+Typer KerasRegressor
+--
+Red
+-0.017597800426026433
+Typer KerasRegressor
+--
+Red
+0.2621441419563282
+Typer KerasRegressor
+--
+Red
+0.4270018401762281
+Typer KerasRegressor
+--
+Red
+-0.007829699009915148
+Typer KerasRegressor
+--
+Red
+0.021875136783111482
+Typer KerasRegressor
+--
+Red
+0.004395553393997664
+Typer KerasRegressor
+--
+Red
+-0.17244874400336374
+Typer KerasRegressor
+--
+Red
+0.43821854043864983
+Typer KerasRegressor
+--
+Red
+0.28978696156107686
+Typer KerasRegressor
+--
+Red
+0.2863085359983857
+Typer KerasRegressor
+--
+Red
+-0.06742831537141192
+Typer KerasRegressor
+--
+Red
+0.011016340188060525
+Typer KerasRegressor
+--
+Red
+-0.0522000424761111
+Typer KerasRegressor
+--
+Red
+0.007244289573305918
+Typer KerasRegressor
+--
+Red
+0.5039396809287706
+Typer KerasRegressor
+--
+Red
+-0.019104943920079887
+Typer KerasRegressor
+--
+Red
+-0.019057783244029958
+Typer KerasRegressor
+--
+Red
+-0.009927140521943212
+Typer KerasRegressor
+--
+Red
+0.0029868788694581427
+Typer KerasRegressor
+--
+Red
+-0.0014859339705153296
+Typer KerasRegressor
+--
+Red
+0.4874182792870865
+Typer KerasRegressor
+--
+Red
+-0.00112940693763397
+Typer KerasRegressor
+--
+Red
+0.1264023880333094
+Typer KerasRegressor
+--
+Red
+5.417910964744532e-05
+Typer KerasRegressor
+--
+Red
+-0.02000982328889256
+Typer KerasRegressor
+--
+Red
+0.3141813129262585
+Typer KerasRegressor
+--
+Red
+-0.010923007100842597
+Typer KerasRegressor
+--
+Red
+0.36652214987309084
+Typer KerasRegressor
+--
+Red
+0.3744545474965192
+Typer KerasRegressor
+--
+Red
+0.007051002020379782
+Typer KerasRegressor
+--
+Red
+-0.031973779766477195
+Typer KerasRegressor
+--
+Red
+0.4669386693060612
+Typer KerasRegressor
+--
+Red
+0.3879672841975943
+Typer KerasRegressor
+--
+Red
+-0.02024602852219437
+Typer KerasRegressor
+--
+Red
+-0.0187884196389696
+Typer KerasRegressor
+--
+Red
+-0.047562881600383466
+Typer KerasRegressor
+--
+Red
+-0.019544873463930967
+Typer KerasRegressor
+--
+Red
+0.1769857929045383
+Typer KerasRegressor
+--
+Red
+-0.01822354566791451
+Typer KerasRegressor
+--
+Red
+0.005758045577177517
+Typer KerasRegressor
+--
+Red
+0.04576624959101172
+Typer KerasRegressor
+--
+Red
+-0.018356613781889353
+Typer KerasRegressor
+--
+Red
+0.006837251028934843
+Typer KerasRegressor
+--
+Red
+0.38726058384670814
+Typer KerasRegressor
+--
+Red
+0.34629133699325065
+Typer KerasRegressor
+--
+Red
+0.24558963335032813
+Typer KerasRegressor
+--
+Red
+-0.01455462627786197
+Typer KerasRegressor
+--
+Red
+0.05649196969668491
+Typer KerasRegressor
+--
+Red
+-0.014896173098673637
+Typer KerasRegressor
+--
+Red
+-0.015210078904864144
+Typer KerasRegressor
+--
+Red
+-0.0023662345350188296
+Typer KerasRegressor
+--
+Red
+0.1429071197772639
+Typer KerasRegressor
+--
+Red
+0.032612565868342824
+Typer KerasRegressor
+--
+Red
+-0.014355895869867297
+Typer KerasRegressor
+--
+Red
+-0.009874856433815804
+Typer KerasRegressor
+--
+Red
+-0.010725872946929282
+Typer KerasRegressor
+--
+Red
+-0.018958897206218683
+Typer KerasRegressor
+--
+Red
+0.17176108407014234
+Typer KerasRegressor
+--
+Red
+-0.016644771329663355
+Typer KerasRegressor
+--
+Red
+0.2967877263357068
+Typer KerasRegressor
+--
+Red
+0.4536276606040953
+Typer KerasRegressor
+--
+Red
+-0.010608586175150592
+Typer KerasRegressor
+--
+Red
+0.3191764641383362
+Typer KerasRegressor
+--
+Red
+0.24868024833083469
+Typer KerasRegressor
+--
+Red
+0.21888912948598016
+Typer KerasRegressor
+--
+Red
+0.13151558295207166
+Typer KerasRegressor
+--
+Red
+0.007180487960850912
+Typer KerasRegressor
+--
+Red
+0.0024058002849974836
+Typer KerasRegressor
+--
+Red
+-0.01516421044881433
+Typer KerasRegressor
+--
+Red
+0.029206059319915045
+Typer KerasRegressor
+--
+Red
+-0.01273409094374145
+Typer KerasRegressor
+--
+Red
+-0.012375179853653329
+Typer KerasRegressor
+--
+Red
+-0.014597386189708406
+Typer KerasRegressor
+--
+Red
+0.007649779564524062
+Typer KerasRegressor
+--
+Red
+0.3358532104844363
+Typer KerasRegressor
+--
+Red
+0.004041838348082805
+Typer KerasRegressor
+--
+Red
+0.12640022329369638
+Typer KerasRegressor
+--
+Red
+-0.0388545287929325
+Typer KerasRegressor
+--
+Red
+-0.0010007128834723655
+Typer KerasRegressor
+--
+Red
+0.2574078775507873
+Typer KerasRegressor
+--
+Red
+-0.004552522669895698
+Typer KerasRegressor
+--
+Red
+0.36109459311336234
+Typer KerasRegressor
+--
+Red
+0.14813710868606866
+Typer KerasRegressor
+--
+Red
+-8.064483566894154e-05
+Typer KerasRegressor
+--
+Red
+0.36263864751137775
+Typer KerasRegressor
+--
+Red
+0.39041243145396254
+Typer KerasRegressor
+--
+Red
+-0.015161659381547565
+Typer KerasRegressor
+--
+Red
+0.2378504730377321
+Typer KerasRegressor
+--
+Red
+-0.014961409656265134
+Typer KerasRegressor
+--
+Red
+0.01658847445771272
+Typer KerasRegressor
+--
+Red
+0.06135577652130786
+Typer KerasRegressor
+--
+Red
+-0.017929513604711067
+Typer KerasRegressor
+--
+Red
+0.2730209835237878
+Typer KerasRegressor
+--
+Red
+0.2400315394106931
+Typer KerasRegressor
+--
+Red
+-0.018264824767818322
+Typer KerasRegressor
+--
+Red
+0.004110340747560448
+Typer KerasRegressor
+--
+Red
+0.30766304554207424
+Typer KerasRegressor
+--
+Red
+0.31895590071118907
+Typer KerasRegressor
+--
+Red
+-0.02015416103791301
+Typer KerasRegressor
+--
+Red
+-0.015145444756444526
+Typer KerasRegressor
+--
+Red
+0.17888604724102464
+Typer KerasRegressor
+--
+Red
+-0.07934753035425746
+Typer KerasRegressor
+--
+Red
+0.2573475873479788
+Typer KerasRegressor
+--
+Red
+-0.0009485059892953007
+Typer KerasRegressor
+--
+Red
+-0.011640894340752217
+Typer KerasRegressor
+--
+Red
+0.0076416761196986815
+Typer KerasRegressor
+--
+Red
+0.4819424234244267
+Typer KerasRegressor
+--
+Red
+-0.017620904984356756
+Typer KerasRegressor
+--
+Red
+0.29413343823067606
+Typer KerasRegressor
+--
+Red
+-0.015454783821824192
+Typer KerasRegressor
+--
+Red
+-0.02104259759695526
+Typer KerasRegressor
+--
+Red
+-0.013471569932251404
+Typer KerasRegressor
+--
+Red
+-0.023019365973746098
+Typer KerasRegressor
+--
+Red
+-0.06640130059175564
+Typer KerasRegressor
+--
+Red
+0.3808735136431971
+Typer KerasRegressor
+--
+Red
+0.2780132656961761
+Typer KerasRegressor
+--
+Red
+-0.0009810638850482611
+Typer KerasRegressor
+--
+Red
+-0.008120370395445553
+Typer KerasRegressor
+--
+Red
+-0.023880936777931572
+Typer KerasRegressor
+--
+Red
+0.011664146067789427
+Typer KerasRegressor
+--
+Red
+0.18685179077199043
+Typer KerasRegressor
+--
+Red
+-0.014991544469905138
+Typer KerasRegressor
+--
+Red
+-0.04524377407279401
+Typer KerasRegressor
+--
+Red
+0.18372045071953425
+Typer KerasRegressor
+--
+Red
+-0.007758719662432467
+Typer KerasRegressor
+--
+Red
+0.0035297146701094295
+Typer KerasRegressor
+--
+Red
+-0.01615847357466027
+Typer KerasRegressor
+--
+Red
+0.34692123788450946
+Typer KerasRegressor
+--
+Red
+0.2648528913046275
+Typer KerasRegressor
+--
+Red
+0.23771702930491234
+Typer KerasRegressor
+--
+Red
+0.014568255151929055
+Typer KerasRegressor
+--
+Red
+0.11112854287794127
+Typer KerasRegressor
+--
+Red
+-0.011687521745171514
+Typer KerasRegressor
+--
+Red
+0.2712157281958154
+Typer KerasRegressor
+--
+Red
+-0.014429624569962884
+Typer KerasRegressor
+--
+Red
+-0.0007064059062389383
+Typer KerasRegressor
+--
+Red
+-0.014503042126740473
+Typer KerasRegressor
+--
+Red
+0.019805661390595808
+Typer KerasRegressor
+--
+Red
+-0.014937921703023438
+Typer KerasRegressor
+--
+Red
+0.3013813553390754
+Typer KerasRegressor
+--
+Red
+-0.014498357264855821
+Typer KerasRegressor
+--
+Red
+0.18166649636518928
+Typer KerasRegressor
+--
+Red
+-0.0018240601602650397
+Typer KerasRegressor
+--
+Red
+0.019143856845352913
+Typer KerasRegressor
+--
+Red
+-0.1177579776747042
+Typer KerasRegressor
+--
+Red
+-0.2773790805600522
+Typer KerasRegressor
+--
+Red
+-0.023326458959688434
+Typer KerasRegressor
+--
+Red
+0.050318313551460325
+Typer KerasRegressor
+--
+Red
+-0.011160242741460769
+Typer KerasRegressor
+--
+Red
+-0.0355322150478139
+Typer KerasRegressor
+--
+Red
+0.05339329003072091
+Typer KerasRegressor
+--
+Red
+0.28819080485334336
+Typer KerasRegressor
+--
+Red
+0.0032062013854717852
+Typer KerasRegressor
+--
+Red
+0.441033848424881
+Typer KerasRegressor
+--
+Red
+-0.00821439749891173
+Typer KerasRegressor
+--
+Red
+0.37359454237672884
+Typer KerasRegressor
+--
+Red
+-0.03444362025362868
+Typer KerasRegressor
+--
+Red
+0.36768304255185336
+Typer KerasRegressor
+--
+Red
+0.42980099006408345
+Typer KerasRegressor
+--
+Red
+0.394384878028752
+Typer KerasRegressor
+--
+Red
+0.3755111539711009
+Typer KerasRegressor
+--
+Red
+-0.01247430662398541
+Typer KerasRegressor
+--
+Red
+-0.032688090636147304
+Typer KerasRegressor
+--
+Red
+0.056875829507555986
+Typer KerasRegressor
+--
+Red
+0.3580714091202375
+Typer KerasRegressor
+--
+Red
+-0.02696764863496992
+Typer KerasRegressor
+--
+Red
+0.42244718131988024
+Typer KerasRegressor
+--
+Red
+-0.03754829876627053
+Typer KerasRegressor
+--
+Red
+0.3862714047338617
+Typer KerasRegressor
+--
+Red
+-0.006391112679705602
+Typer KerasRegressor
+--
+Red
+0.31968892893051915
+Typer KerasRegressor
+--
+Red
+-0.029609547342300147
+Typer KerasRegressor
+--
+Red
+-0.0293211597844254
+Typer KerasRegressor
+--
+Red
+-0.03624937178523879
+Typer KerasRegressor
+--
+Red
+0.003580731747238386
+Typer KerasRegressor
+--
+Red
+-0.02890202757199134
+Typer KerasRegressor
+--
+Red
+-0.03512094259373888
+Typer KerasRegressor
+--
+Red
+0.3397188790203741
+Typer KerasRegressor
+--
+Red
+0.12961762748840056
+Typer KerasRegressor
+--
+Red
+0.02148235158485423
+Typer KerasRegressor
+--
+Red
+0.3718630774493996
+Typer KerasRegressor
+--
+Red
+0.3191586088976599
+Typer KerasRegressor
+--
+Red
+0.2693841386409719
+Typer KerasRegressor
+--
+Red
+-0.017957179931519685
+Typer KerasRegressor
+--
+Red
+-0.007240627876544892
+Typer KerasRegressor
+--
+Red
+-0.07134257052661841
+Typer KerasRegressor
+--
+Red
+0.38205932817315613
+Typer KerasRegressor
+--
+Red
+0.23158917120689115
+Typer KerasRegressor
+--
+Red
+0.3720312270982973
+Typer KerasRegressor
+--
+Red
+0.4435891258716015
+Typer KerasRegressor
+--
+Red
+-0.016471607485440076
+Typer KerasRegressor
+--
+Red
+0.2597750680151737
+Typer KerasRegressor
+--
+Red
+-0.03659683531965374
+Typer KerasRegressor
+--
+Red
+0.3050964537946754
+Typer KerasRegressor
+--
+Red
+0.20387604032051576
+Typer KerasRegressor
+--
+Red
+0.17559779581178725
+Typer KerasRegressor
+--
+Red
+-0.029564244000062523
+Typer KerasRegressor
+--
+Red
+-0.03548391302546827
+Typer KerasRegressor
+--
+Red
+-0.07008310059923506
+Typer KerasRegressor
+--
+Red
+0.31723313314405654
+Typer KerasRegressor
+--
+Red
+-0.0007678972694629138
+Typer KerasRegressor
+--
+Red
+-0.0421148278798662
+Typer KerasRegressor
+--
+Red
+-0.03429417911173327
+Typer KerasRegressor
+--
+Red
+0.41642076164124053
+Typer KerasRegressor
+--
+Red
+-0.07873998910862179
+Typer KerasRegressor
+--
+Red
+0.40570397228228083
+Typer KerasRegressor
+--
+Red
+0.3940269852918913
+Typer KerasRegressor
+--
+Red
+-0.033670642067039847
+Typer KerasRegressor
+--
+Red
+0.4004409181740085
+Typer KerasRegressor
+--
+Red
+-0.03744958643490914
+Typer KerasRegressor
+--
+Red
+-0.04870647730455957
+Typer KerasRegressor
+--
+Red
+0.4183729841099664
+Typer KerasRegressor
+--
+Red
+-0.01956076110955851
+Typer KerasRegressor
+--
+Red
+0.2741526478413193
+Typer KerasRegressor
+--
+Red
+0.4445607105225139
+Typer KerasRegressor
+--
+Red
+-0.009089358824531768
+Typer KerasRegressor
+--
+Red
+-0.07301270819560379
+Typer KerasRegressor
+--
+Red
+-0.03829385305953137
+Typer KerasRegressor
+--
+Red
+0.4301036093427314
+Typer KerasRegressor
+--
+Red
+0.39269004761937076
+Typer KerasRegressor
+--
+Red
+-0.03809959386541717
+Typer KerasRegressor
+--
+Red
+0.38283690314658236
+Typer KerasRegressor
+--
+Red
+-0.03507032814727307
+Typer KerasRegressor
+--
+Red
+-0.03501872106594939
+Typer KerasRegressor
+--
+Red
+0.34092895419603375
+Typer KerasRegressor
+--
+Red
+-0.03468398843246723
+Typer KerasRegressor
+--
+Red
+0.3094711181665404
+Typer KerasRegressor
+--
+Red
+-0.028062077554924736
+Typer KerasRegressor
+--
+Red
+0.022551282016892826
+Typer KerasRegressor
+--
+Red
+0.02066300356627293
+Typer KerasRegressor
+--
+Red
+0.358062392426014
+Typer KerasRegressor
+--
+Red
+-0.0015622366617997763
+Typer KerasRegressor
+--
+Red
+0.4424576784036365
+Typer KerasRegressor
+--
+Red
+0.004380299133804666
+Typer KerasRegressor
+--
+Red
+0.20980168295191381
+Typer KerasRegressor
+--
+Red
+-0.036747852712645246
+Typer KerasRegressor
+--
+Red
+-0.012008275936722379
+Typer KerasRegressor
+--
+Red
+0.01450889444413328
+Typer KerasRegressor
+--
+Red
+0.0043433558827129515
+Typer KerasRegressor
+--
+Red
+0.012020267269610918
+Typer KerasRegressor
+--
+Red
+-0.03622671993700988
+Typer KerasRegressor
+--
+Red
+-0.00930820084910633
+Typer KerasRegressor
+--
+Red
+0.39407528943179426
+Typer KerasRegressor
+--
+Red
+-0.010050264816224619
+Typer KerasRegressor
+--
+Red
+0.14892754960448984
+Typer KerasRegressor
+--
+Red
+0.06775791340081871
+Typer KerasRegressor
+--
+Red
+0.20083078336312077
+Typer KerasRegressor
+--
+Red
+0.06835599527548863
+Typer KerasRegressor
+--
+Red
+-0.05721548397256826
+Typer KerasRegressor
+--
+Red
+0.005009481451048958
+Typer KerasRegressor
+--
+Red
+-0.06229428241891477
+Typer KerasRegressor
+--
+Red
+-0.04548032296318527
+Typer KerasRegressor
+--
+Red
+-0.005191713437675549
+Typer KerasRegressor
+--
+Red
+-0.07523828471118521
+Typer KerasRegressor
+--
+Red
+-0.05254756550093376
+Typer KerasRegressor
+--
+Red
+0.45837830511076005
+Typer KerasRegressor
+--
+Red
+0.004285810898067677
+Typer KerasRegressor
+--
+Red
+0.3843655193026938
+Typer KerasRegressor
+--
+Red
+0.2782128351169417
+Typer KerasRegressor
+--
+Red
+0.02665545918758927
+Typer KerasRegressor
+--
+Red
+0.35301636364925115
+Typer KerasRegressor
+--
+Red
+-0.02468200971889445
+Typer KerasRegressor
+--
+Red
+-0.049609959230002776
+Typer KerasRegressor
+--
+Red
+-0.03801914833120601
+Typer KerasRegressor
+--
+Red
+0.40635414390383007
+Typer KerasRegressor
+--
+Red
+0.0011950882796989415
+Typer KerasRegressor
+--
+Red
+0.4270703108563739
+Typer KerasRegressor
+--
+Red
+0.13844434994101185
+Typer KerasRegressor
+--
+Red
+-0.055506231898292624
+Typer KerasRegressor
+--
+Red
+0.0720585295421291
+Typer KerasRegressor
+--
+Red
+-0.05836808746121469
+Typer KerasRegressor
+--
+Red
+-0.21381205444675477
+Typer KerasRegressor
+--
+Red
+0.02050108323577171
+Typer KerasRegressor
+--
+Red
+-0.009807137702001478
+Typer KerasRegressor
+--
+Red
+0.34978607045058496
+Typer KerasRegressor
+--
+Red
+-0.057655353272186405
+Typer KerasRegressor
+--
+Red
+-0.055338894366144364
+Typer KerasRegressor
+--
+Red
+0.3922142723216939
+Typer KerasRegressor
+--
+Red
+0.42767439320867473
+Typer KerasRegressor
+--
+Red
+-0.004483061128267796
+Typer KerasRegressor
+--
+Red
+0.30697002678169505
+Typer KerasRegressor
+--
+Red
+-0.056794028472343605
+Typer KerasRegressor
+--
+Red
+-0.056137224447694534
+Typer KerasRegressor
+--
+Red
+-0.059646945699616705
+Typer KerasRegressor
+--
+Red
+-0.05349741354818227
+Typer KerasRegressor
+--
+Red
+-0.0019328497976165426
+Typer KerasRegressor
+--
+Red
+-0.021200729836647447
+Typer KerasRegressor
+--
+Red
+0.3701343705469816
+Typer KerasRegressor
+--
+Red
+-0.010163904616454111
+Typer KerasRegressor
+--
+Red
+-0.005935338328553863
+Typer KerasRegressor
+--
+Red
+-0.06286144527684856
+Typer KerasRegressor
+--
+Red
+-0.019978240340057463
+Typer KerasRegressor
+--
+Red
+0.0024334460467088093
+Typer KerasRegressor
+--
+Red
+-0.05834837790200598
+Typer KerasRegressor
+--
+Red
+0.4123618860814118
+Typer KerasRegressor
+--
+Red
+-0.09286946801329221
+Typer KerasRegressor
+--
+Red
+0.0005015213463550605
+Typer KerasRegressor
+--
+Red
+0.43633169110048764
+Typer KerasRegressor
+--
+Red
+-0.03197425505957763
+Typer KerasRegressor
+--
+Red
+-0.032056585636827784
+Typer KerasRegressor
+--
+Red
+0.4408847161004972
+Typer KerasRegressor
+--
+Red
+-0.01593784403909715
+Typer KerasRegressor
+--
+Red
+0.32371769072275614
+Typer KerasRegressor
+--
+Red
+-0.0037982109676661935
+Typer KerasRegressor
+--
+Red
+-0.09054558278499947
+Typer KerasRegressor
+--
+Red
+0.10035291426443138
+Typer KerasRegressor
+--
+Red
+0.010791369767789938
+Typer KerasRegressor
+--
+Red
+-0.057702845683625936
+Typer KerasRegressor
+--
+Red
+0.18632836070505865
+Typer KerasRegressor
+--
+Red
+-0.05692974098332537
+Typer KerasRegressor
+--
+Red
+-0.023954516345612298
+Typer KerasRegressor
+--
+Red
+-0.03908328067822975
+Typer KerasRegressor
+--
+Red
+0.021709915410689673
+Typer KerasRegressor
+--
+Red
+-0.05144000858117459
+Typer KerasRegressor
+--
+Red
+-0.05702504874275416
+Typer KerasRegressor
+--
+Red
+0.4333989140937867
+Typer KerasRegressor
+--
+Red
+0.39884257537825174
+Typer KerasRegressor
+--
+Red
+0.1226548303518139
+Typer KerasRegressor
+--
+Red
+0.4061081763380392
+Typer KerasRegressor
+--
+Red
+-0.055690217357431626
+Typer KerasRegressor
+--
+Red
+0.22041700398371056
+Typer KerasRegressor
+--
+Red
+0.0471389453297727
+Typer KerasRegressor
+--
+Red
+0.44003459058093564
+Typer KerasRegressor
+--
+Red
+0.4332619114986662
+Typer KerasRegressor
+--
+Red
+0.47412970597589454
+Typer KerasRegressor
+--
+Red
+-0.061740855591969845
+Typer KerasRegressor
+--
+Red
+0.42341326214858344
+Typer KerasRegressor
+--
+Red
+0.03546194571231498
+Typer KerasRegressor
+--
+Red
+-0.05652839985449898
+Typer KerasRegressor
+--
+Red
+-0.022022553090123465
+Typer KerasRegressor
+--
+Red
+0.4835973367861328
+Typer KerasRegressor
+--
+Red
+0.3574315631861428
+Typer KerasRegressor
+--
+Red
+0.1977854557776545
+Typer KerasRegressor
+--
+Red
+-0.05517040886322522
+Typer KerasRegressor
+--
+Red
+0.05085683303698163
+Typer KerasRegressor
+--
+Red
+0.3842544009781568
+Typer KerasRegressor
+--
+Red
+-0.02448028897999377
+Typer KerasRegressor
+--
+Red
+-0.05622722895685395
+Typer KerasRegressor
+--
+Red
+-0.059134456549392755
+Typer KerasRegressor
+--
+Red
+-0.05621242534227311
+Typer KerasRegressor
+--
+Red
+-0.05699171145588
+Typer KerasRegressor
+--
+Red
+0.025837024655316676
+Typer KerasRegressor
+--
+Red
+-0.05401267385552977
+Typer KerasRegressor
+--
+Red
+0.002620306328020905
+Typer KerasRegressor
+--
+Red
+-0.021259939735769562
+Typer KerasRegressor
+--
+Red
+-0.04240697773604518
+Typer KerasRegressor
+--
+Red
+-0.024290489568119078
+Typer KerasRegressor
+--
+Red
+-0.03101262065603838
+Typer KerasRegressor
+--
+Red
+0.3878336125207882
+Typer KerasRegressor
+--
+Red
+0.012339184854776253
+Typer KerasRegressor
+--
+Red
+0.05606723682704651
+Typer KerasRegressor
+--
+Red
+-0.04539453523613357
+Typer KerasRegressor
+--
+Red
+0.49410022272894283
+Typer KerasRegressor
+--
+Red
+-0.04538184714437987
+Typer KerasRegressor
+--
+Red
+-0.040577859512286985
+Typer KerasRegressor
+--
+Red
+0.17030608301647387
+Typer KerasRegressor
+--
+Red
+-0.006506752689700912
+Typer KerasRegressor
+--
+Red
+-0.045552891791043715
+Typer KerasRegressor
+--
+Red
+-0.040658442060997224
+Typer KerasRegressor
+--
+Red
+0.40847911556724226
+Typer KerasRegressor
+--
+Red
+-0.08158311018186648
+Typer KerasRegressor
+--
+Red
+-0.044863765171313075
+Typer KerasRegressor
+--
+Red
+0.00997313814793055
+Typer KerasRegressor
+--
+Red
+-0.010633118387048501
+Typer KerasRegressor
+--
+Red
+0.11774261708126932
+Typer KerasRegressor
+--
+Red
+-0.04449448904024789
+Typer KerasRegressor
+--
+Red
+0.3818091771593092
+Typer KerasRegressor
+--
+Red
+-0.030216310826569615
+Typer KerasRegressor
+--
+Red
+0.06925009215018041
+Typer KerasRegressor
+--
+Red
+-0.041405337881766924
+Typer KerasRegressor
+--
+Red
+0.41886738519304434
+Typer KerasRegressor
+--
+Red
+0.40398643966091397
+Typer KerasRegressor
+--
+Red
+-0.04662489963219718
+Typer KerasRegressor
+--
+Red
+0.04755377713189035
+Typer KerasRegressor
+--
+Red
+0.011831926075560384
+Typer KerasRegressor
+--
+Red
+-0.027878106247346546
+Typer KerasRegressor
+--
+Red
+-0.005778259734903202
+Typer KerasRegressor
+--
+Red
+-0.04547900657809101
+Typer KerasRegressor
+--
+Red
+-0.03934258370534649
+Typer KerasRegressor
+--
+Red
+-0.04405163283653657
+Typer KerasRegressor
+--
+Red
+0.2107530662106435
+Typer KerasRegressor
+--
+Red
+0.10744631707761643
+Typer KerasRegressor
+--
+Red
+-0.04188170575687833
+Typer KerasRegressor
+--
+Red
+-0.0440570443791799
+Typer KerasRegressor
+--
+Red
+0.04219365910049122
+Typer KerasRegressor
+--
+Red
+0.015369101232721283
+Typer KerasRegressor
+--
+Red
+-0.00040817880047128163
+Typer KerasRegressor
+--
+Red
+-0.005638152225021287
+Typer KerasRegressor
+--
+Red
+-0.04346874837125614
+Typer KerasRegressor
+--
+Red
+-0.04412100083729498
+Typer KerasRegressor
+--
+Red
+9.642111581065205e-05
+Typer KerasRegressor
+--
+Red
+-0.04522341666919205
+Typer KerasRegressor
+--
+Red
+0.4198087899969889
+Typer KerasRegressor
+--
+Red
+0.49769147097052313
+Typer KerasRegressor
+--
+Red
+0.06167445624888446
+Typer KerasRegressor
+--
+Red
+0.23519797462643421
+Typer KerasRegressor
+--
+Red
+0.004404046223261404
+Typer KerasRegressor
+--
+Red
+0.019500348852810823
+Typer KerasRegressor
+--
+Red
+0.431970210269369
+Typer KerasRegressor
+--
+Red
+0.39223428794144966
+Typer KerasRegressor
+--
+Red
+0.264098172337202
+Typer KerasRegressor
+--
+Red
+0.4185367607940702
+Typer KerasRegressor
+--
+Red
+0.38566877336661654
+Typer KerasRegressor
+--
+Red
+-0.04546837790324254
+Typer KerasRegressor
+--
+Red
+0.006345530632107299
+Typer KerasRegressor
+--
+Red
+-0.03611645112942341
+Typer KerasRegressor
+--
+Red
+0.15742189732314638
+Typer KerasRegressor
+--
+Red
+0.26589927850186845
+Typer KerasRegressor
+--
+Red
+-0.04214684988169082
+Typer KerasRegressor
+--
+Red
+-0.027262152360806313
+Typer KerasRegressor
+--
+Red
+0.32125451422037254
+Typer KerasRegressor
+--
+Red
+-0.04153063508241739
+Typer KerasRegressor
+--
+Red
+0.006527909350802497
+Typer KerasRegressor
+--
+Red
+-0.0030113244528922056
+Typer KerasRegressor
+--
+Red
+0.24093693764240376
+Typer KerasRegressor
+--
+Red
+0.37248557322987264
+Typer KerasRegressor
+--
+Red
+-0.035838828237670706
+Typer KerasRegressor
+--
+Red
+0.4320411088236722
+Typer KerasRegressor
+--
+Red
+-0.04559698176915594
+Typer KerasRegressor
+--
+Red
+-0.04654950753600384
+Typer KerasRegressor
+--
+Red
+-0.01563922326735745
+Typer KerasRegressor
+--
+Red
+-0.00968195591517107
+Typer KerasRegressor
+--
+Red
+-0.04124347346389223
+Typer KerasRegressor
+--
+Red
+0.48291923289776906
+Typer KerasRegressor
+--
+Red
+-0.036438439000624046
+Typer KerasRegressor
+--
+Red
+-0.0034011061695640166
+Typer KerasRegressor
+--
+Red
+0.02077588283684073
+Typer KerasRegressor
+--
+Red
+0.4550162909314446
+Typer KerasRegressor
+--
+Red
+0.10663477167023894
+Typer KerasRegressor
+--
+Red
+0.06428179473740137
+Typer KerasRegressor
+--
+Red
+-0.004968798498513394
+Typer KerasRegressor
+--
+Red
+-0.0434520105169669
+Typer KerasRegressor
+--
+Red
+0.0009470809378709921
+Typer KerasRegressor
+--
+Red
+0.00221542827737109
+Typer KerasRegressor
+--
+Red
+0.46766641619124716
+Typer KerasRegressor
+--
+Red
+0.2441787592796092
+Typer KerasRegressor
+--
+Red
+-0.0026699210959348907
+Typer KerasRegressor
+--
+Red
+0.2889776200572499
+Typer KerasRegressor
+--
+Red
+0.38329900675611484
+Typer KerasRegressor
+--
+Red
+-0.04406194455905221
+Typer KerasRegressor
+--
+Red
+0.22935322658327761
+Typer KerasRegressor
+--
+Red
+-0.011479907307299975
+Typer KerasRegressor
+--
+Red
+-0.04451649567154892
+Typer KerasRegressor
+--
+Red
+0.4483139950011944
+Typer KerasRegressor
+--
+Red
+-0.0931078644876493
+Typer KerasRegressor
+--
+Red
+-0.001273693124937525
+Typer KerasRegressor
+--
+Red
+0.1957790950377143
+Typer KerasRegressor
+--
+Red
+0.26938036612557636
+Typer KerasRegressor
+--
+Red
+0.4374254829294453
+Typer KerasRegressor
+--
+Red
+0.3121028121897178
+Typer KerasRegressor
+--
+Red
+0.32002046456631617
+Typer KerasRegressor
+--
+Red
+-0.002901126901950324
+Typer KerasRegressor
+--
+Red
+0.3897384230889307
+Typer KerasRegressor
+--
+Red
+0.373888129280774
+Typer KerasRegressor
+--
+Red
+-0.0031847358146934734
+Typer KerasRegressor
+--
+Red
+0.006388500025058752
+Typer KerasRegressor
+--
+Red
+-0.004885091472232039
+Typer KerasRegressor
+--
+Red
+0.4273732812431089
+Typer KerasRegressor
+--
+Red
+-0.017127017672090128
+Typer KerasRegressor
+--
+Red
+0.21822617218526252
+Typer KerasRegressor
+--
+Red
+-0.0043599644946472615
+Typer KerasRegressor
+--
+Red
+0.025867875106427074
+Typer KerasRegressor
+--
+Red
+0.3466363352582349
+Typer KerasRegressor
+--
+Red
+0.3111627516460892
+Typer KerasRegressor
+--
+Red
+0.4320027215716111
+Typer KerasRegressor
+--
+Red
+0.21454176208389986
+Typer KerasRegressor
+--
+Red
+-0.00011829193637891144
+Typer KerasRegressor
+--
+Red
+-0.004819605673173966
+Typer KerasRegressor
+--
+Red
+0.3081789412107845
+Typer KerasRegressor
+--
+Red
+0.22841982462202315
+Typer KerasRegressor
+--
+Red
+-0.037484659796088504
+Typer KerasRegressor
+--
+Red
+0.0065368375312174765
+Typer KerasRegressor
+--
+Red
+-0.004799171781378675
+Typer KerasRegressor
+--
+Red
+-0.004420138867005319
+Typer KerasRegressor
+--
+Red
+0.06905956467690155
+Typer KerasRegressor
+--
+Red
+0.35305123279269
+Typer KerasRegressor
+--
+Red
+-0.005367605102705175
+Typer KerasRegressor
+--
+Red
+-0.003199701201115124
+Typer KerasRegressor
+--
+Red
+0.09004211571113463
+Typer KerasRegressor
+--
+Red
+0.4572754050840996
+Typer KerasRegressor
+--
+Red
+0.11974657283107004
+Typer KerasRegressor
+--
+Red
+-6.305420657204408e-05
+Typer KerasRegressor
+--
+Red
+-0.003674076709616614
+Typer KerasRegressor
+--
+Red
+0.3686989973260201
+Typer KerasRegressor
+--
+Red
+-0.002425070532827922
+Typer KerasRegressor
+--
+Red
+-0.022935595679387744
+Typer KerasRegressor
+--
+Red
+0.2467866478273033
+Typer KerasRegressor
+--
+Red
+-0.009555922942807937
+Typer KerasRegressor
+--
+Red
+-0.0009045176047122183
+Typer KerasRegressor
+--
+Red
+0.1318694306573508
+Typer KerasRegressor
+--
+Red
+0.3851879778255488
+Typer KerasRegressor
+--
+Red
+0.23953830201679893
+Typer KerasRegressor
+--
+Red
+-0.001404566870993662
+Typer KerasRegressor
+--
+Red
+0.26633688376963005
+Typer KerasRegressor
+--
+Red
+0.369447947117132
+Typer KerasRegressor
+--
+Red
+0.3375744803072753
+Typer KerasRegressor
+--
+Red
+0.014011087730290805
+Typer KerasRegressor
+--
+Red
+0.28087715369858735
+Typer KerasRegressor
+--
+Red
+0.06466000336794964
+Typer KerasRegressor
+--
+Red
+-0.004713859556590538
+Typer KerasRegressor
+--
+Red
+0.002399040935984087
+Typer KerasRegressor
+--
+Red
+-0.002564427946499803
+Typer KerasRegressor
+--
+Red
+-0.00390378851624007
+Typer KerasRegressor
+--
+Red
+0.17573469285678478
+Typer KerasRegressor
+--
+Red
+0.008446161611725955
+Typer KerasRegressor
+--
+Red
+0.36860647964016136
+Typer KerasRegressor
+--
+Red
+0.2726214109853786
+Typer KerasRegressor
+--
+Red
+-0.02134132138487077
+Typer KerasRegressor
+--
+Red
+0.3472944870886503
+Typer KerasRegressor
+--
+Red
+0.37977987830934523
+Typer KerasRegressor
+--
+Red
+-0.1047349346473121
+Typer KerasRegressor
+--
+Red
+-0.0043333713215047975
+Typer KerasRegressor
+--
+Red
+0.25175974629552955
+Typer KerasRegressor
+--
+Red
+0.23717445177248975
+Typer KerasRegressor
+--
+Red
+0.35682526180713214
+Typer KerasRegressor
+--
+Red
+-0.04895770203315286
+Typer KerasRegressor
+--
+Red
+0.038303258663462514
+Typer KerasRegressor
+--
+Red
+0.3556095981202998
+Typer KerasRegressor
+--
+Red
+0.34945516104484253
+Typer KerasRegressor
+--
+Red
+-0.003602142876183656
+Typer KerasRegressor
+--
+Red
+0.1752395054885919
+Typer KerasRegressor
+--
+Red
+0.43088139075955023
+Typer KerasRegressor
+--
+Red
+0.3286759464872565
+Typer KerasRegressor
+--
+Red
+-0.0038102785150575524
+Typer KerasRegressor
+--
+Red
+-0.0002001444880519454
+Typer KerasRegressor
+--
+Red
+0.2634486191647145
+Typer KerasRegressor
+--
+Red
+0.002003366428180664
+Typer KerasRegressor
+--
+Red
+-0.0037566876153671824
+Typer KerasRegressor
+--
+Red
+-0.0011790386181991241
+Typer KerasRegressor
+--
+Red
+-0.01677890739003396
+Typer KerasRegressor
+--
+Red
+0.24851943463586212
+Typer KerasRegressor
+--
+Red
+-0.00362026208255406
+Typer KerasRegressor
+--
+Red
+0.45024520668986356
+Typer KerasRegressor
+--
+Red
+0.22931445855684707
+Typer KerasRegressor
+--
+Red
+-0.009273397067306455
+Typer KerasRegressor
+--
+Red
+0.41710626298722875
+Typer KerasRegressor
+--
+Red
+0.30800095101472247
+Typer KerasRegressor
+--
+Red
+-0.0006722252108601889
+Typer KerasRegressor
+--
+Red
+0.4256683962446368
+Typer KerasRegressor
+--
+Red
+0.4074509075596694
+Typer KerasRegressor
+--
+Red
+0.14835009510523567
+Typer KerasRegressor
+--
+Red
+-0.0015666927082025328
+Typer KerasRegressor
+--
+Red
+0.3561198486081488
+Typer KerasRegressor
+--
+Red
+0.059682018452706265
+Typer KerasRegressor
+--
+Red
+0.44733014406573424
+Typer KerasRegressor
+--
+Red
+0.42103363095508695
+Typer KerasRegressor
+--
+Red
+0.47429275484138034
+Typer KerasRegressor
+--
+Red
+-0.0006379967487533111
+Typer KerasRegressor
+--
+Red
+-0.0476634863910359
+Typer KerasRegressor
+--
+Red
+0.484174909651783
+Typer KerasRegressor
+--
+Red
+-0.0436513780824892
+Typer KerasRegressor
+--
+Red
+0.014004195550024634
+Typer KerasRegressor
+--
+Red
+0.012472473052819844
+Typer KerasRegressor
+--
+Red
+0.271474916369019
+Typer KerasRegressor
+--
+Red
+0.5257276792337264
+Typer KerasRegressor
+--
+Red
+-0.04070571876293516
+Typer KerasRegressor
+--
+Red
+-0.006888839777156042
+Typer KerasRegressor
+--
+Red
+0.43412617236729134
+Typer KerasRegressor
+--
+Red
+-0.048894603799451986
+Typer KerasRegressor
+--
+Red
+-0.040229431106740376
+Typer KerasRegressor
+--
+Red
+0.31796451061207287
+Typer KerasRegressor
+--
+Red
+0.45074389691765393
+Typer KerasRegressor
+--
+Red
+-0.0018883880548785648
+Typer KerasRegressor
+--
+Red
+-0.04685687309089581
+Typer KerasRegressor
+--
+Red
+-0.010207638705185262
+Typer KerasRegressor
+--
+Red
+0.4587267378176588
+Typer KerasRegressor
+--
+Red
+0.36895677162323126
+Typer KerasRegressor
+--
+Red
+-0.04400661059610078
+Typer KerasRegressor
+--
+Red
+0.43457663422912474
+Typer KerasRegressor
+--
+Red
+0.4834965086740107
+Typer KerasRegressor
+--
+Red
+-0.03482284148819992
+Typer KerasRegressor
+--
+Red
+0.48568155726597484
+Typer KerasRegressor
+--
+Red
+-0.026425668422496384
+Typer KerasRegressor
+--
+Red
+-0.0426077040787749
+Typer KerasRegressor
+--
+Red
+0.47687003988599896
+Typer KerasRegressor
+--
+Red
+0.21625042503976055
+Typer KerasRegressor
+--
+Red
+-0.013707048831670843
+Typer KerasRegressor
+--
+Red
+-9.111350732560197e-06
+Typer KerasRegressor
+--
+Red
+-0.045276152502277345
+Typer KerasRegressor
+--
+Red
+0.07036352036574733
+Typer KerasRegressor
+--
+Red
+0.4921849750509816
+Typer KerasRegressor
+--
+Red
+-0.05048000496850702
+Typer KerasRegressor
+--
+Red
+-0.022487979279981918
+Typer KerasRegressor
+--
+Red
+0.5332372047055611
+Typer KerasRegressor
+--
+Red
+-0.01609234534667925
+Typer KerasRegressor
+--
+Red
+-0.013977449343037573
+Typer KerasRegressor
+--
+Red
+0.487106840421203
+Typer KerasRegressor
+--
+Red
+-0.0397327801064562
+Typer KerasRegressor
+--
+Red
+0.011220702549633144
+Typer KerasRegressor
+--
+Red
+0.01740403833098092
+Typer KerasRegressor
+--
+Red
+-0.052760959576544364
+Typer KerasRegressor
+--
+Red
+0.43006472458708234
+Typer KerasRegressor
+--
+Red
+-0.0030369113530785974
+Typer KerasRegressor
+--
+Red
+-0.0030826723723158533
+Typer KerasRegressor
+--
+Red
+0.3804754603971431
+Typer KerasRegressor
+--
+Red
+-0.04256341643637329
+Typer KerasRegressor
+--
+Red
+-0.0642197989607316
+Typer KerasRegressor
+--
+Red
+0.018527205323332185
+Typer KerasRegressor
+--
+Red
+-0.03932289740368011
+Typer KerasRegressor
+--
+Red
+-0.04860929153507132
+Typer KerasRegressor
+--
+Red
+-0.0892671792088997
+Typer KerasRegressor
+--
+Red
+-0.00598624720506713
+Typer KerasRegressor
+--
+Red
+0.004700780190391107
+Typer KerasRegressor
+--
+Red
+-0.04046086109161373
+Typer KerasRegressor
+--
+Red
+0.005959453364260625
+Typer KerasRegressor
+--
+Red
+-0.046438205514758746
+Typer KerasRegressor
+--
+Red
+0.5316796595897966
+Typer KerasRegressor
+--
+Red
+0.1515287348263814
+Typer KerasRegressor
+--
+Red
+-0.01919859422874448
+Typer KerasRegressor
+--
+Red
+-0.003739965348799723
+Typer KerasRegressor
+--
+Red
+0.06143555138718282
+Typer KerasRegressor
+--
+Red
+-0.13820919155000166
+Typer KerasRegressor
+--
+Red
+-0.01283183877496108
+Typer KerasRegressor
+--
+Red
+0.25652486614503267
+Typer KerasRegressor
+--
+Red
+0.40866186635991797
+Typer KerasRegressor
+--
+Red
+-0.043722268102714734
+Typer KerasRegressor
+--
+Red
+-0.04829132500997435
+Typer KerasRegressor
+--
+Red
+0.01696809976842195
+Typer KerasRegressor
+--
+Red
+-0.052431068240903045
+Typer KerasRegressor
+--
+Red
+-0.022036675067468314
+Typer KerasRegressor
+--
+Red
+0.4209902897210901
+Typer KerasRegressor
+--
+Red
+0.1763839998838369
+Typer KerasRegressor
+--
+Red
+-0.03751900267277075
+Typer KerasRegressor
+--
+Red
+0.07767745296764128
+Typer KerasRegressor
+--
+Red
+0.0038501291940252758
+Typer KerasRegressor
+--
+Red
+0.42658959677154007
+Typer KerasRegressor
+--
+Red
+0.06962785940417715
+Typer KerasRegressor
+--
+Red
+0.31546057070888
+Typer KerasRegressor
+--
+Red
+-0.011610596029874687
+Typer KerasRegressor
+--
+Red
+-0.007703531165923483
+Typer KerasRegressor
+--
+Red
+-0.0006914219069056315
+Typer KerasRegressor
+--
+Red
+0.22417637772296917
+Typer KerasRegressor
+--
+Red
+0.1385401819309705
+Typer KerasRegressor
+--
+Red
+0.4794453975086381
+Typer KerasRegressor
+--
+Red
+0.34638154110338837
+Typer KerasRegressor
+--
+Red
+0.46143505808315544
+Typer KerasRegressor
+--
+Red
+-0.02905313806589027
+Typer KerasRegressor
+--
+Red
+-0.049565183993268924
+Typer KerasRegressor
+--
+Red
+0.08559449537622477
+Typer KerasRegressor
+--
+Red
+-0.04731079969867524
+Typer KerasRegressor
+--
+Red
+0.42085659957957444
+Typer KerasRegressor
+--
+Red
+0.5385008597810557
+Typer KerasRegressor
+--
+Red
+-0.04602593178229886
+Typer KerasRegressor
+--
+Red
+-0.01264328040634255
+Typer KerasRegressor
+--
+Red
+0.0017697867278019253
+Typer KerasRegressor
+--
+Red
+0.3051570941548678
+Typer KerasRegressor
+--
+Red
+0.003174453757427642
+Typer KerasRegressor
+--
+Red
+0.27497742545121784
+Typer KerasRegressor
+--
+Red
+0.3212263114043904
+Typer KerasRegressor
+--
+Red
+-0.017812470908143307
+Typer KerasRegressor
+--
+Red
+-0.008894098676346829
+Typer KerasRegressor
+--
+Red
+-0.014253408639075094
+Typer KerasRegressor
+--
+Red
+0.37220400732262005
+Typer KerasRegressor
+--
+Red
+-0.03136275205081329
+Typer KerasRegressor
+--
+Red
+0.4000666535698162
+Typer KerasRegressor
+--
+Red
+-0.026486543480392033
+Typer KerasRegressor
+--
+Red
+-0.05870596064386846
+Typer KerasRegressor
+--
+Red
+-0.026957593286071502
+Typer KerasRegressor
+--
+Red
+0.28903725475046393
+Typer KerasRegressor
+--
+Red
+0.39251696680713977
+Typer KerasRegressor
+--
+Red
+0.4092677086833897
+Typer KerasRegressor
+--
+Red
+-0.02455760666151341
+Typer KerasRegressor
+--
+Red
+-0.020831585587521184
+Typer KerasRegressor
+--
+Red
+-0.025706925020054117
+Typer KerasRegressor
+--
+Red
+-0.022012434019557103
+Typer KerasRegressor
+--
+Red
+-0.029185399343321317
+Typer KerasRegressor
+--
+Red
+-0.025959665055790726
+Typer KerasRegressor
+--
+Red
+-0.0030795767147031583
+Typer KerasRegressor
+--
+Red
+-0.030073866443603325
+Typer KerasRegressor
+--
+Red
+0.10211899510666422
+Typer KerasRegressor
+--
+Red
+-0.029991939117619104
+Typer KerasRegressor
+--
+Red
+0.04918785828668326
+Typer KerasRegressor
+--
+Red
+-0.062282336683932016
+Typer KerasRegressor
+--
+Red
+-0.02453792192500015
+Typer KerasRegressor
+--
+Red
+0.0013369233402026337
+Typer KerasRegressor
+--
+Red
+-0.026148106253341297
+Typer KerasRegressor
+--
+Red
+0.07448057256348983
+Typer KerasRegressor
+--
+Red
+0.007183143224107624
+Typer KerasRegressor
+--
+Red
+0.01842701470945185
+Typer KerasRegressor
+--
+Red
+0.42078829631423864
+Typer KerasRegressor
+--
+Red
+-0.02600607883525896
+Typer KerasRegressor
+--
+Red
+-0.025354911926668278
+Typer KerasRegressor
+--
+Red
+-0.026948243025606944
+Typer KerasRegressor
+--
+Red
+0.30487140141418556
+Typer KerasRegressor
+--
+Red
+0.2305175359528987
+Typer KerasRegressor
+--
+Red
+-0.061953265251210476
+Typer KerasRegressor
+--
+Red
+0.4029163269868299
+Typer KerasRegressor
+--
+Red
+-0.03104314278819542
+Typer KerasRegressor
+--
+Red
+0.08871468338712218
+Typer KerasRegressor
+--
+Red
+0.31450974802300236
+Typer KerasRegressor
+--
+Red
+0.24683567914516158
+Typer KerasRegressor
+--
+Red
+0.3558934765742928
+Typer KerasRegressor
+--
+Red
+0.372911365020429
+Typer KerasRegressor
+--
+Red
+0.31734009598557
+Typer KerasRegressor
+--
+Red
+0.3030491819803375
+Typer KerasRegressor
+--
+Red
+-0.026692947965132552
+Typer KerasRegressor
+--
+Red
+0.3901329394668476
+Typer KerasRegressor
+--
+Red
+0.38883476915665116
+Typer KerasRegressor
+--
+Red
+-0.022133661515109315
+Typer KerasRegressor
+--
+Red
+0.2839295537181066
+Typer KerasRegressor
+--
+Red
+-0.0005183588311585829
+Typer KerasRegressor
+--
+Red
+-0.025155921456506025
+Typer KerasRegressor
+--
+Red
+-0.021000889562594383
+Typer KerasRegressor
+--
+Red
+0.3875699410793978
+Typer KerasRegressor
+--
+Red
+-0.013124455758227738
+Typer KerasRegressor
+--
+Red
+-0.016405481231562602
+Typer KerasRegressor
+--
+Red
+-0.07700339712072668
+Typer KerasRegressor
+--
+Red
+0.038220514148920914
+Typer KerasRegressor
+--
+Red
+0.07897603960380895
+Typer KerasRegressor
+--
+Red
+0.38213465071627406
+Typer KerasRegressor
+--
+Red
+-0.03468628437986543
+Typer KerasRegressor
+--
+Red
+0.4262984926469765
+Typer KerasRegressor
+--
+Red
+0.003352678239933349
+Typer KerasRegressor
+--
+Red
+0.29944684645587716
+Typer KerasRegressor
+--
+Red
+0.2705262127550654
+Typer KerasRegressor
+--
+Red
+0.13658791180510532
+Typer KerasRegressor
+--
+Red
+-0.0060012402347624505
+Typer KerasRegressor
+--
+Red
+0.026185884941544946
+Typer KerasRegressor
+--
+Red
+0.23149808251000126
+Typer KerasRegressor
+--
+Red
+0.17724367286597853
+Typer KerasRegressor
+--
+Red
+0.12245868317257502
+Typer KerasRegressor
+--
+Red
+-0.026163199967399464
+Typer KerasRegressor
+--
+Red
+-0.027770960612727658
+Typer KerasRegressor
+--
+Red
+0.3875192605241671
+Typer KerasRegressor
+--
+Red
+0.22447230010957542
+Typer KerasRegressor
+--
+Red
+0.04456223210138954
+Typer KerasRegressor
+--
+Red
+0.19449824869526944
+Typer KerasRegressor
+--
+Red
+0.3468611842435413
+Typer KerasRegressor
+--
+Red
+0.28404730318190585
+Typer KerasRegressor
+--
+Red
+-0.008092833634814056
+Typer KerasRegressor
+--
+Red
+-0.025941261753219536
+Typer KerasRegressor
+--
+Red
+0.15927996858562177
+Typer KerasRegressor
+--
+Red
+-0.022797881836670753
+Typer KerasRegressor
+--
+Red
+0.06105907483026163
+Typer KerasRegressor
+--
+Red
+-0.023021041086752625
+Typer KerasRegressor
+--
+Red
+0.0096600188708873
+Typer KerasRegressor
+--
+Red
+-0.02172409381146445
+Typer KerasRegressor
+--
+Red
+0.3643566551572741
+Typer KerasRegressor
+--
+Red
+0.2534270896583152
+Typer KerasRegressor
+--
+Red
+-0.055646916422933845
+Typer KerasRegressor
+--
+Red
+-0.0035412756617607677
+Typer KerasRegressor
+--
+Red
+-0.0021564951363257645
+Typer KerasRegressor
+--
+Red
+2.7657345439191516e-05
+Typer KerasRegressor
+--
+Red
+-0.027378414312300814
+Typer KerasRegressor
+--
+Red
+-0.061550201352357004
+Typer KerasRegressor
+--
+Red
+-0.05831702311271125
+Typer KerasRegressor
+--
+Red
+-0.06883736857912437
+Typer KerasRegressor
+--
+Red
+0.47297800849940463
+Typer KerasRegressor
+--
+Red
+-0.060422387204928985
+Typer KerasRegressor
+--
+Red
+0.000464712309159121
+Typer KerasRegressor
+--
+Red
+-0.05933477691146538
+Typer KerasRegressor
+--
+Red
+0.021724251260891725
+Typer KerasRegressor
+--
+Red
+-0.025128763314073765
+Typer KerasRegressor
+--
+Red
+0.3194358090476105
+Typer KerasRegressor
+--
+Red
+-0.02037857972835888
+Typer KerasRegressor
+--
+Red
+-0.11565940582500311
+Typer KerasRegressor
+--
+Red
+-0.003939555818352591
+Typer KerasRegressor
+--
+Red
+0.3072132112697089
+Typer KerasRegressor
+--
+Red
+0.3834825972843702
+Typer KerasRegressor
+--
+Red
+-0.010642544937911502
+Typer KerasRegressor
+--
+Red
+0.3861172457237475
+Typer KerasRegressor
+--
+Red
+-0.002750664286446991
+Typer KerasRegressor
+--
+Red
+0.3447145288346172
+Typer KerasRegressor
+--
+Red
+-0.005049367307537134
+Typer KerasRegressor
+--
+Red
+-0.010881783517462162
+Typer KerasRegressor
+--
+Red
+0.4840268792426683
+Typer KerasRegressor
+--
+Red
+0.07411587180121726
+Typer KerasRegressor
+--
+Red
+-0.0656796223048246
+Typer KerasRegressor
+--
+Red
+0.30960401741550636
+Typer KerasRegressor
+--
+Red
+0.14453444008807992
+Typer KerasRegressor
+--
+Red
+-0.049966163077394876
+Typer KerasRegressor
+--
+Red
+0.4494140773957984
+Typer KerasRegressor
+--
+Red
+-0.041251855102050206
+Typer KerasRegressor
+--
+Red
+0.44106357301533927
+Typer KerasRegressor
+--
+Red
+0.4868512667140329
+Typer KerasRegressor
+--
+Red
+0.4825943065959044
+Typer KerasRegressor
+--
+Red
+-0.05977154651679628
+Typer KerasRegressor
+--
+Red
+-0.0013398588014712498
+Typer KerasRegressor
+--
+Red
+-0.05643178960510142
+Typer KerasRegressor
+--
+Red
+0.36562869829075395
+Typer KerasRegressor
+--
+Red
+0.41900875628144196
+Typer KerasRegressor
+--
+Red
+0.49993495635343355
+Typer KerasRegressor
+--
+Red
+-0.004025748622597414
+Typer KerasRegressor
+--
+Red
+0.45936074612126976
+Typer KerasRegressor
+--
+Red
+-0.06012866524934535
+Typer KerasRegressor
+--
+Red
+0.46562022379907275
+Typer KerasRegressor
+--
+Red
+-0.012058210411503234
+Typer KerasRegressor
+--
+Red
+-0.061138601605407183
+Typer KerasRegressor
+--
+Red
+-0.06654679563266241
+Typer KerasRegressor
+--
+Red
+0.15209982933188237
+Typer KerasRegressor
+--
+Red
+-0.01081163082095471
+Typer KerasRegressor
+--
+Red
+0.4287146683944133
+Typer KerasRegressor
+--
+Red
+-0.020758475926515363
+Typer KerasRegressor
+--
+Red
+-0.06860496074638789
+Typer KerasRegressor
+--
+Red
+-0.043801575346076316
+Typer KerasRegressor
+--
+Red
+0.3772491793362046
+Typer KerasRegressor
+--
+Red
+-0.00492531792200035
+Typer KerasRegressor
+--
+Red
+0.1350783678059675
+Typer KerasRegressor
+--
+Red
+-0.01868391071155573
+Typer KerasRegressor
+--
+Red
+0.36995374837186834
+Typer KerasRegressor
+--
+Red
+-0.023168759480169276
+Typer KerasRegressor
+--
+Red
+0.4231768961504909
+Typer KerasRegressor
+--
+Red
+-0.0501833029038079
+Typer KerasRegressor
+--
+Red
+-0.06106298881805827
+Typer KerasRegressor
+--
+Red
+0.15917180601657555
+Typer KerasRegressor
+--
+Red
+-0.04821080403408562
+Typer KerasRegressor
+--
+Red
+-0.057655573286737205
+Typer KerasRegressor
+--
+Red
+0.3598674937584677
+Typer KerasRegressor
+--
+Red
+-0.0655161146667178
+Typer KerasRegressor
+--
+Red
+0.40552081533383866
+Typer KerasRegressor
+--
+Red
+0.40624671696732817
+Typer KerasRegressor
+--
+Red
+-0.012178554199111291
+Typer KerasRegressor
+--
+Red
+-0.05665132911399895
+Typer KerasRegressor
+--
+Red
+0.22526000574740535
+Typer KerasRegressor
+--
+Red
+-0.01455801231168774
+Typer KerasRegressor
+--
+Red
+-0.0156472797436229
+Typer KerasRegressor
+--
+Red
+-0.060540552132875014
+Typer KerasRegressor
+--
+Red
+-0.03496596856935441
+Typer KerasRegressor
+--
+Red
+0.46089847130901496
+Typer KerasRegressor
+--
+Red
+0.40755442283042786
+Typer KerasRegressor
+--
+Red
+0.40368111461436706
+Typer KerasRegressor
+--
+Red
+0.44389556125136564
+Typer KerasRegressor
+--
+Red
+-0.04101464383994102
+Typer KerasRegressor
+--
+Red
+-0.034586672558115206
+Typer KerasRegressor
+--
+Red
+0.42965540660345813
+Typer KerasRegressor
+--
+Red
+0.2484298272840716
+Typer KerasRegressor
+--
+Red
+0.39136462619293433
+Typer KerasRegressor
+--
+Red
+0.11680028481963067
+Typer KerasRegressor
+--
+Red
+-0.019229222910620125
+Typer KerasRegressor
+--
+Red
+0.3965489388878398
+Typer KerasRegressor
+--
+Red
+-0.03176964043973074
+Typer KerasRegressor
+--
+Red
+-0.004549241279348637
+Typer KerasRegressor
+--
+Red
+-0.058639293706669315
+Typer KerasRegressor
+--
+Red
+0.5067958945594045
+Typer KerasRegressor
+--
+Red
+0.4486981869442046
+Typer KerasRegressor
+--
+Red
+-0.017470109582384596
+Typer KerasRegressor
+--
+Red
+-0.03140387604723571
+Typer KerasRegressor
+--
+Red
+-0.13949942766489087
+Typer KerasRegressor
+--
+Red
+-0.07422575725390046
+Typer KerasRegressor
+--
+Red
+-0.06126251036674746
+Typer KerasRegressor
+--
+Red
+-0.022273354498304476
+Typer KerasRegressor
+--
+Red
+0.4835054602046356
+Typer KerasRegressor
+--
+Red
+0.3437609008824959
+Typer KerasRegressor
+--
+Red
+0.3470215583318894
+Typer KerasRegressor
+--
+Red
+-0.0152781197470655
+Typer KerasRegressor
+--
+Red
+-0.005369217832269735
+Typer KerasRegressor
+--
+Red
+0.47023743391593853
+Typer KerasRegressor
+--
+Red
+-0.001028043826267977
+Typer KerasRegressor
+--
+Red
+-0.0014014361163636746
+Typer KerasRegressor
+--
+Red
+-0.000814236381455169
+Typer KerasRegressor
+--
+Red
+0.12242067555730085
+Typer KerasRegressor
+--
+Red
+0.3887610963797691
+Typer KerasRegressor
+--
+Red
+-0.00029641962541737676
+Typer KerasRegressor
+--
+Red
+-0.0004034943101978161
+Typer KerasRegressor
+--
+Red
+-0.0011040302111509082
+Typer KerasRegressor
+--
+Red
+0.14313207425481766
+Typer KerasRegressor
+--
+Red
+-0.026320533483427333
+Typer KerasRegressor
+--
+Red
+0.3815109682071104
+Typer KerasRegressor
+--
+Red
+-0.06575235354959319
+Typer KerasRegressor
+--
+Red
+-0.0023700134367663495
+Typer KerasRegressor
+--
+Red
+-0.01093645985184688
+Typer KerasRegressor
+--
+Red
+-6.898406677269264e-05
+Typer KerasRegressor
+--
+Red
+-0.00027664911845892703
+Typer KerasRegressor
+--
+Red
+0.28596145063559186
+Typer KerasRegressor
+--
+Red
+-0.0010557536430049197
+Typer KerasRegressor
+--
+Red
+0.0029786983821599167
+Typer KerasRegressor
+--
+Red
+-0.0015787382633767333
+Typer KerasRegressor
+--
+Red
+0.39143964177223056
+Typer KerasRegressor
+--
+Red
+0.47335922722580115
+Typer KerasRegressor
+--
+Red
+0.02059654562866864
+Typer KerasRegressor
+--
+Red
+-0.0002748675081465368
+Typer KerasRegressor
+--
+Red
+-0.007430777897332375
+Typer KerasRegressor
+--
+Red
+-0.0010564973971953773
+Typer KerasRegressor
+--
+Red
+0.05303669098122443
+Typer KerasRegressor
+--
+Red
+-0.011618135332539303
+Typer KerasRegressor
+--
+Red
+-0.09293786158761486
+Typer KerasRegressor
+--
+Red
+0.2299751311548831
+Typer KerasRegressor
+--
+Red
+0.2753268904188193
+Typer KerasRegressor
+--
+Red
+-0.023071681056911375
+Typer KerasRegressor
+--
+Red
+-0.001080094669167364
+Typer KerasRegressor
+--
+Red
+-0.0018100173551089949
+Typer KerasRegressor
+--
+Red
+-0.0012019561550913327
+Typer KerasRegressor
+--
+Red
+0.3337740998972786
+Typer KerasRegressor
+--
+Red
+-0.07348426936440489
+Typer KerasRegressor
+--
+Red
+0.3144080808631712
+Typer KerasRegressor
+--
+Red
+0.0019717194833478446
+Typer KerasRegressor
+--
+Red
+0.29240715013139085
+Typer KerasRegressor
+--
+Red
+0.24812504911518596
+Typer KerasRegressor
+--
+Red
+-0.046319552115138496
+Typer KerasRegressor
+--
+Red
+-0.00012696974118808768
+Typer KerasRegressor
+--
+Red
+-0.00048624026364385564
+Typer KerasRegressor
+--
+Red
+0.14977755572593077
+Typer KerasRegressor
+--
+Red
+-0.0002799389290322196
+Typer KerasRegressor
+--
+Red
+-0.021122545658588843
+Typer KerasRegressor
+--
+Red
+-0.010822604510059008
+Typer KerasRegressor
+--
+Red
+0.018195148326544897
+Typer KerasRegressor
+--
+Red
+0.24111333855447215
+Typer KerasRegressor
+--
+Red
+-0.004822436600548929
+Typer KerasRegressor
+--
+Red
+0.35813949243893706
+Typer KerasRegressor
+--
+Red
+-0.08560900604639388
+Typer KerasRegressor
+--
+Red
+-0.00028039352570496945
+Typer KerasRegressor
+--
+Red
+0.003945234533100694
+Typer KerasRegressor
+--
+Red
+0.2960615208287002
+Typer KerasRegressor
+--
+Red
+0.14977431882771652
+Typer KerasRegressor
+--
+Red
+-0.0008197292023255365
+Typer KerasRegressor
+--
+Red
+0.017294596260094552
+Typer KerasRegressor
+--
+Red
+-0.0014870901590453567
+Typer KerasRegressor
