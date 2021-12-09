@@ -236,7 +236,9 @@ ncv_results('baseline', BASELINE_NCV)
 
 import random
 print("Performing Neural Network")
-param_grid = {'epochs' : [50,100,200],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
+param_grid = {'epochs' : [50,100,200],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],
+	      'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform'MORE],'activation' : ['tanh', 'relu'],
+	      'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
 
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -277,13 +279,13 @@ print("Performing a convulutional neural network")
 from tensorboard.plugins.hparams import api as hp
 import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
-cnn_param_grid = {'model__epochs':[200],'model__learning_rate' : [0.01,0.001],'model__HP_L1_REG' : [0.1],'model__HP_L2_REG' : [0.2],
-	      'model__kernel_initializer' : ['glorot_uniform'],'model__activation' : ['tanh'],'model__HP_NUM_HIDDEN_LAYERS' : [3],
-	      'model__units' : [200], 'model__rate' : [float(0)],'model__HP_OPTIMIZER' : ['SGD'], 'model__batch_size': [32],
-	      'model__filters':[1,2],'model__strides':[1,2],'model__pool':[1,2],'model__kernel':[1,2]}
 
 
-cnn_param_grid = {'epochs':[200, 100, 500],'batch_size' : [16,64,128], 'learning_rate' : [0.01,0.001],'HP_L1_REG' : [0.1],'HP_L2_REG' : [0.2],'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [3],'units' : [200], 'rate' : [float(0)],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2],'strides':[1,2],'pool':[1,2],'kernel':[1,2]}
+cnn_param_grid = {'epochs':[20,30,50,100],'batch_size' : [16,64,128], 'learning_rate' : [0.01,0.001,0.0001,0.000001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],
+		  'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2]],'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal','he_normal'],'activation' : ['tanh','relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],
+		  'units' : [200,400,1000], 'rate' : [float(0),0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['SGD','Adam','Adagrad'], 'filters':[1,2,3,4],
+		  'strides':[1,2,3,4],'pool':[1,2,3,4],'kernel':[1,2,3,4]}
+
 
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
