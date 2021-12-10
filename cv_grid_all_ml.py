@@ -293,7 +293,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 #pipeline_keras = Pipeline([('model', regressor_keras)])
-nn_model = KerasRegressor(build_fn = build_nn, verbose=0)
+nn_model = KerasRegressor(build_fn = build_nn, verbose=1, callbacks=[callback])
 
 from sklearn.model_selection import cross_val_score
 
@@ -343,7 +343,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         return model				      
         
 					      
-cnn_model = KerasRegressor(build_fn = conv_model,verbose=0)
+cnn_model = KerasRegressor(build_fn = conv_model,verbose=0, callbacks=[callback])
 CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 16,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='CNN')
 nn_results('CNN', CNN_NCV)
