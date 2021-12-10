@@ -56,17 +56,20 @@ from tensorflow.keras.layers import Dense, Dropout, Flatten #.core
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Dropout
 from sklearn.externals import joblib
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.wrappers.scikit_learn import KerasRegressor # or Classifier
 from sklearn.model_selection import KFold
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Dropout
 import random
-from tensorboard.plugins.hparams import api as hp
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
 from tensorboard.plugins.hparams import api as hp
 import random
+from tensorflow.python.keras.layers import deserialize, serialize
+from tensorflow.python.keras.saving import saving_utils
+
+
 
 #if snps == 'shuf' :
 #	print("Shuf nestedCV in usage")
@@ -134,6 +137,31 @@ def avg_cv_result(measure,cv_result):
 	print('Max', np.nanmax(avg_list), np.where(avg_list == np.nanmax(avg_list)))
 	print('Min', np.nanmin(avg_list), np.where(avg_list == np.nanmin(avg_list)))
 	return avg_list	
+
+
+def unpack(model, training_config, weights): ##https://github.com/tensorflow/tensorflow/issues/34697 #fixes an error that the early stopping callback throws up in the nested cv #something about the parralele fitting step needing everything to be pickle-able and the callback isnt 
+    restored_model = deserialize(model)
+    if training_config is not None:
+        restored_model.compile(
+            **saving_utils.compile_args_from_training_config(
+                training_config
+            )
+        )
+    restored_model.set_weights(weights)
+    return restored_model
+
+# Hotfix function
+def make_keras_picklable():
+
+    def __reduce__(self):
+        model_metadata = saving_utils.model_metadata(self)
+        training_config = model_metadata.get("training_config", None)
+        model = serialize(self)
+        weights = self.get_weights()
+        return (unpack, (model, training_config, weights))
+
+    cls = Model
+    cls.__reduce__ = __reduce__
 
 x_train, y_train = load_data(data)
 name_list = np.loadtxt(data, skiprows=1, usecols=(0,), dtype='str')
@@ -242,7 +270,8 @@ METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
-
+callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0
+make_keras_picklable()
 
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
 	opt = HP_OPTIMIZER
