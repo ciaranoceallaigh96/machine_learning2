@@ -112,7 +112,7 @@ class NestedCV():
             average other than 'binary'
     '''
 
-    def __init__(self, model_name, name_list, model, params_grid, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+    def __init__(self, model_name, name_list, model, params_grid, goal_dict, time_dict, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
         self.model_name = model_name
         self.name_list = name_list
         self.model = model
@@ -226,7 +226,7 @@ class NestedCV():
 
                     return self._transform_score_format(inner_grid_score), param_dict
 
-    def fit(self, X, y, name_list, model_name, phenfile, set_size, snps):
+    def fit(self, X, y, name_list, model_name, goal_dict, time_dict, phenfile, set_size, snps):
         '''A method to fit nested cross-validation 
         Parameters
         ----------
@@ -267,6 +267,8 @@ class NestedCV():
         self.name_list = name_list 
         self.phenfile = phenfile
         self.set_size = set_size
+        self.goal_dict = goal_dict
+        self.time_dict = time_dict
         self.snps = snps
         # If Pandas dataframe or series, convert to array
         if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
@@ -319,7 +321,13 @@ class NestedCV():
                 results = []
                 for parameters in param_func:
                   print(parameters)
-                  results.append(self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters))
+                  tic = time.clock()
+                  inner_grid_score, param_dictionary = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel()-1, y_test_inner.ravel()-1,param_dict=parameters)
+                  toc = time.clock()
+                  results.append((inner_grid_score,param_dictionary))
+                  for key in param_dictionary:
+                    time_dict[key][param_dictionary[key]].append(toc-tic)
+                    goal_dict[key][param_dictionary[key]].append(inner_grid_score)
                 search_scores.extend(results)
             
             best_inner_score, best_inner_params = self._best_of_results(search_scores)
@@ -354,6 +362,8 @@ class NestedCV():
         self.best_inner_score_list = best_inner_score_list
         self.best_params = self._score_to_best_params(best_inner_params_list)
         self.best_inner_params_list = best_inner_params_list
+        self.goal_list = goal_list
+        self.time_list = time_list
 
     # Method to show score vs variance chart. You can run it only after fitting the model.
     def score_vs_variance_plot(self):
