@@ -163,6 +163,43 @@ def make_keras_picklable():
     cls = Model
     cls.__reduce__ = __reduce__
 
+
+def make_param_box_plot(goal_dict, time_dict):
+	for param in goal_dict:
+                plt.subplots(1,2,figsize=(12,8))
+                plt.subplot(121)
+                plt.boxplot(goal_dict[param].values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=goal_dict[param].keys()) #orange line is median, green dotted line is mean
+                plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
+                plt.ylabel('R^2', fontsize=10,fontweight='bold')
+                plt.title('R^2 Score vs %s' % param, fontsize=14, fontweight='bold')
+                if param == 'initialization':
+                        plt.xticks(fontsize=6)
+                plt.subplot(122)
+                plt.boxplot(time_dict[param].values(), bootstrap=None,showmeans=False, meanline=False, notch=False,labels=time_dict[param].keys())
+                plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
+                plt.ylabel('Training Time', fontsize=10,fontweight='bold')
+                plt.title('Training Time vs %s' % param, fontsize=14, fontweight='bold')
+                plt.tight_layout(pad=4)
+                if param == 'initialization':
+                        plt.xticks(fontsize=6)
+                my_fig_name = "plots_of_" + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
+                plt.savefig(my_fig_name, dpi=300) 
+                plt.show()
+                plt.clf()
+                plt.close()
+		
+def make_goal_dict(whole_dict):
+	print(whole_dict)
+	goal_dict = {key:{} for key in whole_dict}
+	for key in whole_dict:
+		for item in whole_dict[key]:
+			goal_dict[key][item] = []
+	time_dict = {key:{} for key in whole_dict} #both empty
+	for key in whole_dict:
+                for item in whole_dict[key]:
+                        time_dict[key][item] = []
+	return goal_dict, time_dict
+
 x_train, y_train = load_data(data)
 name_list = np.loadtxt(data, skiprows=1, usecols=(0,), dtype='str')
 
@@ -205,8 +242,9 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param}
 print(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='SVM')
+rbg_goal_dict, rbg_time_dict = make_goal_dict(svm_random_grid)
+SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
 
 
 ncv_results('SVM', SVM_NCV)	
