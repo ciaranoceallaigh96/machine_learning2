@@ -362,8 +362,8 @@ class NestedCV():
         self.best_inner_score_list = best_inner_score_list
         self.best_params = self._score_to_best_params(best_inner_params_list)
         self.best_inner_params_list = best_inner_params_list
-        self.goal_list = goal_list
-        self.time_list = time_list
+        self.goal_dict = goal_dict
+        self.time_dict = time_dict
 
     # Method to show score vs variance chart. You can run it only after fitting the model.
     def score_vs_variance_plot(self):
