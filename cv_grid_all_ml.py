@@ -164,7 +164,7 @@ def make_keras_picklable():
     cls.__reduce__ = __reduce__
 
 
-def make_param_box_plot(goal_dict, time_dict):
+def make_param_box_plot(goal_dict, time_dict, analysis):
 	for param in goal_dict:
                 plt.subplots(1,2,figsize=(12,8))
                 plt.subplot(121)
@@ -182,7 +182,7 @@ def make_param_box_plot(goal_dict, time_dict):
                 plt.tight_layout(pad=4)
                 if param == 'initialization':
                         plt.xticks(fontsize=6)
-                my_fig_name = "plots_of_" + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
+                my_fig_name = "plots_of_" +str(analysis) + '_' + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
                 plt.savefig(my_fig_name, dpi=300) 
                 plt.show()
                 plt.clf()
@@ -217,7 +217,7 @@ def ncv_results(analysis, ncv_object):
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict)
+        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis)
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
                 pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 
@@ -226,7 +226,7 @@ def nn_results(analysis, ncv_object):
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict)
+        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis))
         nn_list = [ncv_object.best_inner_params_list, ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
