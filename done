@@ -1,6 +1,0 @@
-Script started on Fri 10 Dec 2021 17:40:45 GMT
-bash: alias: NF} $1 | sort -nu | tail -n 1 : not found
-(base) ciaran@pg3:/external_storage/ciaran/machine_learning2$ exit
-exit
-
-Script done on Fri 10 Dec 2021 17:40:52 GMT
