@@ -183,8 +183,8 @@ class NestedCV():
             pred = self.model.predict(X_test)
         
         if(self.multiclass_average == 'binary'):
-            print(self.metric(y_test, pred))
-            return self.metric(y_test, pred), pred
+            print(self.metric(y_test, np.nan_to_num(pred))) #added in nan_to_num because3 of error
+            return self.metric(y_test, np.nan_to_num(pred)), np.nan_to_num(pred)
         else:
             print(self.metric(y_test, pred, average=self.multiclass_average))
             return self.metric(y_test, pred, average=self.multiclass_average), pred
