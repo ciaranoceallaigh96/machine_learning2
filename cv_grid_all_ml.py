@@ -165,9 +165,16 @@ def make_keras_picklable():
 
 
 def make_param_box_plot(goal_dict, time_dict, analysis): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
+	if 'max_depth' in goal_dict.keys():
+		if None in goal_dict['max_depth'].keys():
+			old_key = None #thros up sorting error
+			new_key = 0
+			goal_dict['max_depth'][new_key] = goal_dict['max_depth'].pop(old_key)
+			time_dict['max_depth'][new_key] = time_dict['max_depth'].pop(old_key)
 	for param in goal_dict:
 		for value in goal_dict[param]:
 			goal_dict[param][value] = [0 if score < 0 else score for score in goal_dict[param][value]] #convert negative r2 to zeros
+	print(goal_dict)
 	for param in goal_dict:
                 plt.subplots(1,2,figsize=(12,8))
                 plt.subplot(121) #sorted
@@ -235,7 +242,7 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
-
+'''
 print("Performing SVM")
 c_param = [2e-5,2e-3,1,2e+3,2e+5] #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [2e-5,2e-3,1,2e+3,2e+5]
@@ -273,9 +280,10 @@ lass_goal_dict, lass_time_dict = make_goal_dict(alpha_dict)
 RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':150, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RIDGE', goal_dict=lass_goal_dict, time_dict=lass_time_dict)
 ncv_results('RIDGE', RIDGE_NCV)
+'''
 print("Performing Random Forests")
-n_estimators = [int(x) for x in np.linspace(start = 2000, stop = 9000, num = 50)] # Number of features to consider at every split
-max_features = ['auto', 'sqrt', 'log2'] # Maximum number of levels in tree
+n_estimators = [int(x) for x in np.linspace(start = 100, stop = 1000, num = 10)] # Number of features to consider at every split
+max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
 max_depth = [int(x) for x in np.linspace(1, 100, num = 20)]
 max_depth.append(None) # Minimum number of samples required to split a node
 #min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
@@ -297,7 +305,7 @@ rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"M
 rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 rf_goal_dict, rf_time_dict = make_goal_dict(random_grid)
-RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 8,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':3, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RF', goal_dict=rf_goal_dict, time_dict=rf_time_dict)
 ncv_results('RF', RF_NCV)
 #base_grid = {"fit_intercept":["True"]}
