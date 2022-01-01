@@ -64,9 +64,9 @@ then
 
         head -n $5 gwas_results_clumped_"$1"_in_"$2"_"$3".clumped | awk '{print $3}'  > top_"$5"_snps_"$1"_in_"$2"_"$3".txt
 
-        /hpc/local/CentOS7/hers_en/software/plink-1.90/plink --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_top_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_top_"$1"_in_"$2"_"$3"
 
-        /hpc/local/CentOS7/hers_en/software/plink-1.90/plink --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_top_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_top_"$1"_in_"$2"_"$3"
 
 
 fi
