@@ -175,18 +175,16 @@ def make_param_box_plot(goal_dict, time_dict, analysis): #example goal dict = {'
 		for value in goal_dict[param]:
 			goal_dict[param][value] = [0 if score < 0 else score for score in goal_dict[param][value]] #convert negative r2 to zeros
 	for param in goal_dict:
-		ordered_dict_items = {k:goal_dict[param][k] for k in sorted(goal_dict[param].keys())}
-		ordered_time_items = {k:time_dict[param][k] for k in sorted(time_dict[param].keys())}
                 plt.subplots(1,2,figsize=(12,8))
                 plt.subplot(121) #sorted
-                plt.boxplot(ordered_dict_items.values()), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_dict_items.keys()) #orange line is median, green dotted line is mean
+                plt.boxplot(sorted(goal_dict[param].values()), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=sorted(goal_dict[param].keys())) #orange line is median, green dotted line is mean
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
                 plt.ylabel('R^2', fontsize=10,fontweight='bold')
                 plt.title('R^2 Score vs %s' % param, fontsize=14, fontweight='bold')
                 if param == 'initialization':
                         plt.xticks(fontsize=6)
                 plt.subplot(122)
-                plt.boxplot(ordered_time_items.values()), bootstrap=None,showmeans=False, meanline=False, notch=False,labels=ordered_time_items.keys())
+                plt.boxplot(sorted(time_dict[param].values()), bootstrap=None,showmeans=False, meanline=False, notch=False,labels=sorted(time_dict[param].keys()))
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
                 plt.ylabel('Training Time', fontsize=10,fontweight='bold')
                 plt.title('Training Time vs %s' % param, fontsize=14, fontweight='bold')
@@ -382,7 +380,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
