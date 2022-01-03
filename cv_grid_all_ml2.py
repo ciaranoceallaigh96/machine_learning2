@@ -360,7 +360,7 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[200, 100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01,0.001, 0.0001],'HP_L1_REG' : [0.1, 0, 0.01],'HP_L2_REG' : [0.1, 0, 0.01],'kernel_initializer' : ['random_uniform', 'random_normal', 'glorot_normal', 'glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],'units' : [200,500], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2,3],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+cnn_param_grid = {'epochs':[200, 100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01,0.001, 0.0001],'HP_L1_REG' : [0.1, 0, 0.01],'HP_L2_REG' : [0.1, 0, 0.01],'kernel_initializer' : ['random_uniform', 'random_normal', 'glorot_normal', 'glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],'units' : [200,500], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2,3],'strides':[1,2,3],'pool':[1,2],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
@@ -372,7 +372,7 @@ print(x_train.shape)
 #x_test = x_test.reshape(x_test.shape[0], 1, x_test.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
 print(x_train.shape)
 #K.set_image_dim_ordering('th') #Negative dimension size caused by subtracting 2 from 1 for 'MaxPool - fixes error
-K.image_data_format()					      
+K.set_image_data_format('channels_first')					      
 def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
         opt = HP_OPTIMIZER
         if HP_NUM_HIDDEN_LAYERS == 1 :
@@ -380,11 +380,11 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
-        model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
+        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1), padding='same',data_format='channels_last',activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
-                model.add(Conv1D(filters=filters, strides=strides, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
-                model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides))
+                model.add(Conv1D(filters=filters, strides=strides, padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+                model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same', data_format='channels_last'))
         model.add(Flatten())
         model.add(Dense(1, activation='linear'))
         model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
