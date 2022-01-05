@@ -249,6 +249,7 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
+'''
 print("Performing SVM")
 c_param = [2e-5,2e-3,1,int(2e+3),int(2e+5), int(2e+7)] #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [2e-5,2e-3,1,int(2e+3),int(2e+5)]
@@ -320,6 +321,7 @@ base_time_dict = {}
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(),goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
+'''
 import random
 print("Performing Neural Network")
 param_grid = {'epochs' : [50,100,200],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
@@ -355,9 +357,9 @@ nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':100, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
-nn_results('NN', NN_NCV)
+#NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':100, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+#NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
+#nn_results('NN', NN_NCV)
 
 print("Performing a convulutional neural network")
 from tensorboard.plugins.hparams import api as hp
@@ -365,7 +367,7 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[200, 100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01,0.001, 0.0001],'HP_L1_REG' : [0.1, 0, 0.01],'HP_L2_REG' : [0.1, 0, 0.01],'kernel_initializer' : ['random_uniform', 'random_normal', 'glorot_normal', 'glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],'units' : [200,500], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2,3],'strides':[1,2,3],'pool':[1,2],'kernel':[1,2,3]}
+cnn_param_grid = {'epochs':[50],'batch_size' : [16,64,128], 'learning_rate' : [0.01,0.001, 0.0001,0.1],'HP_L1_REG' : [0.1, 0, 0.01, 0.001, 0.0001],'HP_L2_REG' : [0.1, 0, 0.01, 0.001,0.0001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD', 'Adam', 'Adagrad'], 'filters':[1,5,10],'strides':[1,5,10],'pool':[1,5,10],'kernel':[1,5,10]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
@@ -398,6 +400,6 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         
 					      
 cnn_model = KerasRegressor(build_fn = conv_model,verbose=0, callbacks=[callback])
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='CNN', goal_dict=cnn_goal_dict, time_dict=cnn_time_dict)
 nn_results('CNN', CNN_NCV)

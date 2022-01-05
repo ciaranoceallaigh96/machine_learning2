@@ -215,7 +215,7 @@ class NestedCV():
                     print("Red")
                     # Predict and score model
                     inner_grid_score, inner_pred = self._predict_and_score(X_test_inner, y_test_inner.ravel())
-
+                    inner_grid_train_score = self.model.score(X_train_inner, y_train_inner) #to check stability 
                     # Cleanup for Keras
                     print("Typer", str(type(self.model).__name__))
                     if(type(self.model).__name__ == 'KerasRegressor' or
@@ -224,7 +224,7 @@ class NestedCV():
                         from tensorflow.keras import backend as K
                         K.clear_session()
 
-                    return self._transform_score_format(inner_grid_score), param_dict
+                    return self._transform_score_format(inner_grid_score), param_dict, inner_grid_train_score
 
     def fit(self, X, y, name_list, model_name, goal_dict, time_dict, phenfile, set_size, snps):
         '''A method to fit nested cross-validation 
@@ -283,6 +283,7 @@ class NestedCV():
         
         outer_cv = KFold(n_splits=self.outer_kfolds, shuffle=True, random_state=42)
         inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True, random_state=42)
+        stability_dict = goal_dict
         outer_count = 1
         outer_scores = []
         variance = []
@@ -319,15 +320,22 @@ class NestedCV():
                 
 
                 results = []
+                
                 for parameters in param_func:
                   print(parameters)
                   tic = time.clock()
-                  inner_grid_score, param_dictionary = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel()-1, y_test_inner.ravel()-1,param_dict=parameters)
+                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel()-1, y_test_inner.ravel()-1,param_dict=parameters)
                   toc = time.clock()
                   results.append((inner_grid_score,param_dictionary))
                   for key in param_dictionary:
                     time_dict[key][param_dictionary[key]].append(toc-tic)
                     goal_dict[key][param_dictionary[key]].append(inner_grid_score)
+                    if inner_train_score > 0.1:
+                      if inner_grid_score <= 0:
+                        inner_grid_score = 0
+                      stability_dict[key][param_dictionary[key]].append(inner_train_score-inner_grid_score)
+                    else:
+                      stability_dict[key][param_dictionary[key]].append(1)
                 search_scores.extend(results)
             
             best_inner_score, best_inner_params = self._best_of_results(search_scores)
@@ -364,6 +372,7 @@ class NestedCV():
         self.best_inner_params_list = best_inner_params_list
         self.goal_dict = goal_dict
         self.time_dict = time_dict
+        self.stability_dict = stability_dict
 
     # Method to show score vs variance chart. You can run it only after fitting the model.
     def score_vs_variance_plot(self):

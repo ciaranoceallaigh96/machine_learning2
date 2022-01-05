@@ -166,13 +166,14 @@ def make_keras_picklable():
 import collections
 import operator
 
-def make_param_box_plot(goal_dict, time_dict, analysis): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
+def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
 	if 'max_depth' in goal_dict.keys():
 		if None in goal_dict['max_depth'].keys():
 			old_key = None #thros up sorting error
 			new_key = 0
 			goal_dict['max_depth'][new_key] = goal_dict['max_depth'].pop(old_key)
 			time_dict['max_depth'][new_key] = time_dict['max_depth'].pop(old_key)
+			stability_dict['max_depth'][new_key] = stability_dict['max_depth'].pop(old_key)
 	for param in goal_dict:
 		for value in goal_dict[param]:
 			goal_dict[param][value] = [0 if score < 0 else score for score in goal_dict[param][value]] #convert negative r2 to zeros
@@ -204,6 +205,22 @@ def make_param_box_plot(goal_dict, time_dict, analysis): #example goal dict = {'
                 plt.show()
                 plt.clf()
                 plt.close()
+	if stability_dict is not None:
+		for param in stability_dict:
+			sorted_stability_items = sorted(stability_dict[param].items(), key=operator.itemgetter(0))
+			ordered_stability_items = collections.OrderedDict(sorted_stability_items)
+			plt.boxplot(ordered_stability_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_stability_items.keys())
+			plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
+			plt.ylabel('Delta Train-Test R^2', fontsize=10,fontweight='bold')
+			plt.title('Stability Score vs %s' % param, fontsize=14, fontweight='bold')
+			if param == 'initialization':
+				plt.xticks(fontsize=6)
+			my_fig_name = "stability_plot_of_" +str(analysis) + '_' + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
+			plt.savefig(my_fig_name, dpi=300)
+			plt.show()
+			plt.clf()
+			plt.close()
+	                
 		
 def make_goal_dict(whole_dict):
 	print(whole_dict)
@@ -234,7 +251,7 @@ def ncv_results(analysis, ncv_object):
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis))
+        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis), stability_dict=ncv_object.stability_dict)
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
                 pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
 
@@ -243,11 +260,12 @@ def nn_results(analysis, ncv_object):
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis))
+        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis),stability_dict=ncv_object.stability_dict)
         nn_list = [ncv_object.best_inner_params_list, ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
+
 
 print("Performing SVM")
 c_param = [2e-5,2e-3,1,int(2e+3),int(2e+5), int(2e+7)] #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -266,6 +284,8 @@ svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
 SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
 ncv_results('SVM', SVM_NCV)	
+exit()
+'''
 print("Performing RBG")
 RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='RBG', goal_dict=rbg_goal_dict, time_dict=rbg_time_dict)
@@ -320,6 +340,7 @@ base_time_dict = {}
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(),goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
+'''
 import random
 print("Performing Neural Network")
 param_grid = {'epochs' : [50,100,200],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 0.2, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4, 5],'units' : [200, 400, 1000], 'rate' : [float(0), 0.1, 0.2, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
@@ -355,9 +376,9 @@ nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':100, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
-nn_results('NN', NN_NCV)
+#NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':100, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+#NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
+#nn_results('NN', NN_NCV)
 
 print("Performing a convulutional neural network")
 from tensorboard.plugins.hparams import api as hp
@@ -365,7 +386,7 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[200, 100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01,0.001, 0.0001],'HP_L1_REG' : [0.1, 0, 0.01],'HP_L2_REG' : [0.1, 0, 0.01],'kernel_initializer' : ['random_uniform', 'random_normal', 'glorot_normal', 'glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],'units' : [200,500], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2,3],'strides':[1,2,3],'pool':[1,2],'kernel':[1,2,3]}
+cnn_param_grid = {'epochs':[100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01,0.001, 0.0001],'HP_L1_REG' : [0.1, 0, 0.01, 0.001],'HP_L2_REG' : [0.1, 0, 0.01, 0.001],'kernel_initializer' : ['random_uniform', 'random_normal', 'glorot_normal', 'glorot_uniform'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4,5],'units' : [100,200], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD'], 'filters':[1,2,3],'strides':[1,2,3],'pool':[1,2],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
@@ -385,7 +406,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation,  padding='same',data_format='channels_last', kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
@@ -398,6 +419,6 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         
 					      
 cnn_model = KerasRegressor(build_fn = conv_model,verbose=0, callbacks=[callback])
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, model_name='CNN', goal_dict=cnn_goal_dict, time_dict=cnn_time_dict)
 nn_results('CNN', CNN_NCV)
