@@ -7,12 +7,12 @@ snps=$2 #top or shuf
 NOW=$( date '+%F_%H:%M:%S' )
 echo $NOW >> "$pheno"_gblup_train_only_grm_cv_test.prscores ; \
 for i in {1..4} ; do \
-cut -d ' ' -f 1-2 train_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/train_ids.txt ; \
-cut -d ' ' -f 1-2 test_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
+cut -d ' ' -f 1-2 train_raw_plink_"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/train_ids.txt ; \
+cut -d ' ' -f 1-2 test_raw_plink__"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
 ; \
 /external_storage/eoin/GCTA_manual_install/gcta64 \
 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids \
---extract "$snps"10000_snps_"$i"_in_4_out.txt \
+--extract "$snps"_10000_snps_"$i"_in_4_out.txt \
 --make-grm \
 --thread-num 32 \
 --out ./completed_big_matrix_binary_grm_"$pheno"_train_cv_"$i" \
@@ -29,7 +29,7 @@ cut -d ' ' -f 1-2 test_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/ph
 /external_storage/eoin/GCTA_manual_install/gcta64 \
 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids \
 --blup-snp ./"$pheno"_blup_solutions_train_cv_"$i".indi.blp \
---extract "$snps"10ksnps_"$i"_in_4_out.txt \
+--extract "$snps"_10000_snps_"$i"_in_4_out.txt \
 --keep /home/ciaran/arabadopsis/phenotypes/train_ids.txt \
 --out ./"$pheno"_gblup_snp_FX_train_only_grm_cv_"$i" \
 ; \
