@@ -5,7 +5,7 @@
 pheno=$1 #eg FT10 or FT16
 snps=$2 #top or shuf
 NOW=$( date '+%F_%H:%M:%S' )
-echo $NOW >> "$pheno"_gblup_train_only_grm_cv_test.prscores \
+echo $NOW >> "$pheno"_gblup_train_only_grm_cv_test.prscores ; \
 for i in {1..4} ; do \
 cut -d ' ' -f 1-2 train_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/train_ids.txt ; \
 cut -d ' ' -f 1-2 test_raw_plink_"$i"_in_4_out.raw > /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
