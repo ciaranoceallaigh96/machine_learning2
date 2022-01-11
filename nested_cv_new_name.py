@@ -14,6 +14,7 @@ import sys
 import sklearn
 from sklearn import preprocessing
 import os
+import copy
 print(os.getcwd())
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Flex version")
 #set_size = 10006    
@@ -283,7 +284,7 @@ class NestedCV():
         
         outer_cv = KFold(n_splits=self.outer_kfolds, shuffle=True, random_state=42)
         inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True, random_state=42)
-        stability_dict = goal_dict
+        stability_dict = copy.deepcopy(goal_dict) #fully independent copy of an object 
         outer_count = 1
         outer_scores = []
         variance = []
