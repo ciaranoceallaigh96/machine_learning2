@@ -354,7 +354,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	chosen_opt = getattr(tf.keras.optimizers,opt)
 	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
 	model = Sequential()
-	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1]-1,)))
+	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1],)))
 	if rate != 0:
 		model.add(Dropout(rate=rate))	
 	for i in range(HP_NUM_HIDDEN_LAYERS-1):
@@ -404,7 +404,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
-        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
+        model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1],1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation,  padding='same',data_format='channels_last', kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
