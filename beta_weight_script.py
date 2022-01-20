@@ -1,4 +1,5 @@
 import sys
+import random
 import statistics
 import numpy as np
 import sklearn
@@ -63,51 +64,24 @@ with open(str(sys.argv[3]), 'r') as f:
 	for line in f:
 		beta_weights.append(float(line.strip()))
 
-param_grid = {'epochs' : [50,100,200],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 1e-5,1e-6],'HP_L2_REG' : [1e-8, 0.1, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'he_normal'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [200, 100], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
+param_grid = {'epochs' : [50,100],'batch_size' : [16,64, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-4, 1e-2, 1e-5,1e-6],'HP_L2_REG' : [1e-8, 0.1, 1e-4, 1e-2], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'he_normal'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [200, 100], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['Adam', 'SGD', 'Adagrad']}
 
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
-'''
-def create_model():
-	opt = HP_OPTIMIZER; chosen_opt = getattr(tf.keras.optimizers,opt)
-	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
-	model = Sequential()
-	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(x_train.shape[1],)))
-	if rate != 0:
-		model.add(Dropout(rate=rate))
-	for i in range(HP_NUM_HIDDEN_LAYERS-1):
-		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
-		if rate != 0:
-			model.add(Dropout(rate=rate))
-	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
-	new_layer_weights = np.random.rand(x_train.shape[1]-1,units) #(num_inputs,num_units)
-	for i in range(0,x_train.shape[1]-1):
-		new_Layer_weights[i,:] = beta_weights[i]
-	new_weight_list = []
-	new_weight_list.append(new_layer_weights)
-	new_weight_list.append(np.zeros(num_units)) # biases
-	model.layers[0].set_weights(new_weight_list)
-	print(model.summary())
 
+epochs = random.choice(param_grid['epochs'])
+batch_size= random.choice(param_grid['batch_size'])
+learning_rate= random.choice(param_grid['learning_rate'])
+HP_L1_REG= random.choice(param_grid['HP_L1_REG'])
+HP_L2_REG= random.choice(param_grid['HP_L2_REG'])
+kernel_initializer= random.choice(param_grid['kernel_initializer'])
+activation= random.choice(param_grid['activation'])
+HP_NUM_HIDDEN_LAYERS= random.choice(param_grid['HP_NUM_HIDDEN_LAYERS'])
+units= random.choice(param_grid['units'])
+rate= random.choice(param_grid['rate'])
+HP_OPTIMIZER= random.choice(param_grid['HP_OPTIMIZER'])
 
-model = KerasRegressor(build_fn=create_model)
-grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=10, cv=1, n_jobs=12)
-grid_result = grid.fit(X_train, y_test.ravel())
-print(grid_result.score(X_test, y_test.ravel()))
-'''
-epochs = 40
-batch_size=32
-learning_rate=0.01
-HP_L1_REG=1e-6
-HP_L2_REG=0.1
-kernel_initializer='glorot_uniform'
-activation='tanh'
-HP_NUM_HIDDEN_LAYERS=2
-units=50
-rate=0.05
-HP_OPTIMIZER='Adagrad'
 opt = HP_OPTIMIZER; chosen_opt = getattr(tf.keras.optimizers,opt)
 reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
 model = Sequential()
@@ -126,14 +100,13 @@ limit = math.sqrt(6 / (input_units + output_units)) #glorot_uniform limit
 beta_weights = np.array(beta_weights).reshape(-1, 1)
 beta_weights = np.interp(beta_weights, (beta_weights.min(), beta_weights.max()), (-(limit), limit)) #scale between two numbers
 
-print(model.layers[0].get_weights()[0])
-first_layer_weights = model.layers[0].get_weights()[0]
-for i in first_layer_weights:
-	print(max(i))
-	print(min(i))
-
+#print(model.layers[0].get_weights()[0])
+#first_layer_weights = model.layers[0].get_weights()[0]
+#for i in first_layer_weights:
+#	print(max(i))
+#	print(min(i))
 #print(min(model.layers[0].get_weights()[0]))
-'''
+
 new_layer_weights = np.random.rand(X_train.shape[1],units) #(num_inputs,num_units)
 for i in range(0,X_train.shape[1]-1):
 	new_layer_weights[i,:] = beta_weights[i]
@@ -142,17 +115,36 @@ new_weight_list.append(new_layer_weights)
 new_weight_list.append(np.zeros(units)) # biases
 model.layers[0].set_weights(new_weight_list)
 new_layer_weights = model.layers[0].get_weights()[0]
-'''
 #for i in range(1,20):
 #	print(max(new_layer_weights[i]))
 #	print(min(new_layer_weights[i]))
-print(model.summary())
 
-model.fit(X_train, y_train.ravel(), epochs=epochs, batch_size=batch_size, validation_data=(X_test, y_test.ravel()))
-print(model.layers[0].get_weights()[0])
-first_layer_weights = model.layers[0].get_weights()[0]
-for i in range(1,20):
-       print(max(first_layer_weights[i]))
-       print(min(first_layer_weights[i]))
+model.fit(X_train, y_train.ravel(), epochs=epochs, batch_size=batch_size, verbose=0 , validation_data=(X_test, y_test.ravel()))
+score = model.evaluate(X_test, y_test.ravel())[3] #should be R2
+f = open('seeded_score_file.txt', 'a') 
+f.write(str(score))
+f.close()
 
+#print(model.layers[0].get_weights()[0])
+#first_layer_weights = model.layers[0].get_weights()[0]
+#for i in range(1,20):
+#       print(max(first_layer_weights[i]))
+#       print(min(first_layer_weights[i]))
 
+opt = HP_OPTIMIZER; chosen_opt = getattr(tf.keras.optimizers,opt)
+reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+model2 = Sequential()
+model2.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, input_shape=(X_train.shape[1],)))
+if rate != 0:
+        model2.add(Dropout(rate=rate))
+for i in range(HP_NUM_HIDDEN_LAYERS-1):
+        model2.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
+        if rate != 0:
+                model2.add(Dropout(rate=rate))
+model2.add(Dense(1, activation='linear'))
+model2.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+model2.fit(X_train, y_train.ravel(), epochs=epochs, batch_size=batch_size, verbose=0 , validation_data=(X_test, y_test.ravel()))
+score = model2.evaluate(X_test, y_test.ravel())[3] #should be R2
+f = open('glorot_uni_score_file.txt', 'a') 
+f.write(str(score))
+f.close()
