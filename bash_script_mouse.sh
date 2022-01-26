@@ -31,7 +31,7 @@ if [ "$6" == "shuf" ]
 then
 
 #choose shuf set
-        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        pheno=$(awk '{print $3}' $4 | head -n 1)
         echo "Pheno is $pheno"
         phenofile="$4"
 	#plink2 --bfile /external_storage/ciaran/mouse/mouse_plink --indep-pairwise 5 5 0.5 --out /external_storage/ciaran/greml/mouse_indep_snps #mac 6 doesnt do anything
@@ -48,7 +48,7 @@ fi
 
 if [ "$6" == "top" ]
 then
-        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        pheno=$(awk '{print $3}' $4 | head -n 1)
         echo "Pheno is $pheno"
         phenofile="$4"
         #sed "s/'/ /g" name_vector_train.txt | awk '{print $2, $3}' > name_vector_train2.txt; mv name_vector_train2.txt name_vector_train.txt
@@ -61,8 +61,7 @@ then
         #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
         #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
         #cat header.txt gwas_results_"$1"_in_"$2"_"$3".gsorted.001 > gwas_results_"$1"_in_"$2"_"$3".gsorted.001.filter
-        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /external_storage/ciaran/mouse/mouse_plink --clump-kb 250 --clump-p1 0.0005 --clump-p2 0.001 --clump-r2 0.1 --clump gwas_results_"$1"_in_"$2"_"$3".gsorted --out gwas_results_clumped_"$1"_in_"$2"_"$3"
-
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /external_storage/ciaran/mouse/mouse_plink  --clump-kb 5 --clump-p1 0.2 --clump-p2 0.5 --clump-r2 0.5 --clump gwas_results_"$1"_in_"$2"_"$3".gsorted --out gwas_results_clumped_"$1"_in_"$2"_"$3"
         head -n $5 gwas_results_clumped_"$1"_in_"$2"_"$3".clumped | awk '{print $3}'  > top_"$5"_snps_"$1"_in_"$2"_"$3".txt
 
         plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /external_storage/ciaran/mouse/mouse_plink --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_top_"$1"_in_"$2"_"$3"
@@ -74,7 +73,7 @@ fi
 
 if [ "$6" == "no_clump" ]
 then
-        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        pheno=$(awk '{print $3}' $4 | head -n 1)
         echo "Pheno is $pheno"
         phenofile="$4"
         #grep -v -n "' '" name_vector_train.txt | cut -d ':' -f 1 > line_file.txt #which lines have been spread over two lines

@@ -22,9 +22,9 @@ print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permi
 
 def load_data(data, set_size):
         print("Set size set to %s" % set_size)
-        dataset = np.loadtxt(data, skiprows=1)
-        x = dataset[: , 6:(set_size+6)]/2
-        y = dataset[: , 5 ]
+        dataset = np.loadtxt(data, skiprows=1, dtype='str')
+        x = dataset[: , 6:(set_size+6)].astype(np.int)/2
+        y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
@@ -219,7 +219,9 @@ class NestedCV():
                     print("Red")
                     # Predict and score model
                     inner_grid_score, inner_pred = self._predict_and_score(X_test_inner, y_test_inner.ravel())
-                    inner_grid_train_score = self.model.score(X_train_inner, y_train_inner) #to check stability 
+                    #inner_grid_train_score = self.model.score(X_train_inner, y_train_inner) #to check stability 
+                    inner_train_pred = self.model.predict(X_train_inner)
+                    inner_grid_train_score = self.metric(y_train_inner, np.nan_to_num(inner_train_pred)) #had to replace one line inner_grid_train_score because of NA,Infiinity error, this allows NAs in train_pred to be dealt with
                     # Cleanup for Keras
                     print("Typer", str(type(self.model).__name__))
                     if(type(self.model).__name__ == 'KerasRegressor' or
