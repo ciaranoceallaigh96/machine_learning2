@@ -20,10 +20,15 @@ print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permi
 #set_size = 10006    
 #print("Set size set to %s" % set_size)
 
-def load_data(data, set_size):
+def load_data(data, set_size, organism='arabidopsis'):
         print("Set size set to %s" % set_size)
         dataset = np.loadtxt(data, skiprows=1, dtype='str')
-        x = dataset[: , 6:(set_size+6)].astype(np.int)/2
+        if organism=='mouse':
+            print("organism: %s" % organism)
+            x = dataset[: , 6:(set_size+6)].astype(np.int)
+        else:
+            print("organism: %s" % organism)
+            x = dataset[: , 6:(set_size+6)].astype(np.int)/2
         y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
@@ -31,7 +36,7 @@ def load_data(data, set_size):
         return x, y #x_train, y_train, x_test, y_test
 
 
-def bash_script(train_index, test_index, train_names, test_names, outer_count, inner_count, phenfile, set_size, snps, organism, outer=False):
+def bash_script(train_index, test_index, train_names, test_names, outer_count, inner_count, phenfile, set_size, snps, organism='arabidopsis', outer=False):
         print(os.getcwd())
         if outer==True:
             foo='out'
@@ -54,8 +59,8 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         while not os.path.exists('test_raw_plink_' +  str(snps) +  '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
         print('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
-        new_X_train , new_y_train = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size) #made from bash_script.sh
-        new_X_test , new_y_test  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size)
+        new_X_train , new_y_train = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism) #made from bash_script.sh
+        new_X_test , new_y_test  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism)
         scaler = preprocessing.StandardScaler().fit(new_y_train)
         new_y_train = scaler.transform(new_y_train)
         new_y_test = scaler.transform(new_y_test)

@@ -101,7 +101,7 @@ def coeff_determination(y_true, y_pred):
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1, dtype='str')
-        x = dataset[: , 6:set_size+6].astype(np.int)/2
+        x = dataset[: , 6:set_size+6].astype(np.int)
         y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
