@@ -7,6 +7,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.feature_selection import RFECV
 from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
+from matplotlib.ticker import MaxNLocator #needed to make epoch axis integers
 import os.path
 import time
 import subprocess
@@ -366,8 +367,19 @@ class NestedCV():
             if model_name == 'CNN':
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
                 X_test_outer = X_test_outer.reshape(X_test_outer.shape[0],X_test_outer.shape[1],1)
-            self.model.fit(X_train_outer, y_train_outer.ravel())
-            
+            if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
+                result = self.model.fit(X_train_outer, y_train_outer.ravel(), validation_data=(X_test_inner, y_test_inner))
+                object = result.model.history
+                plt.plot(object.history['loss'])
+                plt.plot(object.history['val_loss'])
+                ax = plt.figure().gca()
+                ax.xaxis.set_major_locator(MaxNLocator(integer=True)) #let epochs be integers
+                plt.title('Model Loss Curve'); plt.ylabel('Mean Absolute Error'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
+                plt.show()
+                plt.savefig('loss_training_curve_' + str(outer_count) + '_' + model_name, dpi=300)
+                plt.clf() ; plt.close()
+            else:
+                self.model.fit(X_train_outer, y_train_outer.ravel())
             # Get score and prediction
             score,pred = self._predict_and_score(X_test_outer, y_test_outer.ravel())
             outer_scores.append(self._transform_score_format(score))
