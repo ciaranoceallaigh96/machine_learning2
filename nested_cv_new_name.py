@@ -376,7 +376,7 @@ class NestedCV():
                 ax.xaxis.set_major_locator(MaxNLocator(integer=True)) #let epochs be integers
                 plt.title('Model Loss Curve'); plt.ylabel('Mean Absolute Error'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
                 plt.show()
-                plt.savefig('loss_training_curve_' + str(outer_count) + '_' + model_name, dpi=300)
+                plt.savefig('loss_training_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
                 plt.clf() ; plt.close()
             else:
                 self.model.fit(X_train_outer, y_train_outer.ravel())
