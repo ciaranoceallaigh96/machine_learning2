@@ -26,6 +26,7 @@ def load_data(data, set_size, organism='arabidopsis'):
         if organism=='mouse':
             print("organism: %s" % organism)
             x = dataset[: , 6:(set_size+6)].astype(np.int)
+            #x = np.where(x==0, 3, x) ; x = np.where(x==2, 0, x) ; x = np.where(x==3, 2, x) #flipping around the alleles
         else:
             print("organism: %s" % organism)
             x = dataset[: , 6:(set_size+6)].astype(np.int)/2
@@ -220,7 +221,10 @@ class NestedCV():
                     self.model.set_params(**param_dict)
                     print("Blue")
                     # Fit model with current hyperparameters and score it
-                    self.model.fit(X_train_inner, y_train_inner)
+                    if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
+                        self.model.fit(X_train_inner, y_train_inner, validation_data=(X_test_inner, y_test_inner)) #will allow for learning curve plotting
+                    else:
+                        self.model.fit(X_train_inner, y_train_inner)
                     print("Red")
                     # Predict and score model
                     inner_grid_score, inner_pred = self._predict_and_score(X_test_inner, y_test_inner.ravel())
