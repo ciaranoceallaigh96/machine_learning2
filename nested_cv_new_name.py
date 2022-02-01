@@ -7,7 +7,6 @@ from sklearn.metrics import mean_squared_error
 from sklearn.feature_selection import RFECV
 from sklearn.utils.multiclass import type_of_target
 from joblib import Parallel, delayed
-from matplotlib.ticker import MaxNLocator #needed to make epoch axis integers
 import os.path
 import time
 import subprocess
@@ -372,12 +371,17 @@ class NestedCV():
                 object = result.model.history
                 plt.plot(object.history['loss'])
                 plt.plot(object.history['val_loss'])
-                ax = plt.figure().gca()
-                ax.xaxis.set_major_locator(MaxNLocator(integer=True)) #let epochs be integers
                 plt.title('Model Loss Curve'); plt.ylabel('Mean Absolute Error'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
                 plt.show()
                 plt.savefig('loss_training_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
-                plt.clf() ; plt.close()
+                plt.clf() ; plt.close() #coeff_determination
+                plt.plot(object.history['coeff_determination'])
+                plt.plot(object.history['val_coeff_determination'])
+                plt.title('Model $R^{2}$ Curve'); plt.ylabel('$R^{2}$'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
+                plt.show()
+                plt.savefig('loss_r2_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
+                plt.clf() ; plt.close() #coeff_determination
+                
             else:
                 self.model.fit(X_train_outer, y_train_outer.ravel())
             # Get score and prediction
