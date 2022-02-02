@@ -367,7 +367,7 @@ class NestedCV():
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
                 X_test_outer = X_test_outer.reshape(X_test_outer.shape[0],X_test_outer.shape[1],1)
             if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
-                result = self.model.fit(X_train_outer, y_train_outer.ravel(), validation_data=(X_test_inner, y_test_inner))
+                result = self.model.fit(X_train_outer, y_train_outer.ravel(), validation_data=(X_test_outer, y_test_outer))
                 object = result.model.history
                 plt.plot(object.history['loss'])
                 plt.plot(object.history['val_loss'])
