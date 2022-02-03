@@ -375,8 +375,11 @@ class NestedCV():
                 plt.show()
                 plt.savefig('loss_training_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
                 plt.clf() ; plt.close() #coeff_determination
-                plt.plot(object.history['coeff_determination'])
-                plt.plot(object.history['val_coeff_determination'])
+                coeff_det = [0 if i < 0 else i for i in object.history['coeff_determination']] #replace negative values
+                val_coeff_det = [0 if i < 0 else i for i in object.history['val_coeff_determination']]
+                plt.plot(coeff_det)
+                plt.plot(val_coeff_det)
+                #plt.ylim(0, 1) #dont show negative values as they can distort
                 plt.title('Model $R^{2}$ Curve'); plt.ylabel('$R^{2}$'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
                 plt.show()
                 plt.savefig('loss_r2_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
