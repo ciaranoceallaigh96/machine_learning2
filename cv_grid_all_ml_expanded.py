@@ -257,7 +257,7 @@ tolerance=[1e-3,1e-5,1e-1]
 shrinking=[True,False]
 cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
 degree = [1,2,3,0.1,100]
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size"=cache_size}
+svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
@@ -365,7 +365,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 #pipeline_keras = Pipeline([('model', regressor_keras)])
-nn_model = KerasRegressor(build_fn = build_nn, verbose=2, callbacks=[callback])
+nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
 from sklearn.model_selection import cross_val_score
 
 
