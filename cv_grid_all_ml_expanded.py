@@ -273,9 +273,9 @@ RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, se
 ncv_results('RBG', RBG_NCV)
 exit()
 print("Performing LASSO")
-alpha = [0.0001, 0.001, 0.01, 0.1, 1 10 100, -1, -10, -100]
+alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
-ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1 10 100, -1, -10, -100]
+ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
 ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
 print(alpha_dict)
