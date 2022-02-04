@@ -1,11 +1,9 @@
 #Warning : best model selected by NMAE and R2 might not be the same
-#performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
+#performs linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
 #source ~/venv/bin/activate #in python 3.5.2
-#print a log to a .txt file!
 #model = pickle.load(open('FILEPATH', 'rb')) 
 #dependencies = {'coeff_determination':coeff_determination}
 #model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
-#
 
 #import tensorflow
 #import numpy as np; import scipy #need to do this before path insert
@@ -69,20 +67,9 @@ from tensorboard.plugins.hparams import api as hp
 import random
 from tensorflow.python.keras.layers import deserialize, serialize
 from tensorflow.python.keras.saving import saving_utils
-
-
-
-#if snps == 'shuf' :
-#	print("Shuf nestedCV in usage")
-#	from nested_cv_shuf import NestedCV
-#elif snps == 'top':
-#	from nested_cv import NestedCV
-#else:
-#	print("snnps must be top or shuf")
-	
-
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
 import dill as pickle
+
 for i in range(1,len(sys.argv)):
 	print(sys.argv[i])
 
@@ -100,21 +87,14 @@ def coeff_determination(y_true, y_pred):
 
 
 def load_data(data):
-        dataset = np.loadtxt(data, skiprows=1, dtype='str')
-        x = dataset[: , 6:set_size+6].astype(np.int)/2
-        y = dataset[: , 5 ].astype(np.float)
+        dataset = np.loadtxt(data, skiprows=1)
+        x = dataset[: , 6:set_size+6]/2
+        y = dataset[: , 5 ]
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y #x_train, y_train, x_test, y_test
 
-
-
-with open(('validation_results_'+ str(snps) +str(num) + phenotype + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '.vallog' ), 'a') as f:
-        original_stdout = sys.stdout # Save a reference to the original standard output
-        sys.stdout = f # Change the standard output to the file we created.
-        print(datetime.datetime.now())
-        sys.stdout = original_stdout      
 
 def baseline(x, y):
         model = LinearRegression()
@@ -267,59 +247,64 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
-'''
 print("Performing SVM")
-c_param = [1,int(2e+2),int(2e+4),int(2e+8)] #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
-gamma_param = [0.002,0.2,0.5,0.01]
-
+c_param = [int(2e-2),int(2e-4),int(2e-8), 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
 epsilon_param = [2e-5,2e-3,1,0]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
-kernel_param = ['poly', 'rbf']
-degree = [1,2,3,0.1]
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param}
+kernel_param = ['poly', 'rbf', 'sigmoid', 'precomputed']
+tolerance=[1e-3,1e-5,1e-1]
+shrinking=[True,False]
+cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
+degree = [1,2,3,0.1,100]
+svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size"=cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
 rbg_goal_dict, rbg_time_dict = make_goal_dict(svm_random_grid)
 svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
 ncv_results('SVM', SVM_NCV)	
 
 print("Performing RBG")
-RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RBG', goal_dict=rbg_goal_dict, time_dict=rbg_time_dict)
 ncv_results('RBG', RBG_NCV)
+exit()
 print("Performing LASSO")
-alpha = [0.0001, 0.001, 0.01, 0.1]
-ridge_alpha = [10,100,500]
-alpha_dict = {'alpha':alpha}
-ridge_alpha_dict = {'alpha':ridge_alpha}
+alpha = [0.0001, 0.001, 0.01, 0.1, 1 10 100, -1, -10, -100]
+max_iter=[1000,3000]
+ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1 10 100, -1, -10, -100]
+alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
+ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
 print(alpha_dict)
-alpha_name_dict = {'alpha':"Alpha"}
+tolerance=[1e-3,1e-5,1e-1]
+selection=['cyclic','random']# default=’cyclic’
+alpha_name_dict = {'alpha':"Alpha", "max_iter":max_iter, "tol":tolerance, "selection":selection}
+
 lass_goal_dict, lass_time_dict = make_goal_dict(alpha_dict)
-LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 LASS_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='LASS', goal_dict=lass_goal_dict, time_dict=lass_time_dict)
 ncv_results('LASS', LASS_NCV)
-exit()
 print("Performing Ridge")
 lass_goal_dict, lass_time_dict = make_goal_dict(ridge_alpha_dict)
-RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RIDGE', goal_dict=lass_goal_dict, time_dict=lass_time_dict)
 ncv_results('RIDGE', RIDGE_NCV)
 
 print("Performing Random Forests")
 n_estimators = [10,100,1000] # Number of features to consider at every split
 max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
-max_depth = [10, 50]
+max_depth = [1, 10, 100]
 #max_depth.append(None) # Minimum number of samples required to split a node
 #min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
-min_samples_split = [2, 10] # Minimum number of samples required at each leaf node
+min_samples_split = [2, 20, 200] # Minimum number of samples required at each leaf node
 #min_samples_leaf = [int(x) for x in np.linspace(1, 2000, num = 200)] ; min_samples_leaf.extend((2,4,8,16, 32, 64)) # Method of selecting samples for training each tree
-min_samples_leaf = [1,2]
+min_samples_leaf = [1,10, 50]
 bootstrap = [False]
-max_leaf_nodes = [100, 500] #; max_leaf_nodes.append(x_train.shape[0])
-max_samples = [0.75, 0.9]
+max_leaf_nodes = [100, 500, 10] #; max_leaf_nodes.append(x_train.shape[0])
+max_samples = [0.75, 0.9, 0.5, 0.2]
 #{'max_depth': 46, 'max_leaf_nodes': 695, 'n_estimators': 2778, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'min_samples_split': 2, 'bootstrap': False, 'max_samples': 0.5}
 random_grid = {'n_estimators': n_estimators,
                'max_features': max_features,
@@ -332,20 +317,20 @@ rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"M
 rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 rf_goal_dict, rf_time_dict = make_goal_dict(random_grid)
-RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':50, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RF', goal_dict=rf_goal_dict, time_dict=rf_time_dict)
 ncv_results('RF', RF_NCV)
 #base_grid = {"fit_intercept":["True"]}
 print("Performing Baseline")
 base_goal_dict = {}
 base_time_dict = {}
-BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(),goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=LinearRegression(),goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
-'''
 import random
+
 print("Performing Neural Network")
-param_grid = {'epochs' : [50,100,200],'batch_size' : [16,32],'learning_rate' : [0.001],'HP_L1_REG' : [1e-5,1e-6, 0.00005],'HP_L2_REG' : [1e-8], 'kernel_initializer' : ['glorot_uniform'],'activation' : ['tanh'],'HP_NUM_HIDDEN_LAYERS' : [2],'units' : [200, 100,50], 'rate' : [float(0), 0.1],'HP_OPTIMIZER' : ['Adam']}
+param_grid = {'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal','he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Adagrad', 'Ftrl', 'RMSprop', 'Adadelta', 'Adamax']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -380,21 +365,21 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
 #pipeline_keras = Pipeline([('model', regressor_keras)])
-nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
+nn_model = KerasRegressor(build_fn = build_nn, verbose=2, callbacks=[callback])
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':24, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
 nn_results('NN', NN_NCV)
-exit()
 print("Performing a convulutional neural network")
 from tensorboard.plugins.hparams import api as hp
 import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[100, 50],'batch_size' : [16,64], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Adam'], 'filters':[1,5],'strides':[1],'pool':[1,2],'kernel':[1,2]}
+cnn_param_grid = {'epochs':[50,100],'batch_size' : [16,64,128], 'learning_rate' : [0.00000001, 0.0000001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_uniform' , 'glorot_normal', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['Adagrad','Ftrl', 'RMSprop', 'Adadelta', 'Adamax'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 METRIC_ACCURACY = 'coeff_determination'
 #not sure if strides is relevant
@@ -427,6 +412,6 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         
 					      
 cnn_model = KerasRegressor(build_fn = conv_model,verbose=0, callbacks=[callback])
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':40, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='CNN', goal_dict=cnn_goal_dict, time_dict=cnn_time_dict)
 nn_results('CNN', CNN_NCV)
