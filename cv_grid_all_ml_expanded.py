@@ -252,7 +252,7 @@ c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
 epsilon_param = [2e-5,2e-3,1,0]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
-kernel_param = ['poly', 'rbf', 'sigmoid'] #precompuited leads to square matrix error
+kernel_param = ['rbf', 'sigmoid'] #precompuited leads to square matrix error #temorarily removing poly for time reasons need to put it back in
 tolerance=[1e-3,1e-5,1e-1]
 shrinking=[True,False]
 cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
@@ -263,9 +263,9 @@ svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
 rbg_goal_dict, rbg_time_dict = make_goal_dict(svm_random_grid)
 svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
-SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
-ncv_results('SVM', SVM_NCV)	
+#SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+#SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
+#ncv_results('SVM', SVM_NCV)	
 
 print("Performing RBG")
 RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
@@ -330,7 +330,7 @@ ncv_results('baseline', BASELINE_NCV)
 import random
 
 print("Performing Neural Network")
-param_grid = {'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal','he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Adagrad', 'Ftrl', 'RMSprop', 'Adadelta', 'Adamax']}
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal','he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Adagrad', 'Ftrl', 'RMSprop', 'Adadelta', 'Adamax']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -339,19 +339,27 @@ tf.config.threading.set_intra_op_parallelism_threads(64)
 callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0
 make_keras_picklable()
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
-	opt = HP_OPTIMIZER
-	chosen_opt = getattr(tf.keras.optimizers,opt)
-	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
-	model = Sequential()
-	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=(x_train.shape[1]-1,)))
-	if rate != 0:
-		model.add(Dropout(rate=rate))	
-	for i in range(HP_NUM_HIDDEN_LAYERS-1):
-		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
-		if rate != 0:
-			model.add(Dropout(rate=rate))
-	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+        opt = HP_OPTIMIZER
+        chosen_opt = getattr(tf.keras.optimizers,opt)
+        reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+        long_funnel_count = 0 #keep widest shape for two layers
+        model = Sequential()
+        model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=(x_train.shape[1]-1,)))
+        if rate != 0:
+                model.add(Dropout(rate=rate))
+                units = units
+        for i in range(HP_NUM_HIDDEN_LAYERS-1):
+                if network_shape == 'funnel':
+                        units = int(units*0.666)
+                elif network_shape == 'long_funnel':
+                        if long_funnel_count >= 1: #two wide layers (inclduing previous first layer)
+                                units=int(units*0.666)
+                        long_funnel_count += 1
+                model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
+                if rate != 0:
+                        model.add(Dropout(rate=rate))
+        model.add(Dense(1, activation='linear'))
+        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))	
 	#new_layer_weights = np.random.rand(x_train.shape[1]-1,units) #(num_inputs,num_units)
 	#for i in range(0,x_train.shape[1]-1):
 	#	new_Layer_weights[i,:] = beta_weights[i]
@@ -359,8 +367,8 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	#new_weight_list.append(new_layer_weights)
 	#new_weight_list.append(np.zeros(num_units)) # biases
 	#model.layers[0].set_weights(new_weight_list)
-	print(model.summary())
-	return model
+        print(model.summary())
+        return model
 
 
 #regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
@@ -378,7 +386,7 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[50,100],'batch_size' : [16,64,128], 'learning_rate' : [0.00000001, 0.0000001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_uniform' , 'glorot_normal', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['Adagrad','Ftrl', 'RMSprop', 'Adadelta', 'Adamax'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[50,100],'batch_size' : [16,64,128], 'learning_rate' : [0.00000001, 0.0000001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_uniform' , 'glorot_normal', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['Adagrad','Ftrl', 'RMSprop', 'Adadelta', 'Adamax'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 METRIC_ACCURACY = 'coeff_determination'
@@ -397,11 +405,18 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         if HP_NUM_HIDDEN_LAYERS == 1 :
                 print("HP_NUM_HIDDEN_LAYERS is equal to 1; this could cause building problems")
         chosen_opt = getattr(tf.keras.optimizers,opt)
+        long_funnel_count = 0 #keep widest shape for two layers
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
+                if network_shape == 'funnel':
+                        units = int(units*0.666)
+                elif network_shape == 'long_funnel':
+                        if long_funnel_count >= 1:
+                                units = int(units*0.666)
+                        long_funnel_count += 1
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation,  padding='same',data_format='channels_last', kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same', data_format='channels_last'))
         model.add(Flatten())

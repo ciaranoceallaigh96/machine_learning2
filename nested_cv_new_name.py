@@ -6,6 +6,13 @@ from sklearn.model_selection import KFold, ParameterGrid, ParameterSampler
 from sklearn.metrics import mean_squared_error
 from sklearn.feature_selection import RFECV
 from sklearn.utils.multiclass import type_of_target
+from sklearn.metrics import roc_auc_score
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve
+from sklearn.calibration import calibration_curve
+import matplotlib.lines as mlines
+import matplotlib.transforms as mtransforms
+import collections
 from joblib import Parallel, delayed
 import os.path
 import time
@@ -19,6 +26,22 @@ print(os.getcwd())
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Flex version")
 #set_size = 10006    
 #print("Set size set to %s" % set_size)
+def auc(y, predictions, model_name, outer_count, snps):
+        #import matplotlib.pyplot as plt
+        #from sklearn.metrics import roc_auc_score
+        #from sklearn.metrics import roc_curve
+        auc_score = roc_auc_score(y, predictions)
+        print("%s AUC is %.2f" % (str(outer_count), auc_score))
+        fpr, tpr, thresholds = roc_curve(y, predictions)
+        plt.plot([0, 1], [0, 1], linestyle='--')
+        plt.plot(fpr, tpr, marker='.')
+        plt.title('ROC Curve (AUC=%.2f) of %s' % (auc_score, model_name))
+        plt.ylabel('True Positive Rate')
+        plt.xlabel('False Positive Rate')
+        plt.show()
+        plt.savefig('AUC_curve_' + str(outer_count) + '_' +str(model_name) + '_' + str(snps)  + '.png', dpi=300)
+        plt.clf()
+        plt.close()
 
 def load_data(data, set_size, organism='arabidopsis'):
         print("Set size set to %s" % set_size)

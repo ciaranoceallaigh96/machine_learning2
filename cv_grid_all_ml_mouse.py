@@ -27,6 +27,7 @@ snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
 set_size = int(sys.argv[6]) #how many SNPs
 organism = str(sys.argv[7]) #which directory mouse or arabidopsis
+binary = str(sys.argv[8]) #True or False
 from nested_cv import NestedCV
 import statistics
 import numpy as np
@@ -63,6 +64,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasRegressor # or Classifie
 from sklearn.model_selection import KFold
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Dropout
+from tensorflow.keras.metrics import AUC
 import random
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
 from tensorboard.plugins.hparams import api as hp
@@ -353,6 +355,13 @@ tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0
+
+if binary == 'True': #overwrite variables
+	dependencies = {'auc':tf.keras.metrics.AUC}
+	METRIC_ACCURACY = METRIC_ACCURACY = tf.keras.metrics.AUC
+	callback = tf.keras.callbacks.EarlyStopping(monitor='auc', patience=20, mode='max', baseline=0.0) #min above 0
+
+
 make_keras_picklable()
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
 	opt = HP_OPTIMIZER
@@ -366,8 +375,12 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
 		if rate != 0:
 			model.add(Dropout(rate=rate))
-	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+	if binary == 'True' :
+		model.add(Dense(1, activation='sigmoid'))
+		model.compile(loss='binary_crossentropy',metrics=['accuracy', AUC(name='auc')],optimizer=chosen_opt(learning_rate=learning_rate))
+	else:
+		model.add(Dense(1, activation='linear'))
+		model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
 	#new_layer_weights = np.random.rand(x_train.shape[1]-1,units) #(num_inputs,num_units)
 	#for i in range(0,x_train.shape[1]-1):
 	#	new_Layer_weights[i,:] = beta_weights[i]
@@ -397,7 +410,11 @@ from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 cnn_param_grid = {'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
-METRIC_ACCURACY = 'coeff_determination'
+if binary == 'True':
+	METRIC_ACCURACY = tf.metrics.AUC
+else:
+	METRIC_ACCURACY = 'coeff_determination'
+
 #not sure if strides is relevant
 print(x_train.shape)
 #x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
@@ -421,8 +438,12 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation,  padding='same',data_format='channels_last', kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same', data_format='channels_last'))
         model.add(Flatten())
-        model.add(Dense(1, activation='linear'))
-        model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+        if binary == 'True':
+                model.add(Dense(1, activation='sigmoid'))
+                model.compile(loss='binary_crossentropy',metrics=['accuracy', AUC(name='auc')],optimizer=chosen_opt(learning_rate=learning_rate))
+        else:
+                model.add(Dense(1, activation='linear'))
+                model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
         print("Summary ", model.summary())
         return model				      
         
