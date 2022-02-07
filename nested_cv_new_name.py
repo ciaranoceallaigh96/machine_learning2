@@ -98,7 +98,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         elif binary == True:
             new_y_train -= 1
             new_y_test -= 1
-        return new_X_train, new_X_test, new_y_train, new_y_test
+        return new_X_train, new_X_test, new_y_train, new_y_test, binary
 
 
 class NestedCV():
@@ -358,7 +358,7 @@ class NestedCV():
                 #y_train_inner, y_test_inner = y_train_outer[train_index_inner], y_train_outer[test_index_inner]
                 inner_count += 1 ; print("INNER COUNT NO. ", str(inner_count))
                 inner_train_names, inner_test_names = outer_train_names[train_index_inner], outer_train_names[test_index_inner]
-                X_train_inner, X_test_inner, y_train_inner, y_test_inner = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names, outer_count, inner_count, phenfile, set_size, snps, organism, outer=False)
+                X_train_inner, X_test_inner, y_train_inner, y_test_inner, binary = bash_script(train_index_inner, test_index_inner, inner_train_names, inner_test_names, outer_count, inner_count, phenfile, set_size, snps, organism, outer=False)
                 if model_name == 'CNN':
                     X_train_inner = X_train_inner.reshape(X_train_inner.shape[0],X_train_inner.shape[1],1)
                     X_test_inner = X_test_inner.reshape(X_test_inner.shape[0],X_test_inner.shape[1],1)
@@ -372,7 +372,7 @@ class NestedCV():
                 for parameters in param_func:
                   print(parameters)
                   tic = time.clock()
-                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel()-1, y_test_inner.ravel()-1,param_dict=parameters)
+                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters) #-1 on phen elsewhere
                   toc = time.clock()
                   results.append((inner_grid_score,param_dictionary))
                   for key in param_dictionary:
@@ -394,7 +394,7 @@ class NestedCV():
             print("OUTER COUNT NO. ", str(outer_count))
             # Fit the best hyperparameters from one of the K inner loops
             self.model.set_params(**best_inner_params)
-            X_train_outer, X_test_outer, y_train_outer, y_test_outer = bash_script(train_index, test_index, outer_train_names, outer_test_names, outer_count, inner_count, phenfile, set_size, snps, organism, outer=True)
+            X_train_outer, X_test_outer, y_train_outer, y_test_outer, binary = bash_script(train_index, test_index, outer_train_names, outer_test_names, outer_count, inner_count, phenfile, set_size, snps, organism, outer=True)
             outer_count += 1
             if model_name == 'CNN':
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
@@ -404,20 +404,21 @@ class NestedCV():
                 object = result.model.history
                 plt.plot(object.history['loss'])
                 plt.plot(object.history['val_loss'])
+                plt.ylabel('Mean Absolute Error') if binary == False else plt.ylabel('Binary Cross Entropy')
                 plt.title('Model Loss Curve'); plt.ylabel('Mean Absolute Error'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
                 plt.show()
                 plt.savefig('loss_training_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
                 plt.clf() ; plt.close() #coeff_determination
-                coeff_det = [0 if i < 0 else i for i in object.history['coeff_determination']] #replace negative values
-                val_coeff_det = [0 if i < 0 else i for i in object.history['val_coeff_determination']]
-                plt.plot(coeff_det)
-                plt.plot(val_coeff_det)
-                #plt.ylim(0, 1) #dont show negative values as they can distort
-                plt.title('Model $R^{2}$ Curve'); plt.ylabel('$R^{2}$'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
-                plt.show()
-                plt.savefig('loss_r2_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
-                plt.clf() ; plt.close() #coeff_determination
-                
+                if binary == False:
+                    coeff_det = [0 if i < 0 else i for i in object.history['coeff_determination']] #replace negative values
+                    val_coeff_det = [0 if i < 0 else i for i in object.history['val_coeff_determination']]
+                    plt.plot(coeff_det)
+                    plt.plot(val_coeff_det)
+                    #plt.ylim(0, 1) #dont show negative values as they can distort
+                    plt.title('Model $R^{2}$ Curve'); plt.ylabel('$R^{2}$'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
+                    plt.show()
+                    plt.savefig('loss_r2_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
+                    plt.clf() ; plt.close() #coeff_determination
             else:
                 self.model.fit(X_train_outer, y_train_outer.ravel())
             # Get score and prediction
