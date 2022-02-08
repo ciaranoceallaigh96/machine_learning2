@@ -424,7 +424,16 @@ class NestedCV():
             # Get score and prediction
             score,pred = self._predict_and_score(X_test_outer, y_test_outer.ravel())
             outer_scores.append(self._transform_score_format(score))
-
+            if binary == True :
+                auc(y_test_outer.ravel(), pred, model_name, outer_count-1, snps) #outer count is weird
+                fig, ax = plt.subplots()
+                plt.plot([0, 1], [0, 1], linestyle='solid', color='black') #reference line
+                plt.plot(calib_x,calib_y, marker='o', linewidth=1, label='model_name')
+                fig.suptitle('Calibration Plot for %s' % model_name) #suptitle not a typo
+                ax.set_xlabel('Predicted Probability')
+                ax.set_ylabel('True Probability (Per Bin)')
+                plt.savefig(("calibration_plot_" + model_name + '_' + str(outer_count-1) + ".png"), dpi=300)
+                plt.clf() ; plt.close()
             # Append variance
             variance.append(np.var(pred, ddof=1))
 
