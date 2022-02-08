@@ -426,6 +426,7 @@ class NestedCV():
             outer_scores.append(self._transform_score_format(score))
             if binary == True :
                 auc(y_test_outer.ravel(), pred, model_name, outer_count-1, snps) #outer count is weird
+                calib_y, calib_x = calibration_curve(y_test_outer.ravel(), pred, n_bins=10) #pred NEEDS to be probabilities not hard-classification
                 fig, ax = plt.subplots()
                 plt.plot([0, 1], [0, 1], linestyle='solid', color='black') #reference line
                 plt.plot(calib_x,calib_y, marker='o', linewidth=1, label='model_name')
