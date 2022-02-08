@@ -1,7 +1,7 @@
 #Warning : best model selected by NMAE and R2 might not be the same
-#performs linear regression, linear regression, neural network, svm and random forest, LASSO, RIDGE, CNN
+#can be binary or continoous trait
+#performs linear regression, logistic regression, neural network, svm and random forest, LASSO, RIDGE, CNN
 #source ~/venv/bin/activate #in python 3.5.2
-#print a log to a .txt file!
 #model = pickle.load(open('FILEPATH', 'rb')) 
 #dependencies = {'coeff_determination':coeff_determination}
 #model = tf.keras.models.load_model('FILEPATH', custom_objects=dependencies)
@@ -26,7 +26,7 @@ data = str(sys.argv[3]) #needs to be same size as set_size
 snps = str(sys.argv[4]) #top or shuf
 phenotype = str(sys.argv[5]) #make a directory for the results
 set_size = int(sys.argv[6]) #how many SNPs
-organism = str(sys.argv[7]) #which directory mouse or arabidopsis
+organism = str(sys.argv[7]) #which directory mouse or arabadopsis (the mis-spelling is needed)
 binary = str(sys.argv[8]) #True or False
 from nested_cv import NestedCV
 import statistics
@@ -43,8 +43,6 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 from sklearn.svm import LinearSVR
 from sklearn.svm import SVR
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 #import pickle #use dill instead below
 from sklearn.ensemble import RandomForestRegressor #based in part on https://towardsdatascience.com/random-forest-in-python-24d0893d51c0
@@ -66,7 +64,6 @@ from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.layers import Dropout
 import random
 #https://github.com/WillKoehrsen/Machine-Learning-Projects/blob/master/random_forest_explained/Improving%20Random%20Forest%20Part%202.ipynb
-from tensorboard.plugins.hparams import api as hp
 import random
 from tensorflow.python.keras.layers import deserialize, serialize
 from tensorflow.python.keras.saving import saving_utils
@@ -108,7 +105,7 @@ def coeff_determination(y_true, y_pred):
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1, dtype='str')
-        x = dataset[: , 6:set_size+6].astype(np.int)
+        x = dataset[: , 6:set_size+6].astype(np.int) if organism != 'Arabadopsis' else dataset[: , 6:set_size+6]/2 #Arabdopsis data is inbred to homozyotisity to be 2/0
         y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
