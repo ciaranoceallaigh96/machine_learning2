@@ -117,34 +117,10 @@ def load_data(data):
 
 
 
-with open(('validation_results_'+ str(snps) +str(num) + phenotype + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '.vallog' ), 'a') as f:
-        original_stdout = sys.stdout # Save a reference to the original standard output
-        sys.stdout = f # Change the standard output to the file we created.
-        print(datetime.datetime.now())
-        sys.stdout = original_stdout      
-
 def baseline(x, y):
         model = LinearRegression()
         model.fit(x, y)
         return model
-
-
-def avg_cv_result(measure,cv_result):
-	my_var_name = [k for k,v in locals().items() if v == measure][0] #just to print out the name
-	print(my_var_name)
-	n_combos = len(cv_result.cv_results_['split0_test_neg_mean_absolute_error'])
-	named_dict = {} #dictonary will have a list of results PER grid combination across all CV results and this will return the average result. 
-	avg_list = []
-	for combo in range(0, n_combos):
-		named_dict[str(combo)] = []
-		for split in measure:
-			named_dict[str(combo)].append(cv_result.cv_results_[split][combo])
-		avg_list.append(statistics.mean(named_dict[str(combo)]))
-		print(combo, statistics.mean(named_dict[str(combo)]))
-
-	print('Max', np.nanmax(avg_list), np.where(avg_list == np.nanmax(avg_list)))
-	print('Min', np.nanmin(avg_list), np.where(avg_list == np.nanmin(avg_list)))
-	return avg_list	
 
 
 def unpack(model, training_config, weights): ##https://github.com/tensorflow/tensorflow/issues/34697 #fixes an error that the early stopping callback throws up in the nested cv #something about the parralele fitting step needing everything to be pickle-able and the callback isnt 
@@ -175,6 +151,7 @@ import collections
 import operator
 
 def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
+	metric = 'R^2' if binary == 'False' else 'AUC' #binary should be accesible from outside of function
 	if 'max_depth' in goal_dict.keys():
 		if None in goal_dict['max_depth'].keys():
 			old_key = None #thros up sorting error
@@ -196,8 +173,8 @@ def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #e
                 plt.subplot(121) #sorted
                 plt.boxplot(ordered_dict_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_dict_items.keys()) #orange line is median, green dotted line is mean
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-                plt.ylabel('R^2', fontsize=10,fontweight='bold')
-                plt.title('R^2 Score vs %s' % param, fontsize=14, fontweight='bold')
+                plt.ylabel(metric, fontsize=10,fontweight='bold')
+                plt.title('%s Score vs %s' % (metric, param), fontsize=14, fontweight='bold')
                 if param == 'initialization':
                         plt.xticks(fontsize=6)
                 plt.subplot(122)
@@ -219,7 +196,7 @@ def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #e
 			ordered_stability_items = collections.OrderedDict(sorted_stability_items)
 			plt.boxplot(ordered_stability_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_stability_items.keys())
 			plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-			plt.ylabel('Delta Train-Test R^2', fontsize=10,fontweight='bold')
+			plt.ylabel('Delta Train-Test %s' % metric, fontsize=10,fontweight='bold')
 			plt.title('Stability Score vs %s' % param, fontsize=14, fontweight='bold')
 			if param == 'initialization':
 				plt.xticks(fontsize=6)
@@ -252,7 +229,7 @@ scaler = preprocessing.StandardScaler().fit(y_train)
 y_train = scaler.transform(y_train)
 
 n_snps = x_train.shape[1]
-my_cv = sklearn.model_selection.KFold(n_splits=10, shuffle=True, random_state=42)
+metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
 def ncv_results(analysis, ncv_object):
         print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
@@ -273,17 +250,18 @@ def nn_results(analysis, ncv_object):
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
-'''
+
 print("Performing SVM")
-c_param = [2e-5,2e-3,1,int(2e+3),int(2e+5), int(2e+7)] #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
-gamma_param = [2e-5,2e-3,1,int(2e+3),int(2e+5)]
-
-epsilon_param = [2e-5,2e-3,1,int(2e+3),int(2e+5)]
+c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
+epsilon_param = [2e-5,2e-3,1,0]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
-kernel_param = ['poly', 'rbf']
-degree = [1,2,3,0.1,10,100]
-
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param}
+kernel_param = ['rbf', 'sigmoid'] #precompuited leads to square matrix error #temorarily removing poly for time reasons need to put it back in
+tolerance=[1e-3,1e-5,1e-1]
+shrinking=[True,False]
+cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
+degree = [1,2,3,0.1,100]
+svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
@@ -295,37 +273,40 @@ if binary == 'True':
 	dual = [False]
 	svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'penalty':penalty_box, 'dual':dual}
 	svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
-	SVM_NCV = NestedCV(model_name='LinearSVC', name_list = name_list, model=LinearSVC(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	SVM_NCV = NestedCV(model_name='LinearSVC', name_list = name_list, model=LinearSVC(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 else:
-	SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	SVM_NCV = NestedCV(model_name='LinearSVR', name_list = name_list, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
 ncv_results('SVM', SVM_NCV)	
 
 if binary == 'False' :
 	print("Performing RBG")
-	RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 	RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RBG', goal_dict=rbg_goal_dict, time_dict=rbg_time_dict)
 	ncv_results('RBG', RBG_NCV)
 
 print("Performing LASSO")
-alpha = [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100, 1000]
-ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100, 1000]
-alpha_dict = {'alpha':alpha}
-ridge_alpha_dict = {'alpha':ridge_alpha}
+alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
+max_iter=[1000,3000]
+ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
+tolerance=[1e-3,1e-5,1e-1]
+selection=['cyclic','random']# default=’cyclic’
+alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
+ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
 lass_goal_dict, lass_time_dict = make_goal_dict(alpha_dict)
 if binary == 'False' :
-	LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	LASS_NCV = NestedCV(model_name='LASS', name_list=name_list, model=Lasso(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 	LASS_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='LASS', goal_dict=lass_goal_dict, time_dict=lass_time_dict)
 	ncv_results('LASS', LASS_NCV)
 
 print("Performing Ridge")
 lass_goal_dict, lass_time_dict = make_goal_dict(ridge_alpha_dict)
 if binary == 'True':
-	RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=RidgeClassifier(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=RidgeClassifier(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 else:
-	RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	RIDGE_NCV = NestedCV(model_name='RIDGE', name_list=name_list, model=Ridge(), goal_dict=lass_goal_dict, time_dict=lass_time_dict, params_grid=ridge_alpha_dict, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 RIDGE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RIDGE', goal_dict=lass_goal_dict, time_dict=lass_time_dict)
 ncv_results('RIDGE', RIDGE_NCV)
 
@@ -354,9 +335,9 @@ rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
 rf_goal_dict, rf_time_dict = make_goal_dict(random_grid)
 if binary == 'True':
-	RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestClassifier(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestClassifier(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 else:
-	RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+	RF_NCV = NestedCV(model_name='RF', name_list=name_list, model=RandomForestRegressor(), goal_dict=rf_goal_dict, time_dict=rf_time_dict, params_grid=random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 RF_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RF', goal_dict=rf_goal_dict, time_dict=rf_time_dict)
 ncv_results('RF', RF_NCV)
 #base_grid = {"fit_intercept":["True"]}
@@ -364,13 +345,12 @@ print("Performing Baseline")
 base_goal_dict = {}
 base_time_dict = {}
 model_type = LinearRegression() if binary == 'False' else LogisticRegression()
-BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
 import random
-'''
 print("Performing Neural Network")
-param_grid = {'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,4],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Adam', 'Adagrad', 'SGD']}
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -385,15 +365,22 @@ if binary == 'True': #overwrite variables
 
 
 make_keras_picklable()
-def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer):
+def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer, network_shape):
 	opt = HP_OPTIMIZER
 	chosen_opt = getattr(tf.keras.optimizers,opt)
 	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+	long_funnel_count = 0 #keep widest shape for two layers
 	model = Sequential()
 	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=(x_train.shape[1]-1,)))
 	if rate != 0:
 		model.add(Dropout(rate=rate))	
 	for i in range(HP_NUM_HIDDEN_LAYERS-1):
+		if network_shape == 'funnel':
+			units = int(units*0.666)
+		elif network_shape == 'long_funnel':
+			if long_funnel_count >= 1: #two wide layers (inclduing previous first layer)
+				units=int(units*0.666)
+			long_funnel_count += 1
 		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
 		if rate != 0:
 			model.add(Dropout(rate=rate))
@@ -423,7 +410,7 @@ else:
 from sklearn.model_selection import cross_val_score
 
 
-NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+NN_NCV = NestedCV(model_name='nn_model', name_list = name_list, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
 nn_results('NN', NN_NCV)
 print("Performing a convulutional neural network")
@@ -432,7 +419,7 @@ import random
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 
 
-cnn_param_grid = {'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 if binary == 'True':
 	METRIC_ACCURACY = tf.metrics.AUC
@@ -449,16 +436,23 @@ print(x_train.shape)
 print(x_train.shape)
 #K.set_image_dim_ordering('th') #Negative dimension size caused by subtracting 2 from 1 for 'MaxPool - fixes error
 K.set_image_data_format('channels_first')					      
-def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel):
+def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel, network_shape):
         opt = HP_OPTIMIZER
         if HP_NUM_HIDDEN_LAYERS == 1 :
                 print("HP_NUM_HIDDEN_LAYERS is equal to 1; this could cause building problems")
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+        long_funnel_count = 0 #keep widest shape for two layers
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         model.add(Conv1D(filters=filters, strides=strides, input_shape=(x_train.shape[1]-1,1),  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
+                if network_shape == 'funnel':
+                        units = int(units*0.666)
+                elif network_shape == 'long_funnel':
+                        if long_funnel_count >= 1: #two wide layers (inclduing previous first layer)
+                                units=int(units*0.666)
+                        long_funnel_count += 1
                 model.add(Conv1D(filters=filters, strides=strides, activation=activation,  padding='same',data_format='channels_last', kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
                 model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same', data_format='channels_last'))
         model.add(Flatten())
@@ -473,6 +467,6 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         
 					      
 cnn_model = KerasRegressor(build_fn = conv_model,verbose=0, callbacks=[callback]) if binary == 'False' else KerasClassifier(build_fn = conv_model,verbose=0, callbacks=[callback])
-CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':sklearn.metrics.r2_score, 'metric_score_indicator_lower':False})
+CNN_NCV = NestedCV(model_name='CNN', name_list=name_list,model=cnn_model, goal_dict=cnn_goal_dict, time_dict=cnn_time_dict, params_grid=cnn_param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'randomized_search':True, 'randomized_search_iter':20, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 CNN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='CNN', goal_dict=cnn_goal_dict, time_dict=cnn_time_dict)
 nn_results('CNN', CNN_NCV)
