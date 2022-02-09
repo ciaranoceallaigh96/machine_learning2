@@ -30,6 +30,7 @@ organism = str(sys.argv[7]) #which directory mouse or arabadopsis (the mis-spell
 binary = str(sys.argv[8]) #True or False
 binary_boolean = True if binary == 'True' else False
 iterations = int(sys.argv[9])
+#from sklearn.model_selection import cross_val_score
 from nested_cv import NestedCV
 import statistics
 import numpy as np
@@ -69,6 +70,10 @@ import random
 import random
 from tensorflow.python.keras.layers import deserialize, serialize
 from tensorflow.python.keras.saving import saving_utils
+from tensorflow.keras.layers import Dense, Conv1D, Flatten
+import collections
+import operator
+
 if binary == 'True':
 	from sklearn.linear_model import LogisticRegression, RidgeClassifier
 	from sklearn.ensemble import RandomForestClassifier
@@ -77,15 +82,6 @@ if binary == 'True':
 	from sklearn.svm import LinearSVC
 	from sklearn.svm import SVC
 
-
-#if snps == 'shuf' :
-#	print("Shuf nestedCV in usage")
-#	from nested_cv_shuf import NestedCV
-#elif snps == 'top':
-#	from nested_cv import NestedCV
-#else:
-#	print("snnps must be top or shuf")
-	
 
 sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/')
 import dill as pickle
@@ -146,8 +142,6 @@ def make_keras_picklable():
     cls = Model
     cls.__reduce__ = __reduce__
 
-import collections
-import operator
 
 def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
 	metric = 'R^2' if binary == 'False' else 'AUC' #binary should be accesible from outside of function
@@ -251,6 +245,7 @@ def nn_results(analysis, ncv_object):
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
+
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
@@ -348,7 +343,7 @@ model_type = LinearRegression() if binary == 'False' else LogisticRegression()
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
-import random
+
 print("Performing Neural Network")
 param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
@@ -401,24 +396,17 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	return model
 
 
-#regressor_keras = KerasRegressor(build_fn = build_nn, epochs=10, verbose=1, batch_size=32)
-#pipeline_keras = Pipeline([('model', regressor_keras)])
 if binary == 'True':
 	nn_model = KerasClassifier(build_fn = build_nn, verbose=0, callbacks=[callback])
 else:
 	nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
-from sklearn.model_selection import cross_val_score
 
 
 NN_NCV = NestedCV(model_name='nn_model', name_list=name_list, num=num, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
 nn_results('NN', NN_NCV)
+
 print("Performing a convulutional neural network")
-from tensorboard.plugins.hparams import api as hp
-import random
-from tensorflow.keras.layers import Dense, Conv1D, Flatten
-
-
 cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 if binary == 'True':
@@ -428,14 +416,8 @@ else:
 
 #not sure if strides is relevant
 print(x_train.shape)
-#x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
-#x_train = x_train.reshape(x_train.shape[0],x_train.shape[1],1)
-#x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],1)
-#x_val = x_val.reshape(x_val.shape[0],x_val.shape[1],1)
-#x_test = x_test.reshape(x_test.shape[0], 1, x_test.shape[1]) # You needs to reshape your input data according to Conv1D layer input format - (batch_size, steps, input_dim)
-print(x_train.shape)
 #K.set_image_dim_ordering('th') #Negative dimension size caused by subtracting 2 from 1 for 'MaxPool - fixes error
-K.set_image_data_format('channels_first')					      
+K.set_image_data_format('channels_first') #prevents error					      
 def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel, network_shape):
         opt = HP_OPTIMIZER
         if HP_NUM_HIDDEN_LAYERS == 1 :
