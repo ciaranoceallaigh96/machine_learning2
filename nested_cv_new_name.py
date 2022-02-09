@@ -10,6 +10,7 @@ from sklearn.metrics import roc_auc_score
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve
 from sklearn.calibration import calibration_curve
+from sklearn.calibration import CalibratedClassifierCV
 import matplotlib.lines as mlines
 import matplotlib.transforms as mtransforms
 import collections
@@ -26,7 +27,7 @@ print(os.getcwd())
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Flex version")
 #set_size = 10006    
 #print("Set size set to %s" % set_size)
-def auc(y, predictions, model_name, outer_count, snps):
+def auc(y, predictions, model_name, outer_count, snps, num):
         #import matplotlib.pyplot as plt
         #from sklearn.metrics import roc_auc_score
         #from sklearn.metrics import roc_curve
@@ -39,7 +40,7 @@ def auc(y, predictions, model_name, outer_count, snps):
         plt.ylabel('True Positive Rate')
         plt.xlabel('False Positive Rate')
         plt.show()
-        plt.savefig('AUC_curve_' + str(outer_count) + '_' +str(model_name) + '_' + str(snps)  + '.png', dpi=300)
+        plt.savefig('AUC_curve_' + str(outer_count) + '_' +str(model_name) + '_' + str(snps) +'_' + str(num) + '.png', dpi=300)
         plt.clf()
         plt.close()
 
@@ -155,9 +156,10 @@ class NestedCV():
             average other than 'binary'
     '''
 
-    def __init__(self, model_name, name_list, model, params_grid, goal_dict, time_dict, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
+    def __init__(self, model_name, name_list, num, model, params_grid, goal_dict, time_dict, outer_kfolds, inner_kfolds, n_jobs = 1, cv_options={}):
         self.model_name = model_name
         self.name_list = name_list
+        self.num = num
         self.model = model
         self.params_grid = params_grid
         self.outer_kfolds = outer_kfolds
@@ -274,7 +276,7 @@ class NestedCV():
 
                     return self._transform_score_format(inner_grid_score), param_dict, inner_grid_train_score
 
-    def fit(self, X, y, name_list, model_name, goal_dict, time_dict, phenfile, set_size, snps, organism):
+    def fit(self, X, y, name_list, num, model_name, goal_dict, time_dict, phenfile, set_size, snps, organism):
         '''A method to fit nested cross-validation 
         Parameters
         ----------
@@ -313,6 +315,7 @@ class NestedCV():
         self.y = y
         self.model_name = model_name
         self.name_list = name_list 
+        self.num = num
         self.phenfile = phenfile
         self.set_size = set_size
         self.goal_dict = goal_dict
@@ -410,6 +413,7 @@ class NestedCV():
                 plt.savefig('loss_training_curve_' + str(outer_count-1) + '_' + model_name, dpi=300)
                 plt.clf() ; plt.close() #coeff_determination
                 if binary == False:
+                    #MAKE LEARNING CURVE
                     coeff_det = [0 if i < 0 else i for i in object.history['coeff_determination']] #replace negative values
                     val_coeff_det = [0 if i < 0 else i for i in object.history['val_coeff_determination']]
                     plt.plot(coeff_det)
@@ -425,15 +429,25 @@ class NestedCV():
             score,pred = self._predict_and_score(X_test_outer, y_test_outer.ravel())
             outer_scores.append(self._transform_score_format(score))
             if binary == True :
-                auc(y_test_outer.ravel(), pred, model_name, outer_count-1, snps) #outer count is weird
-                calib_y, calib_x = calibration_curve(y_test_outer.ravel(), pred, n_bins=10) #pred NEEDS to be probabilities not hard-classification
+                ############MAKE CALIBRATION Pnd AUC PLOT####################
+                try: #get probabilities for prediction from fitted model if available
+                    prob_pred = self.model.predict_proba(X_test_outer)
+                except: #if model doesnt have predict_proba you need to run CalibratedClassifierCV #https://towardsdatascience.com/how-to-enforce-the-outcome-of-your-ml-classifiers-b5f6163d68c2
+                    platt_model = CalibratedClassifierCV(self.model, cv="prefit", method='sigmoid') # run on fitted estimator
+                    platt_model = platt_model.fit(X_test_outer, y_test_outer)
+                    prob_pred = platt_model.predict_proba(X_test_outer)
+                try:
+                    auc(y_test_outer.ravel(), prob_pred, model_name, outer_count-1, snps, num) #outer count is weird
+                except:
+                    auc(y_test_outer.ravel(), prob_pred[:,1], model_name, outer_count-1, snps, num)
+                calib_y, calib_x = calibration_curve(y_test_outer.ravel(), prob_pred[:,1], n_bins=10) #pred NEEDS to be probabilities not hard-classification
                 fig, ax = plt.subplots()
                 plt.plot([0, 1], [0, 1], linestyle='solid', color='black') #reference line
                 plt.plot(calib_x,calib_y, marker='o', linewidth=1, label='model_name')
                 fig.suptitle('Calibration Plot for %s' % model_name) #suptitle not a typo
                 ax.set_xlabel('Predicted Probability')
                 ax.set_ylabel('True Probability (Per Bin)')
-                plt.savefig(("calibration_plot_" + model_name + '_' + str(outer_count-1) + ".png"), dpi=300)
+                plt.savefig(("calibration_plot_" + model_name + '_' + str(outer_count-1) + '_' + str(num) + ".png"), dpi=300)
                 plt.clf() ; plt.close()
             # Append variance
             variance.append(np.var(pred, ddof=1))
