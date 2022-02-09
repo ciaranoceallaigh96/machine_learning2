@@ -232,6 +232,7 @@ metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metri
 def ncv_results(analysis, ncv_object):
         print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
+        print("Outer scores (AUC probs if available) of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores2, np.mean(ncv_object.outer_scores2)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
         make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis), stability_dict=ncv_object.stability_dict)
@@ -241,6 +242,7 @@ def ncv_results(analysis, ncv_object):
 def nn_results(analysis, ncv_object):
         print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
         print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
+        print("Outer scores (AUC probs if available) of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores2, np.mean(ncv_object.outer_scores2)))
         print("Variance of %s is %s " % (analysis, ncv_object.variance))
         #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
         make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis),stability_dict=ncv_object.stability_dict)

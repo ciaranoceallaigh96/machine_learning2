@@ -27,7 +27,7 @@ print(os.getcwd())
 print("WARNING THIS IS AN EDITED SCRIPT - Ciaran Kelly 2021 \n Edited with permission under liscence \n Flex version")
 #set_size = 10006    
 #print("Set size set to %s" % set_size)
-def auc(y, predictions, model_name, outer_count, snps, num):
+def auc(y, predictions, model_name, outer_count, snps, num): #predictions should be probabilities not hard-calls
         #import matplotlib.pyplot as plt
         #from sklearn.metrics import roc_auc_score
         #from sklearn.metrics import roc_curve
@@ -43,6 +43,7 @@ def auc(y, predictions, model_name, outer_count, snps, num):
         plt.savefig('AUC_curve_' + str(outer_count) + '_' +str(model_name) + '_' + str(snps) +'_' + str(num) + '.png', dpi=300)
         plt.clf()
         plt.close()
+        return auc_score
 
 def load_data(data, set_size, organism='arabidopsis', binary=False):
         print("Set size set to %s" % set_size)
@@ -181,6 +182,7 @@ class NestedCV():
         self.multiclass_average = cv_options.get(
             'multiclass_average', 'binary')
         self.outer_scores = []
+        self.outer_scores2 = [] #only used when binary is true and for auc calculated on probabilites
         self.best_params = {}
         self.best_inner_score_list = []
         self.variance = []
@@ -336,7 +338,7 @@ class NestedCV():
         inner_cv = KFold(n_splits=self.inner_kfolds, shuffle=True, random_state=42)
         stability_dict = copy.deepcopy(goal_dict) #fully independent copy of an object 
         outer_count = 1
-        outer_scores = []
+        outer_scores = [] ; outer_scores2 = []
         variance = []
         best_inner_params_list = []  # Change both to by one thing out of key-value pair
         best_inner_score_list = []
@@ -437,9 +439,11 @@ class NestedCV():
                     platt_model = platt_model.fit(X_test_outer, y_test_outer)
                     prob_pred = platt_model.predict_proba(X_test_outer)
                 try:
-                    auc(y_test_outer.ravel(), prob_pred, model_name, outer_count-1, snps, num) #outer count is weird
+                    score2 = auc(y_test_outer.ravel(), prob_pred, model_name, outer_count-1, snps, num) #outer count is weird
+                    outer_scores2.append(score2)
                 except:
-                    auc(y_test_outer.ravel(), prob_pred[:,1], model_name, outer_count-1, snps, num)
+                    score2 = auc(y_test_outer.ravel(), prob_pred[:,1], model_name, outer_count-1, snps, num)
+                    outer_scores2.append(score2)
                 calib_y, calib_x = calibration_curve(y_test_outer.ravel(), prob_pred[:,1], n_bins=10) #pred NEEDS to be probabilities not hard-classification
                 fig, ax = plt.subplots()
                 plt.plot([0, 1], [0, 1], linestyle='solid', color='black') #reference line
@@ -459,6 +463,7 @@ class NestedCV():
          
         self.variance = variance
         self.outer_scores = outer_scores
+        self.outer_scores2 = outer_scores2
         self.best_inner_score_list = best_inner_score_list
         self.best_params = self._score_to_best_params(best_inner_params_list)
         self.best_inner_params_list = best_inner_params_list
