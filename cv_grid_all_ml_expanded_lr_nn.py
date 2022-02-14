@@ -19,7 +19,7 @@
 
 print("Please remember to set the right set size in the nested_cv code")
 import sys
-sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
+sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv2')
 num = sys.argv[1] #script number for saving out
 phenfile = str(sys.argv[2]) #txt file with phenotypes
 data = str(sys.argv[3]) #needs to be same size as set_size
@@ -245,7 +245,6 @@ def nn_results(analysis, ncv_object):
         with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
-
 '''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -346,7 +345,7 @@ BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfil
 ncv_results('baseline', BASELINE_NCV)
 '''
 print("Performing Neural Network")
-param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [0.5,0.2,1.2, 1e-2, 0.1],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0), 0.5], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['RMSprop', 'Adam', 'Adagrad', 'SGD']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
 METRIC_ACCURACY = coeff_determination
 tf.config.threading.set_inter_op_parallelism_threads(64)
@@ -409,7 +408,7 @@ NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phen
 nn_results('NN', NN_NCV)
 exit()
 print("Performing a convulutional neural network")
-cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.000000001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 if binary == 'True':
 	METRIC_ACCURACY = tf.metrics.AUC

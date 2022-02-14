@@ -55,18 +55,14 @@ def load_data(data, set_size, organism='arabidopsis', binary=False):
         else:
             print("organism: %s" % organism)
             x = dataset[: , 6:(set_size+6)].astype(np.int)/2
-            #snp_effects = np.loadtxt("/external_storage/ciaran/arabadopsis/FT10cv_new_10k/top/FT10_gblup_snp_FX_train_only_grm_cv_1.snp.blp", dtype='str') #from gcta gblup
-            #x = x * snp_effects[:,2].astype(np.float)
-        phen_set = set(dataset[: , 5 ])
+        phen_set = set(dataset[: , 5 ]) 
         s = {'2', '1'}
         if phen_set == s :
             binary=True
             y = dataset[: , 5 ].astype(np.int)
         else:
-            binary=False
             y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
-        print("Binary is %s" % binary)
         #print("Performing split of raw data....")
         #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
         return x, y, binary #x_train, y_train, x_test, y_test
@@ -95,8 +91,8 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         while not os.path.exists('test_raw_plink_' +  str(snps) +  '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
         print('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
-        new_X_train , new_y_train, binary = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism, outer_count) #made from bash_script.sh
-        new_X_test , new_y_test, binary  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism, outer_count)
+        new_X_train , new_y_train, binary = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism) #made from bash_script.sh
+        new_X_test , new_y_test, binary  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism)
         if binary == False:
             scaler = preprocessing.StandardScaler().fit(new_y_train)
             new_y_train = scaler.transform(new_y_train)
@@ -255,7 +251,7 @@ class NestedCV():
         
         return best_score, best_parameters
 
-    def _parallel_fitting(self, X_train_inner, X_test_inner, y_train_inner, y_test_inner, param_dict):
+    def _parallel_fitting(self, X_train_inner, X_test_inner, y_train_inner, y_test_inner, param_dict, count):
                     log.debug(
                         '\n\tFitting these parameters:\n\t{0}'.format(param_dict))
                     # Set hyperparameters, train model on inner split, predict results.
@@ -263,7 +259,16 @@ class NestedCV():
                     print("Blue")
                     # Fit model with current hyperparameters and score it
                     if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
-                        self.model.fit(X_train_inner, y_train_inner, validation_data=(X_test_inner, y_test_inner)) #will allow for learning curve plotting
+                        result = self.model.fit(X_train_inner, y_train_inner, validation_data=(X_test_inner, y_test_inner)) #will allow for learning curve plotting
+                        object = result.model.history
+                        plt.plot(object.history['loss'])
+                        plt.plot(object.history['val_loss'])
+                        plt.ylabel('Mean Absolute Error') if binary == False else plt.ylabel('Binary Cross Entropy')
+                        plt.title('Model Loss Curve'); plt.ylabel('Mean Absolute Error'); plt.xlabel('Epoch'); plt.legend(['Train', 'Test'], loc='upper left')
+                        plt.show()
+                        count = 1
+                        plt.savefig('loss_training_curve_' + str(inner_count) + '_' + str(count) + '_' + model_name, dpi=300)
+                        plt.clf() ; plt.close() #coeff_determination
                     else:
                         self.model.fit(X_train_inner, y_train_inner)
                     print("Red")
@@ -377,12 +382,13 @@ class NestedCV():
                 
 
                 results = []
-                
+                count = 1
                 for parameters in param_func:
                   print(parameters)
                   tic = time.clock()
-                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters) #-1 on phen elsewhere
+                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters, count=count) #-1 on phen elsewhere
                   toc = time.clock()
+                  count += 1 
                   results.append((inner_grid_score,param_dictionary))
                   for key in param_dictionary:
                     time_dict[key][param_dictionary[key]].append(toc-tic)
@@ -440,7 +446,7 @@ class NestedCV():
                     prob_pred = self.model.predict_proba(X_test_outer)
                 except: #if model doesnt have predict_proba you need to run CalibratedClassifierCV #https://towardsdatascience.com/how-to-enforce-the-outcome-of-your-ml-classifiers-b5f6163d68c2
                     platt_model = CalibratedClassifierCV(self.model, cv="prefit", method='sigmoid') # run on fitted estimator
-                    platt_model = platt_model.fit(X_test_outer, y_test_outer.ravel())
+                    platt_model = platt_model.fit(X_test_outer, y_test_outer)
                     prob_pred = platt_model.predict_proba(X_test_outer)
                 try:
                     score2 = auc(y_test_outer.ravel(), prob_pred, model_name, outer_count-1, snps, num) #outer count is weird
