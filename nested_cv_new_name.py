@@ -95,8 +95,8 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
         while not os.path.exists('test_raw_plink_' +  str(snps) +  '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
         print('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw')
-        new_X_train , new_y_train, binary = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism, outer_count) #made from bash_script.sh
-        new_X_test , new_y_test, binary  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism, outer_count)
+        new_X_train , new_y_train, binary = load_data('train_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism) #made from bash_script.sh
+        new_X_test , new_y_test, binary  = load_data('test_raw_plink_' +  str(snps) + '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw', set_size, organism)
         if binary == False:
             scaler = preprocessing.StandardScaler().fit(new_y_train)
             new_y_train = scaler.transform(new_y_train)
