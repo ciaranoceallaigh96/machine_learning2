@@ -44,6 +44,34 @@ then
 
 fi
 
+if [ "$6" == "pca" ]
+then
+	pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+	echo "Pheno is $pheno"
+	phenofile="$4"
+	plink2 --out nested_cv_pca_out_"$1"_in_"$2"_"$3" --allow-no-sex --pca 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt
+	mv nested_cv_pca_out_"$1"_in_"$2"_"$3" test_raw_plink_pca_"$1"_in_"$2"_"$3".raw
+	plink2 --out nested_cv_pca_out_"$1"_in_"$2"_"$3" --allow-no-sex --pca 20 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt 
+	mv nested_cv_pca_out_"$1"_in_"$2"_"$3" train_raw_plink_pca_"$1"_in_"$2"_"$3".raw
+	#need to project test pca ; see rosses email
+fi
+
+if [ "$6" == "lmm" ]
+then
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
+        if [ ! -f train_grm_"$1"_in_"$2"_"$3".grm.bin ]; then
+                /home/ciaran/gcta64 --make-grm  --autosome-num 5 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --thread-num 32 --out train_grm_"$1"_in_"$2"_"$3"
+        fi
+        /home/ciaran/gcta64 --mlma --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --pheno $phenofile --thread-num 32 --keep name_vector_train.txt --out nested_cv_mlma_out_"$1"_in_"$2"_"$3"
+        cat /external_storage/ciaran/machine_learning2/header2.txt <(sort -g -k 9,9 nested_cv_mlma_out_"$1"_in_"$2"_"$3".mlma  awk '{if ($9 != "-nan") print}' | tail -n +2) > mlma_results_"$1"_in_"$2"_"$3".gsorted
+        plink1.9 --mac 6 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 0.0005 --clump-p2 0.001 --clump-r2 0.1 --clump mlma_results_"$1"_in_"$2"_"$3".gsorted --out mlma_results_clumped_"$1"_in_"$2"_"$3"
+        head -n $5 mlma_results_clumped_"$1"_in_"$2"_"$3".clumped | awk '{print $3}'  > top_"$5"_snps_"$1"_in_"$2"_"$3".txt
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_top_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_top_"$1"_in_"$2"_"$3"
+
+fi
 
 if [ "$6" == "top" ]
 then

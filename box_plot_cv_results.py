@@ -12,7 +12,7 @@ data = pd.read_csv('sample_results.txt', header=None, index_col=0)
 df = data.transpose()
 #df = pd.DataFrame(data, columns=['gBLUP', 'Regression','SVM','FNN','Random Forest','LASSO', 'Ridge', 'CNN'])
 
-
+#df.reindex(df.mean().sort_values().index, axis=1) # sort by column means
 results, names, scatter_points = [],[],[]
 
 for i, col in enumerate(df.columns):

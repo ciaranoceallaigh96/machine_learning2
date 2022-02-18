@@ -1,3 +1,4 @@
+##python /external_storage/ciaran/machine_learning2/beta_weight_script.py train_raw_plink_top_1_in_4_out.raw test_raw_plink_top_1_in_4_out.raw snps_beta.txt 10000
 import sys
 import random
 import statistics
