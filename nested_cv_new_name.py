@@ -54,7 +54,7 @@ def load_data(data, set_size, organism='arabidopsis', binary=False):
             #x = np.where(x==0, 3, x) ; x = np.where(x==2, 0, x) ; x = np.where(x==3, 2, x) #flipping around the alleles
         else:
             print("organism: %s" % organism)
-            x = dataset[: , 6:(set_size+6)].astype(np.float) #/2
+            x = dataset[: , 6:(set_size+6)].astype(np.int)/2
             #snp_effects = np.loadtxt("/external_storage/ciaran/arabadopsis/FT10cv_new_10k/top/FT10_gblup_snp_FX_train_only_grm_cv_1.snp.blp", dtype='str') #from gcta gblup
             #x = x * snp_effects[:,2].astype(np.float)
         phen_set = set(dataset[: , 5 ])
@@ -263,7 +263,7 @@ class NestedCV():
                     print("Blue")
                     # Fit model with current hyperparameters and score it
                     if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
-                        self.model.fit(X_train_inner, y_train_inner, validation_split=0.1 #(X_test_inner, y_test_inner)) #will allow for learning curve plotting
+                        self.model.fit(X_train_inner, y_train_inner, validation_data=(X_test_inner, y_test_inner)) #will allow for learning curve plotting
                     else:
                         self.model.fit(X_train_inner, y_train_inner)
                     print("Red")
