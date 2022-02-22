@@ -1,2 +1,1 @@
 Chr	SNP	bp	A1	A2	Freq	b	se	P
-

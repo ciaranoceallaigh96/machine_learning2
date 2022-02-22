@@ -1,5 +1,5 @@
 #Uses SNP set from nested_grid search (top or shuf)
-#takes 10k snps from set and makes GRM
+#USES FULL GRM
 #estimate random effects in a MLM by BLUP
 #computes blup solutions for snps
 #WARNING YOU MIGHT NEED TO CHNAGE "$snps"10ksnps_"$i"_in_4_out.txt to "$snps"10ksnps_"$i"_in_4_out.txt
