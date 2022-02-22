@@ -2,6 +2,7 @@
 #
 #WARNING YOU MIGHT NEED TO CHNAGE "$snps"10ksnps_"$i"_in_4_out.txt to "$snps"10ksnps_"$i"_in_4_out.txt
 #WARNING YOU MIGHT NEED TO CHNAGE pheno file e.g /home/ciaran/arabadopsis/phenotypes/values_"$pheno" > /home/ciaran/arabadopsis/phenotypes/values_"$pheno".8424.dup.del
+#Note --autosome-num doesnt seem to make a difference
 pheno=$1 #eg FT10 or FT16
 snps=$2 #top or shuf
 NOW=$( date '+%F_%H:%M:%S' )
@@ -15,6 +16,7 @@ cut -d ' ' -f 1-2 test_raw_plink_"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabad
 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids \
 --extract "$snps"_"$set_size"_snps_"$i"_in_4_out.txt \
 --make-grm \
+--autosome-num 5 \
 --thread-num 32 \
 --out ./completed_big_matrix_binary_grm_"$pheno"_train_cv_"$i" \
 --keep /home/ciaran/arabadopsis/phenotypes/train_ids.txt \

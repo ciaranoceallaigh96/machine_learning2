@@ -3,12 +3,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
 
-str_var = ' ' #variable to save out boxplot
+binary = sys.argv[1]
+results_file = sys.argv[2]
+
+str_var = 'ft10_1k_300_mlma' #variable to save out boxplot
 
 metric = 'R^2' if binary == 'False' else 'AUC'
 
-data = pd.read_csv('sample_results.txt', header=None, index_col=0)
+data = pd.read_csv(results_file, header=None, index_col=0) #i.e. /external_storage/ciaran/try_folder/sample_results.txt 
 df = data.transpose()
 #df = pd.DataFrame(data, columns=['gBLUP', 'Regression','SVM','FNN','Random Forest','LASSO', 'Ridge', 'CNN'])
 
@@ -19,6 +23,9 @@ for i, col in enumerate(df.columns):
 	results.append(df[col].values)
 	names.append(col)
 	scatter_points.append(np.random.normal(i + 1, 0.04, df[col].values.shape[0])) # adds jitter to the data points - can be adjusted
+
+for i in range(0, len(results)-1):
+	results[i][results[i]<0] = 0 #change negative r^2 values to 0 
 
 sns.set_style("whitegrid")
 plt.boxplot(results, labels=names)
