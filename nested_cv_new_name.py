@@ -90,7 +90,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
             if organism != 'mouse':
                 subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)]) 
             else:
-                subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script_mouse.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)])
+                subprocess.run(["/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/machine_learning2/bash_script_mouse.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)])
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
         while not os.path.exists('test_raw_plink_' +  str(snps) +  '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
