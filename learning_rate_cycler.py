@@ -1,3 +1,4 @@
+import sys; sys.path.insert(0, '/home/hers_en/rmclaughlin/tf/lib/python3.6/site-packages') ; sys.path.insert(0, '/hpc/local/CentOS7/modulefiles/python_libs/3.6.1'); sys.path.insert(0, '/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/envciaran2/lib/python3.6/site-packages')
 import sys
 import statistics
 import numpy as np
@@ -43,6 +44,15 @@ def coeff_determination(y_true, y_pred):
         return (1-SS_res/SS_tot)
 
 
+def load_data(data):
+        dataset = np.loadtxt(data, skiprows=1, dtype='str')
+        x = dataset[: , 6:set_size+6].astype(np.int) if organism != 'Arabadopsis' else dataset[: , 6:set_size+6]/2 #Arabdopsis data is inbred to homozyotisity to be 2/0
+        y = dataset[: , 5 ].astype(np.float)
+        y = y.reshape(-1,1)
+        #print("Performing split of raw data....")
+        #x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.8, random_state=42)
+        return x, y #x_train, y_train, x_test, y_test
+
 def unpack(model, training_config, weights): ##https://github.com/tensorflow/tensorflow/issues/34697 #fixes an error that the early stopping callback throws up in the nested cv #something about the parralele fitting step needing everything to be pickle-able and the callback isnt 
     restored_model = deserialize(model)
     if training_config is not None:
@@ -84,19 +94,29 @@ tf.config.threading.set_intra_op_parallelism_threads(32)
 
 make_keras_picklable()
 
-learning_rates = [10, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]
+learning_rates = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+#learning_rates = [1e-4]
 scores = []
+train_mae = []
+train_r2 =[] 
+r2 = []
 for learning_rate in learning_rates:
 	opt = 'SGD'
 	chosen_opt = getattr(tf.keras.optimizers,opt)
 	model = Sequential()
-	input_shape = (x_train.shape[1]-1,)
+	input_shape = (x_train.shape[1],)
 	model.add(Dense(units=100, activation='relu', input_shape=input_shape))
-	model.add(Dense(units=100, activation='relu')
+	model.add(Dropout(0.35))
+	model.add(Dense(units=100, activation='relu'))
+	model.add(Dropout(0.35))
 	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['mae'],optimizer=chosen_opt(learning_rate=learning_rate))
-	model.fit(x_train, y_train, validation_data =(x_test, y_test), batch_size=32, epochs=200, verbose=2)
-        score.append(model.score(x_test, y_test))
+	model.compile(loss='mean_absolute_error',metrics=['mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+	model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=32, epochs=200, verbose=2)
+        scores.append(model.evaluate(x_test, y_test)[0])
+        train_mae.append(model.evaluate(x_train, y_train)[0])
+	train_r2.append(model.evaluate(x_train, y_train)[2])
+	r2.append(model.evaluate(x_test, y_test)[2])
+	del(model)
 
 
 import matplotlib.pyplot as plt

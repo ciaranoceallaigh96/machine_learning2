@@ -25,7 +25,7 @@ cut -d ' ' -f 1-2 test_raw_plink_"$snps"_"$i"_in_4_out.raw > /home/ciaran/arabad
 /external_storage/eoin/GCTA_manual_install/gcta64 \
 --reml \
 --grm ./full_completed_big_matrix_binary_grm_"$pheno"_train_cv_"$i" \
---pheno /home/ciaran/arabadopsis/phenotypes/values_"$pheno".8424.dup.del \
+--pheno /home/ciaran/arabadopsis/phenotypes/values_"$pheno".8424.80.del \
 --reml-pred-rand \
 --out ./full_"$pheno"_blup_solutions_train_cv_"$i" \
 --keep /home/ciaran/arabadopsis/phenotypes/train_ids.txt \
@@ -41,7 +41,7 @@ plink1.9 \
 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids \
 --keep /home/ciaran/arabadopsis/phenotypes/test_ids.txt \
 --out ./full_"$pheno"_gblup_train_only_grm_cv_"$i"_test \
---pheno /home/ciaran/arabadopsis/phenotypes/values_"$pheno".8424.dup.del \
+--pheno /home/ciaran/arabadopsis/phenotypes/values_"$pheno".8424.80.del \
 --score ./full_"$pheno"_gblup_snp_FX_train_only_grm_cv_"$i".snp.blp 1 2 3 \
 ; \
 python /external_storage/ciaran/machine_learning2/r2_score.py ./full_"$pheno"_gblup_train_only_grm_cv_"$i"_test.profile "$i" >> "$pheno"_gblup_train_only_grm_cv_test.prscores \
