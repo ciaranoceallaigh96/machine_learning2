@@ -44,6 +44,9 @@ def coeff_determination(y_true, y_pred):
         return (1-SS_res/SS_tot)
 
 
+organism = 'mouse'
+set_size = 10000
+
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1, dtype='str')
         x = dataset[: , 6:set_size+6].astype(np.int) if organism != 'Arabadopsis' else dataset[: , 6:set_size+6]/2 #Arabdopsis data is inbred to homozyotisity to be 2/0
@@ -94,35 +97,48 @@ tf.config.threading.set_intra_op_parallelism_threads(32)
 
 make_keras_picklable()
 
-learning_rates = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
-#learning_rates = [1e-4]
+learning_rates = [0.1, 1e-2, 1e-3, 1e-4, 1e-5]
+l1_reg = [0, 0.1, 0.01, 0.001, 0.00001, 0.000001]
+l2_reg = [0, 0.1. 0.01, 0.001, 0.00001, 0.000001]
+dropout = [0.1, 0.3, 0.5, 0]
+epochs = [50, 100, 200]
+
+import random
 scores = []
 train_mae = []
 train_r2 =[] 
 r2 = []
-for learning_rate in learning_rates:
+
+for i in range(1, 300):
+	a = random.choice(learning_rates)
+	b = random.choice(l1_reg)
+	c = random.choice(l2_reg)
+	d = random.choice(dropout)
+	e random.choice(epochs)
+	print(a,b,c,d,e, sep=',')
 	opt = 'SGD'
 	chosen_opt = getattr(tf.keras.optimizers,opt)
 	model = Sequential()
 	input_shape = (x_train.shape[1],)
 	model.add(Dense(units=100, activation='relu', input_shape=input_shape))
-	model.add(Dropout(0.35))
+	model.add(Dropout(d))
 	model.add(Dense(units=100, activation='relu'))
-	model.add(Dropout(0.35))
+	model.add(Dropout(d))
 	model.add(Dense(1, activation='linear'))
-	model.compile(loss='mean_absolute_error',metrics=['mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
-	model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=32, epochs=200, verbose=2)
-        scores.append(model.evaluate(x_test, y_test)[0])
-        train_mae.append(model.evaluate(x_train, y_train)[0])
-	train_r2.append(model.evaluate(x_train, y_train)[2])
-	r2.append(model.evaluate(x_test, y_test)[2])
+	model.compile(loss='mean_absolute_error',metrics=['mae', coeff_determination],optimizer=chosen_opt(learning_rate=a))
+	model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=32, epochs=e, verbose=0)
+        #scores.append(model.evaluate(x_test, y_test)[0])
+        #train_mae.append(model.evaluate(x_train, y_train)[0])
+	#train_r2.append(model.evaluate(x_train, y_train)[2])
+	#r2.append(model.evaluate(x_test, y_test)[2])
+	print(model.evaluate(x_test, y_test)[2])
 	del(model)
 
 
-import matplotlib.pyplot as plt
-plt.plot(learning_rates, scores)
-plt.xscale("log")
-plt.savefig("log_lr_scores_tibia")
-plt.clf(); plt.close()
+#import matplotlib.pyplot as plt
+#plt.plot(learning_rates, scores)
+#plt.xscale("log")
+#plt.savefig("log_lr_scores_tibia")
+#plt.clf(); plt.close()
 
 
