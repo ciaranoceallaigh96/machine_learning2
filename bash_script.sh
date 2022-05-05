@@ -69,7 +69,7 @@ then
         fi
 
         cat /external_storage/ciaran/machine_learning2/header2.txt <(sort -g -k 9,9 nested_cv_mlma_out_"$1"_in_"$2"_"$3".mlma | awk '{if ($9 != "-nan") print}' | tail -n +2) > mlma_results_"$1"_in_"$2"_"$3".gsorted
-        plink1.9 --keep name_vector_train.txt --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 0.05 --clump-p2 0.1 --clump-r2 0.05 --clump mlma_results_"$1"_in_"$2"_"$3".gsorted --out mlma_results_clumped_"$1"_in_"$2"_"$3"
+        plink1.9 --keep name_vector_train.txt --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 30 --clump-p1 0.05 --clump-p2 0.1 --clump-r2 0.05 --clump mlma_results_"$1"_in_"$2"_"$3".gsorted --out mlma_results_clumped_"$1"_in_"$2"_"$3"
         head -n $5 mlma_results_clumped_"$1"_in_"$2"_"$3".clumped | awk '{print $3}'  > mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt
         tmp=$(wc -l mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt | cut -d ' ' -f 1) ; if [ $tmp -lt $5 ] ; then echo "sleeping"; sleep 1d ; fi
         plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_mlma_"$1"_in_"$2"_"$3"

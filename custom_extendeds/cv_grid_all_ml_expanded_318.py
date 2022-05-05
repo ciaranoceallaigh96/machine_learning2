@@ -260,6 +260,7 @@ def nn_results(analysis, ncv_object):
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
 
+'''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 rbf_c = [1,int(2e+2),int(2e+4),int(2e+8)]
@@ -358,6 +359,7 @@ model_type = LinearRegression() if binary == 'False' else LogisticRegression()
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
+'''
 print("Performing Neural Network")
 param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.001, 0.0001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
@@ -368,7 +370,7 @@ tf.config.threading.set_inter_op_parallelism_threads(32)
 tf.config.threading.set_intra_op_parallelism_threads(32)
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
-#callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0 #this callkaci is throwing up and error Unknown metric function
+callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0 #this callkaci is throwing up and error Unknown metric function
 
 if binary == 'True': #overwrite variables
 	dependencies = {'auc':tf.keras.metrics.AUC}
@@ -425,7 +427,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 if binary == 'True':
 	nn_model = KerasClassifier(build_fn = build_nn, verbose=0, callbacks=[callback])
 else:
-	nn_model = KerasRegressor(build_fn = build_nn, verbose=0)
+	nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
 
 
 NN_NCV = NestedCV(model_name='nn_model', name_list=name_list, num=num, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})

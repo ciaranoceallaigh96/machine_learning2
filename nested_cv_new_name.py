@@ -90,7 +90,7 @@ def bash_script(train_index, test_index, train_names, test_names, outer_count, i
             if organism != 'mouse':
                 subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)]) 
             else:
-                subprocess.run(["/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/machine_learning2/bash_script_mouse.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)])
+                subprocess.run(["/external_storage/ciaran/machine_learning2/bash_script_mouse.sh", str(outer_count), str(inner_count), foo, str(phenfile), str(set_size), str(snps)])
         #while not os.path.exists('train_raw_plink_shuf_' + str(outer_count) + '_in_' + str(inner_count) + '.raw'):
         while not os.path.exists('test_raw_plink_' +  str(snps) +  '_' + str(outer_count) + '_in_' + str(inner_count) + '_' + foo + '.raw'):
             time.sleep(20)
@@ -387,12 +387,16 @@ class NestedCV():
                   for key in param_dictionary:
                     time_dict[key][param_dictionary[key]].append(toc-tic)
                     goal_dict[key][param_dictionary[key]].append(inner_grid_score)
-                    if inner_train_score > 0.1:
-                      if inner_grid_score <= 0:
-                        inner_grid_score = 0
-                      stability_dict[key][param_dictionary[key]].append(inner_train_score-inner_grid_score)
+                    if inner_grid_score > 0:
+                       stability_dict[key][param_dictionary[key]].append(1)
                     else:
-                      stability_dict[key][param_dictionary[key]].append(1)
+                       stability_dict[key][param_dictionary[key]].append(0)
+                    #if inner_train_score > 0.1:
+                      #if inner_grid_score <= 0:
+                        #inner_grid_score = 0
+                      #stability_dict[key][param_dictionary[key]].append(inner_train_score-inner_grid_score)
+                    #else:
+                      #stability_dict[key][param_dictionary[key]].append(1)
                 search_scores.extend(results)
             
             best_inner_score, best_inner_params = self._best_of_results(search_scores)

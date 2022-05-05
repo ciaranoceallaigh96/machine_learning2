@@ -198,21 +198,26 @@ def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #e
                 plt.clf()
                 plt.close()
 	if stability_dict is not None:
-		for param in stability_dict:
-			sorted_stability_items = sorted(stability_dict[param].items(), key=operator.itemgetter(0))
-			ordered_stability_items = collections.OrderedDict(sorted_stability_items)
-			plt.boxplot(ordered_stability_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_stability_items.keys())
-			plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-			plt.ylabel('Delta Train-Test %s' % metric, fontsize=10,fontweight='bold')
-			plt.title('Stability Score vs %s' % param, fontsize=14, fontweight='bold')
-			if param == 'initialization':
-				plt.xticks(fontsize=6)
-			my_fig_name = "stability_plot_of_" +str(analysis) + '_' + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
-			plt.savefig(my_fig_name, dpi=300)
-			plt.show()
-			plt.clf()
-			plt.close()
-	                
+######Below commented code is from nested_cv.py and how stability_dict is made#####
+#                    if inner_grid_score > 0:
+#                       stability_dict[key][param_dictionary[key]].append(1)
+#                    else:
+#                       stability_dict[key][param_dictionary[key]].append(0)
+		for i in stability_dict:
+			for y in stability_dict[i]:
+				stability_dict[i][y] = sum(stability_dict[i][y]) #sum of 1s and 0s
+			keys_values = stability_dict[i].items()
+			stability_dict[i] = {str(key): value for key, value in keys_values} #e.g {'HP_L2_REG': {0.1: 7, 0.2: 4}, 'HP_OPTIMIZER': {'Adam': 4, 'Adamax': 4}, 'HP_L1_REG': {0.001: 4}}
+			if len(stability_dict[i]) > 1 : #check if more than one param to graph
+				plt.bar(*zip(*stability_dict[i].items())) #bar plots
+				plt.title('Stability Score vs %s' % i, fontsize=14, fontweight='bold')
+				if param == 'initialization':
+					plt.xticks(fontsize=6) #names too long e.g glorot uniform
+				plt.show()
+				my_fig_name = "new_stability_plot_of_" +str(analysis) + '_' + str(i) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
+				plt.savefig(my_fig_name, dpi=300)
+				plt.clf(); plt.close()	               
+ 
 		
 def make_goal_dict(whole_dict):
 	print(whole_dict)
@@ -261,8 +266,10 @@ def nn_results(analysis, ncv_object):
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
 
+'''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+rbf_c = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)]
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
 epsilon_param = [2e-5,2e-3,1,0]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
@@ -271,7 +278,7 @@ tolerance=[1e-3,1e-5,1e-1]
 shrinking=[True,False]
 cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
 degree = [1,2,3,0.1,100]
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
+svm_random_grid = {'gamma':gamma_param, 'C':rbf_c,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
@@ -295,6 +302,7 @@ if binary == 'False' :
 	RBG_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='RBG', goal_dict=rbg_goal_dict, time_dict=rbg_time_dict)
 	ncv_results('RBG', RBG_NCV)
 
+'''
 print("Performing LASSO")
 alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
@@ -392,7 +400,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
 	long_funnel_count = 0 #keep widest shape for two layers
 	model = Sequential()
 	input_shape = (x_train.shape[1],) if snps == 'shuf' else (x_train.shape[1]-1,)
-	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape))
+	model.add(Dense(units=units, activation=activation, kernel_initializer=kernel_initializer, kernel_regularizer=reg, input_shape=input_shape))
 	if rate != 0:
 		model.add(Dropout(rate=rate))	
 	for i in range(HP_NUM_HIDDEN_LAYERS-1):

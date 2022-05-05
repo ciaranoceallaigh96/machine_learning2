@@ -1,3 +1,4 @@
+#based on 408
 #Warning : best model selected by NMAE and R2 might not be the same
 #can be binary or continoous trait
 #performs linear regression, logistic regression, neural network, svm and random forest, LASSO, RIDGE, CNN
@@ -262,16 +263,17 @@ def nn_results(analysis, ncv_object):
 
 
 print("Performing SVM")
-c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
-gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
+c_param = [2e-2, 1,int(2e+2),int(2e+4),int(2e+8)]#[2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+rbf_c = [1,int(2e+2),int(2e+4),int(2e+8)]
+gamma_param = [0.002,0.01]#[0.002,0.2,0.5,0.01] #ValueError: gamma < 0
 epsilon_param = [2e-5,2e-3,1,0]
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
 kernel_param = ['rbf', 'sigmoid'] #precompuited leads to square matrix error #temorarily removing poly for time reasons need to put it back in
 tolerance=[1e-3,1e-5,1e-1]
 shrinking=[True,False]
 cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
-degree = [1,2,3,0.1,100]
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
+degree = [1,2,3,100] #[1,2,3,0.1,100]
+svm_random_grid = {'gamma':gamma_param, 'C':rbf_c,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
@@ -296,9 +298,9 @@ if binary == 'False' :
 	ncv_results('RBG', RBG_NCV)
 
 print("Performing LASSO")
-alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
+alpha = [0.0001, 0.001, 0.01, 0.1]#[0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
-ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
+ridge_alpha = [100,500,1000] #[0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 tolerance=[1e-3,1e-5,1e-1]
 selection=['cyclic','random']# default=’cyclic’
 alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
@@ -323,13 +325,13 @@ ncv_results('RIDGE', RIDGE_NCV)
 print("Performing Random Forests")
 n_estimators = [10,100,1000] # Number of features to consider at every split
 max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
-max_depth = [1, 10, 50,100]
+max_depth = [10, 50,100] #not 1
 max_depth.append(None) # Minimum number of samples required to split a node
 #min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
-min_samples_split = [2, 10, 100, 1000] # Minimum number of samples required at each leaf node
+min_samples_split = [2, 10, 100]#, 1000] # Minimum number of samples required at each leaf node
 #min_samples_leaf = [int(x) for x in np.linspace(1, 2000, num = 200)] ; min_samples_leaf.extend((2,4,8,16, 32, 64)) # Method of selecting samples for training each tree
-min_samples_leaf = [1,2, 10, 100, 1000]
-bootstrap = [False, True]
+min_samples_leaf = [1,2]#, 10, 100, 1000]
+bootstrap = [True] #not false
 max_leaf_nodes = [10, 100, 500] #; max_leaf_nodes.append(x_train.shape[0])
 max_samples = [0.5, 0.9, 0.1, 0.01]
 #{'max_depth': 46, 'max_leaf_nodes': 695, 'n_estimators': 2778, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'min_samples_split': 2, 'bootstrap': False, 'max_samples': 0.5}
@@ -359,7 +361,9 @@ BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , mo
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
 print("Performing Neural Network")
-param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
+#nn not ftrl, adadelta
+#nn not l1 0.1
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['RMSprop', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
 METRIC_ACCURACY = coeff_determination
 dependencies = {'coeff_determination':coeff_determination}
@@ -432,7 +436,10 @@ NN_NCV = NestedCV(model_name='nn_model', name_list=name_list, num=num, model=nn_
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
 nn_results('NN', NN_NCV)
 print("Performing a convulutional neural network")
-cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+#cnn not random_uniform or glorot normal
+#cnn not ftrl
+#cnn hideen layers 2 
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_uniform', 'he_uniform', 'random_normal', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
 if binary == 'True':
 	METRIC_ACCURACY = tf.metrics.AUC
