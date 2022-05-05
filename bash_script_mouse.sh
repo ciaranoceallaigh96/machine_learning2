@@ -35,11 +35,11 @@ then
         echo "Pheno is $pheno"
         phenofile="$4"
 	#plink2 --bfile /external_storage/ciaran/mouse/mouse_plink --indep-pairwise 5 5 0.5 --out /external_storage/ciaran/greml/mouse_indep_snps #mac 6 doesnt do anything
-	shuf /external_storage/ciaran/greml/mouse_indep_snps.prune.in | head -n $5 > shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt
+	shuf /hpc/hers_en/rmclaughlin/ciaran/keras_tryout/mouse/mouse_indep_snps.prune.in | head -n $5 > shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt
 
-	plink1.9 --pheno $phenofile --prune --bfile /external_storage/ciaran/mouse/mouse_plink   --keep name_vector_train.txt --extract shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_shuf_"$1"_in_"$2"_"$3"
+	/hpc/local/CentOS7/hers_en/software/plink-1.90/plink --pheno $phenofile --prune --bfile /hpc/hers_en/rmclaughlin/ciaran/keras_tryout/mouse/mouse_plink   --keep name_vector_train.txt --extract shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_shuf_"$1"_in_"$2"_"$3"
 
-	plink1.9  --pheno $phenofile --prune --bfile /external_storage/ciaran/mouse/mouse_plink   --keep name_vector_test.txt --extract shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_shuf_"$1"_in_"$2"_"$3"
+	/hpc/local/CentOS7/hers_en/software/plink-1.90/plink  --pheno $phenofile --prune --bfile /hpc/hers_en/rmclaughlin/ciaran/keras_tryout/mouse/mouse_plink   --keep name_vector_test.txt --extract shuf_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_shuf_"$1"_in_"$2"_"$3"
 
 	mv name_vector_train.txt name_vector_train_"$1"_in_"$2"_"$3".txt ; mv name_vector_test.txt name_vector_test_"$1"_in_"$2"_"$3".txt
 
@@ -129,3 +129,4 @@ then
 
 
 fi
+

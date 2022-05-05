@@ -18,4 +18,16 @@ y_resids = result.resid_pearson
 print("Generating Pearson Residuals...")
 np.savetxt((str(sys.argv[1]) + ".resids"), y_resids)
 
+''' #merge data frames wih same ids in covars
+import pandas as pd
+sex = pd.read_csv('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/mouse/phenotypes/sex.txt.noNA', dtype='str', delimiter=' ')
+sex.shape
+ppibox4 = pd.read_csv('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/mouse/phenotypes/ppi.box4.txt.noNA', dtype='str', delimiter=' ')
+ppibox4.shape
+result = pd.merge(sex, ppibox4[['FID','ppi.box4']], on='FID')
+result.iloc[:5,]
+result.shape
+result2 = result.to_numpy()
+ model = sm.regression.linear_model.OLS(result6[:, 2].astype('float'),sm.add_constant(result6[:,3:].astype('float')))
+'''
 
