@@ -81,6 +81,7 @@ from tensorflow.python.keras.saving import saving_utils
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 import collections
 import operator
+import joblib
 if binary == 'True':
 	from sklearn.linear_model import LogisticRegression, RidgeClassifier
 	from sklearn.ensemble import RandomForestClassifier
@@ -166,14 +167,14 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
-        model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2
+        model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=1, n_points=5, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize" 
         result = model.fit(x_outer_train, y_outer_train.ravel())
         print(result.best_index_)
         print("Best inner score for fold %s is %s" % (k, result.best_score_))
         best_params = result.best_params_
         print("Best inner params for outer fold %s is %s" % (k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
-        _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range")
+        _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
         plt.show()
         #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values
         #plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
@@ -228,12 +229,13 @@ if binary == 'True':
 	svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
 	SVM_NCV = NestedCV(model_name='LinearSVC', name_list=name_list, num=num, model=LinearSVC(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 elif binary == 'False':
-	loop_through(LinearSVR(), svm_random_grid2, 'linSVM')	
+	print("skipping rn")
+	#loop_through(LinearSVR(), svm_random_grid2, 'linSVM')	
 
 #kf_outer = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42) #should result in the exact same split as was done in line 341 nested_cv_new_name.py
 #kf_outer.get_n_splits(X)
 
-
+'''
 if binary == 'False' :
 	print("Performing RBG")
 	RBG_NCV = NestedCV(model_name='RBG', name_list=name_list, num=num, model=SVR(),  goal_dict=rbg_goal_dict, time_dict=rbg_time_dict,params_grid=svm_random_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
@@ -303,18 +305,17 @@ model_type = LinearRegression() if binary == 'False' else LogisticRegression()
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
+'''
 print("Performing Neural Network")
-param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
-nn_goal_dict, nn_time_dict = make_goal_dict(param_grid)
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 METRIC_ACCURACY = coeff_determination
 dependencies = {'coeff_determination':coeff_determination}
 custom_objects = {"coeff_determination":coeff_determination}
-tf.config.threading.set_inter_op_parallelism_threads(32)
-tf.config.threading.set_intra_op_parallelism_threads(32)
+tf.config.threading.set_inter_op_parallelism_threads(64)
+tf.config.threading.set_intra_op_parallelism_threads(64)
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
 callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0 #this callkaci is throwing up and error Unknown metric function
-
 if binary == 'True': #overwrite variables
 	dependencies = {'auc':tf.keras.metrics.AUC}
 	METRIC_ACCURACY = tf.keras.metrics.AUC
@@ -331,46 +332,47 @@ from tensorflow.python.keras.saving import saving_utils
 make_keras_picklable()
 
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer, network_shape):
-	opt = HP_OPTIMIZER
-	chosen_opt = getattr(tf.keras.optimizers,opt)
-	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
-	long_funnel_count = 0 #keep widest shape for two layers
-	model = Sequential()
-	input_shape = (x_train.shape[1],) if snps == 'shuf' else (x_train.shape[1]-1,)
-	model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape))
-	if rate != 0:
-		model.add(Dropout(rate=rate))	
-	for i in range(HP_NUM_HIDDEN_LAYERS-1):
-		if network_shape == 'funnel':
-			units = int(units*0.666)
-		elif network_shape == 'long_funnel':
-			if long_funnel_count >= 1: #two wide layers (inclduing previous first layer)
-				units=int(units*0.666)
-			long_funnel_count += 1
-		model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
-		if rate != 0:
-			model.add(Dropout(rate=rate))
-	if binary == 'True' :
-		model.add(Dense(1, activation='sigmoid'))
-		model.compile(loss='binary_crossentropy',metrics=['accuracy', AUC(name='auc')],optimizer=chosen_opt(learning_rate=learning_rate))
-	else:
-		model.add(Dense(1, activation='linear'))
-		model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
-	#new_layer_weights = np.random.rand(x_train.shape[1]-1,units) #(num_inputs,num_units)
-	#for i in range(0,x_train.shape[1]-1):
-	#	new_Layer_weights[i,:] = beta_weights[i]
-	#new_weight_list = []
-	#new_weight_list.append(new_layer_weights)
-	#new_weight_list.append(np.zeros(num_units)) # biases
-	#model.layers[0].set_weights(new_weight_list)
-	print(model.summary())
-	return model
-
+        opt = HP_OPTIMIZER
+        chosen_opt = getattr(tf.keras.optimizers,opt)
+        reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
+        long_funnel_count = 0 #keep widest shape for two layer
+        make_keras_picklable()
+        model = Sequential()
+        input_shape = (set_size,) if snps == 'shuf' else (set_size-1,)
+        model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape))
+        if rate != 0:
+                model.add(Dropout(rate=rate))
+        for i in range(HP_NUM_HIDDEN_LAYERS-1):
+                if network_shape == 'funnel':
+                        units = int(units*0.666)
+                elif network_shape == 'long_funnel':
+                        if long_funnel_count >= 1: #two wide layers (inclduing previous first layer)
+                                units=int(units*0.666)
+                        long_funnel_count += 1
+                model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer))
+                if rate != 0:
+                        model.add(Dropout(rate=rate))
+        if binary == 'True' :
+                model.add(Dense(1, activation='sigmoid'))
+                model.compile(loss='binary_crossentropy',metrics=['accuracy', AUC(name='auc')],optimizer=chosen_opt(learning_rate=learning_rate))
+        else:
+                model.add(Dense(1, activation='linear'))
+                model.compile(loss='mean_absolute_error',metrics=['accuracy', 'mae', coeff_determination],optimizer=chosen_opt(learning_rate=learning_rate))
+        #new_layer_weights = np.random.rand(x_train.shape[1]-1,units) #(num_inputs,num_units)
+        #for i in range(0,x_train.shape[1]-1):
+        #       new_Layer_weights[i,:] = beta_weights[i]
+        #new_weight_list = []
+        #new_weight_list.append(new_layer_weights)
+        #new_weight_list.append(np.zeros(num_units)) # biases
+        #model.layers[0].set_weights(new_weight_list)
+        print(model.summary())
+        return model
 
 if binary == 'True':
 	nn_model = KerasClassifier(build_fn = build_nn, verbose=0, callbacks=[callback])
 else:
-	nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
+	nn_model = KerasRegressor(build_fn = build_nn, verbose=0)# , callbacks=[callback])
+	loop_through(nn_model, param_grid, 'FNN')
 
 
 NN_NCV = NestedCV(model_name='nn_model', name_list=name_list, num=num, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
