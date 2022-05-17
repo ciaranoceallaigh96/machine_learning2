@@ -175,7 +175,13 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         outer_score = model.score(x_outer_test, y_outer_test)
         _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range")
         plt.show()
-        plt.savefig("%s_cv_%s.png" % (model_name, k))
+        #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values
+        #plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
+        #plt.subplots_adjust(left=0, bottom=0, right=1, top=1)
+        fig = plt.gcf()
+        fig.set_size_inches(27, 27)
+        plt.subplots_adjust(left=0.2)
+        plt.savefig("%s_cv_%s_%s_%s.png" % (model_name, k, snps, num), dpi=300)
         plt.clf() ; plt.close()
         return outer_score
 
