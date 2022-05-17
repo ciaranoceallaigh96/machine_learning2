@@ -81,7 +81,6 @@ from tensorflow.python.keras.saving import saving_utils
 from tensorflow.keras.layers import Dense, Conv1D, Flatten
 import collections
 import operator
-from skopt import BayesSearchCV
 if binary == 'True':
 	from sklearn.linear_model import LogisticRegression, RidgeClassifier
 	from sklearn.ensemble import RandomForestClassifier
@@ -160,110 +159,48 @@ def make_keras_picklable():
     cls = Model
     cls.__reduce__ = __reduce__
 
+def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name):
+        for key in param_grid:
+                param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
+        kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
+        kf_inner.get_n_splits(x_outer_train) #split outer train set
+        model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2
+        result = model.fit(x_outer_train, y_outer_train)
+        print(result.best_index_)
+        print("Best inner score for fold %s is %s" % (count, result.best_score_))
+        best_params = result.best_params_
+        print("Best inner params for outer fold %s is %s" % (count, best_params))
+        outer_score = model.score(x_outer_test, y_outer_test)
+        _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range")
+        plt.show()
+        plt.savefig("%s_cv_%s.png" % (model_name, count))
+        plt.clf() ; plt.close()
+        return outer_score
 
-def make_param_box_plot(goal_dict, time_dict, analysis, stability_dict=None): #example goal dict = {'alpha' : {0.1 : [0.3, 0.5, 0.4], 1 : [0, 0.1, 0.2]}, 'beta' : {0.1 : [0.5, 0.5, 0.45, 1 : [0.8, 0.7, 0.7]}}
-	metric = 'R^2' if binary == 'False' else 'AUC' #binary should be accesible from outside of function
-	if 'max_depth' in goal_dict.keys():
-		if None in goal_dict['max_depth'].keys():
-			old_key = None #thros up sorting error
-			new_key = 0
-			goal_dict['max_depth'][new_key] = goal_dict['max_depth'].pop(old_key)
-			time_dict['max_depth'][new_key] = time_dict['max_depth'].pop(old_key)
-			stability_dict['max_depth'][new_key] = stability_dict['max_depth'].pop(old_key)
-	for param in goal_dict:
-		for value in goal_dict[param]:
-			goal_dict[param][value] = [0 if score < 0 else score for score in goal_dict[param][value]] #convert negative r2 to zeros
-	for param in goal_dict:
-                #ordered_dict_items = {k:goal_dict[param][k] for k in sorted(goal_dict[param].keys())} this doesnt work in python3.5 for some reason (does work in 3.8)
-                #ordered_time_items = {k:time_dict[param][k] for k in sorted(time_dict[param].keys())}
-                sorted_dict_items = sorted(goal_dict[param].items(), key=operator.itemgetter(0))#in order python It is not possible to sort a dictionary, only to get a representation of a dictionary that is sorted
-                sorted_time_items = sorted(time_dict[param].items(), key=operator.itemgetter(0))
-                ordered_dict_items = collections.OrderedDict(sorted_dict_items) #turn back into dictionary
-                ordered_time_items = collections.OrderedDict(sorted_time_items)
-                plt.subplots(1,2,figsize=(12,8))
-                plt.subplot(121) #sorted
-                plt.boxplot(ordered_dict_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_dict_items.keys()) #orange line is median, green dotted line is mean
-                plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-                plt.ylabel(metric, fontsize=10,fontweight='bold')
-                plt.title('%s Score vs %s' % (metric, param), fontsize=14, fontweight='bold')
-                if param == 'initialization':
-                        plt.xticks(fontsize=6)
-                plt.subplot(122)
-                plt.boxplot(ordered_time_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=False,labels=ordered_time_items.keys())
-                plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-                plt.ylabel('Training Time', fontsize=10,fontweight='bold')
-                plt.title('Training Time vs %s' % param, fontsize=14, fontweight='bold')
-                plt.tight_layout(pad=4)
-                if param == 'initialization':
-                        plt.xticks(fontsize=6)
-                my_fig_name = "plots_of_" +str(analysis) + '_' + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
-                plt.savefig(my_fig_name, dpi=300) 
-                plt.show()
-                plt.clf()
-                plt.close()
-	if stability_dict is not None:
-		for param in stability_dict:
-			sorted_stability_items = sorted(stability_dict[param].items(), key=operator.itemgetter(0))
-			ordered_stability_items = collections.OrderedDict(sorted_stability_items)
-			plt.boxplot(ordered_stability_items.values(), bootstrap=None,showmeans=False, meanline=False, notch=True,labels=ordered_stability_items.keys())
-			plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
-			plt.ylabel('Delta Train-Test %s' % metric, fontsize=10,fontweight='bold')
-			plt.title('Stability Score vs %s' % param, fontsize=14, fontweight='bold')
-			if param == 'initialization':
-				plt.xticks(fontsize=6)
-			my_fig_name = "stability_plot_of_" +str(analysis) + '_' + str(param) + '_' + str("{:%Y_%m_%d}".format(datetime.datetime.now())) + '_' +str(snps) +str(num)+ ".png"
-			plt.savefig(my_fig_name, dpi=300)
-			plt.show()
-			plt.clf()
-			plt.close()
-	                
-		
-def make_goal_dict(whole_dict):
-	print(whole_dict)
-	goal_dict = {key:{} for key in whole_dict}
-	for key in whole_dict:
-		for item in whole_dict[key]:
-			goal_dict[key][item] = []
-	time_dict = {key:{} for key in whole_dict} #both empty
-	for key in whole_dict:
-                for item in whole_dict[key]:
-                        time_dict[key][item] = []
-	return goal_dict, time_dict
+def loop_through(estimator, param_grid): #should be able to merge this with CK_nested_cv
+        outer_scores = []
+        count = 1 #for CK_nested_cv()
+        metric_in_use = 'r2'
+        outer_ks = 4 #number of outer splits
+        model_name = ''.join(filter(str.isalnum, str(estimator).lower())) #grabs model name as string and removes ()
+        for k in range(1, outer_ks+1):
+                x_outer_train, y_outer_train = load_data('train_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
+                x_outer_test, y_outer_test = load_data('test_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
+		scaler = preprocessing.StandardScaler().fit(y_outer_train) 
+		y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name) #e.g SVR()
+                outer_scores.append(outer_score)
+                count += 1
+        print(outer_scores)
+        print("Outer scores of estimator is %s and mean is %s" % (outer_scores, np.mean(outer_scores)))
 
-x_train, y_train = load_data(data)
-name_list = np.loadtxt(data, skiprows=1, usecols=(0,), dtype='str')
 
-scaler = preprocessing.StandardScaler().fit(y_train)
 #pickle.dump(scaler, open('scaler.pkl', 'wb'))
 #scaler = pickle.load(open('scaler.pkl', 'rb'))
-
-y_train = scaler.transform(y_train)
 
 n_snps = x_train.shape[1]
 metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
-def ncv_results(analysis, ncv_object):
-        print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
-        print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
-        print("Outer scores (AUC probs if available) of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores2, np.mean(ncv_object.outer_scores2)))
-        print("Variance of %s is %s " % (analysis, ncv_object.variance))
-        #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis), stability_dict=ncv_object.stability_dict)
-        with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile: #with open("fname.pkl", 'rb') as ncvfile:
-                pickle.dump(ncv_object, ncvfile) #ncv_object = pickle.load(ncvfile)
-
-def nn_results(analysis, ncv_object):
-        print("Best Params of %s is %s " % (analysis, ncv_object.best_params))
-        print("Outer scores of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores, np.mean(ncv_object.outer_scores)))
-        print("Outer scores (AUC probs if available) of %s is %s and mean is %s" % (analysis, ncv_object.outer_scores2, np.mean(ncv_object.outer_scores2)))
-        print("Variance of %s is %s " % (analysis, ncv_object.variance))
-        #print("Goal dict of %s is %s " % (analysis, ncv_object.goal_dict))
-        make_param_box_plot(ncv_object.goal_dict, ncv_object.time_dict, str(analysis),stability_dict=ncv_object.stability_dict)
-        nn_list = [ncv_object.best_inner_params_list, ncv_object.best_inner_score_list, ncv_object.best_params, ncv_object.metric, ncv_object.outer_scores, ncv_object.variance]
-        with open('NCV_' + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + '.pkl', 'wb') as ncvfile:
-                pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
-        ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
-
 
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -289,46 +226,12 @@ if binary == 'True':
 	svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
 	SVM_NCV = NestedCV(model_name='LinearSVC', name_list=name_list, num=num, model=LinearSVC(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 else:
-	SVM_NCV = NestedCV(model_name='LinearSVR', name_list=name_list, num=num, model=LinearSVR(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
-SVM_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='SVM', goal_dict=svm_goal_dict, time_dict=svm_time_dict)
-ncv_results('SVM', SVM_NCV)	
+	loop_through(LinearSVR(), svm_random_grid2)	
+
 
 #kf_outer = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42) #should result in the exact same split as was done in line 341 nested_cv_new_name.py
 #kf_outer.get_n_splits(X)
 
-
-def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid):
-	for key in param_grid:
-		param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
-	kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
-	kf_inner.get_n_splits(x_outer_train) #split outer train set
-	model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2
-	result = model.fit(x_outer_train, y_outer_train)
-	print(result.best_index_)
-	print("Best inner score for fold %s is %s" % (count, result.best_score_))
-	best_params = result.best_params_
-	print("Best params for fold %s is %s" % (count, best_params))
-	outer_score = model.score(x_outer_test, y_outer_test)
-	_ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range")
-	plt.show()
-	model_name = ''.join(filter(str.isalnum, str(estimator).lower())) #grabs model name as string and removes ()
-	plt.savefig("%s_cv_%s.png" % (model_name, count))
-	plt.clf() ; plt.close()
-	return outer_score
-
-outer_scores = []
-count = 1
-metric_in_use = 'r2'
-outer_ks = 4 #number of outer splits
-for k in range(1, outer_ks+1):
-	x_outer_train, y_outer_train = load_data('train_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
-	x_outer_test, y_outer_test = load_data('test_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
-	outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=nn_model, param_grid=param_grid)
-	#outer_score = CK_nested_cv(x_outer_train=x[train_index], y_outer_train=y[train_index], x_outer_test=x[test_index], y_outer_test=y[test_index], estimator=SVR(), param_grid=svm_random_grid)
-	outer_scores.append(outer_score)
-	count += 1
-
-print(outer_scores)
 
 if binary == 'False' :
 	print("Performing RBG")
