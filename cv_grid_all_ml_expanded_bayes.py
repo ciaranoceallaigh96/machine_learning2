@@ -159,38 +159,36 @@ def make_keras_picklable():
     cls = Model
     cls.__reduce__ = __reduce__
 
-def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name):
+
+print("Warning: if you get this error: 'xi, yi = partial_dependence_1D(space, result.models[-1], ;  IndexError: list index out of range' then increase n_iteations to >= 10")
+def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name, k):
         for key in param_grid:
                 param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
         model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2
-        result = model.fit(x_outer_train, y_outer_train)
+        result = model.fit(x_outer_train, y_outer_train.ravel())
         print(result.best_index_)
-        print("Best inner score for fold %s is %s" % (count, result.best_score_))
+        print("Best inner score for fold %s is %s" % (k, result.best_score_))
         best_params = result.best_params_
-        print("Best inner params for outer fold %s is %s" % (count, best_params))
+        print("Best inner params for outer fold %s is %s" % (k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
         _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range")
         plt.show()
-        plt.savefig("%s_cv_%s.png" % (model_name, count))
+        plt.savefig("%s_cv_%s.png" % (model_name, k))
         plt.clf() ; plt.close()
         return outer_score
 
-def loop_through(estimator, param_grid): #should be able to merge this with CK_nested_cv
+def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv
         outer_scores = []
-        count = 1 #for CK_nested_cv()
-        metric_in_use = 'r2'
         outer_ks = 4 #number of outer splits
-        model_name = ''.join(filter(str.isalnum, str(estimator).lower())) #grabs model name as string and removes ()
         for k in range(1, outer_ks+1):
-                x_outer_train, y_outer_train = load_data('train_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
-                x_outer_test, y_outer_test = load_data('test_raw_plink_' + 'snps' + '_' + k + '_in_4_out.raw') #not standardized #already split
-		scaler = preprocessing.StandardScaler().fit(y_outer_train) 
-		y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
-                outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name) #e.g SVR()
+                x_outer_train, y_outer_train = load_data('train_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
+                x_outer_test, y_outer_test = load_data('test_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
+                scaler = preprocessing.StandardScaler().fit(y_outer_train) 
+                y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name, k=k) #e.g SVR()
                 outer_scores.append(outer_score)
-                count += 1
         print(outer_scores)
         print("Outer scores of estimator is %s and mean is %s" % (outer_scores, np.mean(outer_scores)))
 
@@ -198,9 +196,9 @@ def loop_through(estimator, param_grid): #should be able to merge this with CK_n
 #pickle.dump(scaler, open('scaler.pkl', 'wb'))
 #scaler = pickle.load(open('scaler.pkl', 'rb'))
 
-n_snps = x_train.shape[1]
-metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
+#metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
+metric_in_use = 'r2'
 
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -216,8 +214,6 @@ svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degr
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
-rbg_goal_dict, rbg_time_dict = make_goal_dict(svm_random_grid)
-svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
 if binary == 'True':
 	loss_param = ['squared_hinge']
 	penalty_box = ['l1','l2'] #The combination of penalty='l1' and loss='hinge' is not supported
@@ -225,9 +221,8 @@ if binary == 'True':
 	svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'penalty':penalty_box, 'dual':dual}
 	svm_goal_dict, svm_time_dict = make_goal_dict(svm_random_grid2)
 	SVM_NCV = NestedCV(model_name='LinearSVC', name_list=name_list, num=num, model=LinearSVC(), goal_dict=svm_goal_dict, time_dict=svm_time_dict, params_grid=svm_random_grid2, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
-else:
-	loop_through(LinearSVR(), svm_random_grid2)	
-
+elif binary == 'False':
+	loop_through(LinearSVR(), svm_random_grid2, 'linSVM')	
 
 #kf_outer = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42) #should result in the exact same split as was done in line 341 nested_cv_new_name.py
 #kf_outer.get_n_splits(X)
