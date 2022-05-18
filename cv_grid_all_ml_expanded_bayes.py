@@ -82,6 +82,7 @@ from tensorflow.keras.layers import Dense, Conv1D, Flatten
 import collections
 import operator
 import joblib
+import tempfile
 if binary == 'True':
 	from sklearn.linear_model import LogisticRegression, RidgeClassifier
 	from sklearn.ensemble import RandomForestClassifier
@@ -311,20 +312,13 @@ print("Performing Neural Network")
 param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100], 'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
-callback = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0) #min above 0 #this callkaci is throwing up and error Unknown metric function
 if binary == 'True': #overwrite variables
 	dependencies = {'auc':tf.keras.metrics.AUC}
 	METRIC_ACCURACY = tf.keras.metrics.AUC
-	callback = tf.keras.callbacks.EarlyStopping(monitor='auc', patience=20, mode='max', baseline=0.0) #min above 0
+	callback1 = tf.keras.callbacks.EarlyStopping(monitor='auc', patience=20, mode='max', baseline=0.0) #min above 0
 
 
-import tempfile
 #https://github.com/tensorflow/tensorflow/issues/34697 #fixes an error that the early stopping callback throws up in the nested cv #something about the parralele fitting step needing everything to be pickle-able and the callback isnt 
-from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Dense
-from tensorflow.python.keras.layers import deserialize, serialize
-from tensorflow.python.keras.saving import saving_utils
-
 make_keras_picklable()
 
 def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer, network_shape):
