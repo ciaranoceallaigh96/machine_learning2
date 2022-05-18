@@ -167,7 +167,10 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
-        model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':2, 'callbacks': [callback1]}, n_jobs=1, n_points=5, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize" 
+        if model_name in ('FNN' , 'CNN'):
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
+        else:
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         result = model.fit(x_outer_train, y_outer_train.ravel())
         print(result.best_index_)
         print("Best inner score for fold %s is %s" % (k, result.best_score_))
@@ -206,7 +209,6 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
 #metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
 metric_in_use = 'r2'
-'''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
@@ -288,7 +290,6 @@ else:
 	loop_through(RandomForestRegressor(), random_grid, 'RF')
 
 #base_grid = {"fit_intercept":["True"]}
-'''
 '''
 print("Performing Baseline")
 base_goal_dict = {}
