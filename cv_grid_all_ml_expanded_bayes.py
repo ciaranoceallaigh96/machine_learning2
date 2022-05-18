@@ -33,11 +33,8 @@ iterations = int(sys.argv[9])
 
 if organism != 'mouse':
 	sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
-	import nested_cv
-	from nested_cv import NestedCV
 else:
 	sys.path.insert(0, '/home/hers_en/rmclaughlin/tf/lib/python3.6/site-packages') ; sys.path.insert(0, '/hpc/local/CentOS7/modulefiles/python_libs/3.6.1'); sys.path.insert(0, '/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/envciaran2/lib/python3.6/site-packages')
-	from nested_cv2 import NestedCV
 
 import statistics
 import numpy as np
@@ -133,19 +130,16 @@ def unpack(model, training_config, weights): ##https://github.com/tensorflow/ten
 
 # Hotfix function
 def make_keras_picklable():
-
     def __reduce__(self):
         model_metadata = saving_utils.model_metadata(self)
         training_config = model_metadata.get("training_config", None)
         model = serialize(self)
         weights = self.get_weights()
         return (unpack, (model, training_config, weights))
-
     cls = Model
     cls.__reduce__ = __reduce__
 
 
-print("Warning: if you get this error: 'xi, yi = partial_dependence_1D(space, result.models[-1], ;  IndexError: list index out of range' then increase n_iteations to >= 10")
 def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name, k):
         """Fits each Cross-validation fold within an inner loop. 
             Applies best params to outer test set and reports results. 
@@ -203,6 +197,7 @@ else:
         os.chdir('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/'  + phenotype)
 
 
+print("Warning: if you get this error: 'xi, yi = partial_dependence_1D(space, result.models[-1], ;  IndexError: list index out of range' then increase n_iteations to >= 10")
 date_object = datetime.datetime.now().replace(second=0,microsecond=0)
 print(date_object)
 
@@ -211,8 +206,15 @@ print(date_object)
 
 #metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
-metric_in_use = 'r2'
+
+if binary == 'False':
+	metric_in_use = 'r2' 
+elif binary == 'True':
+	metric_in_use = 'AUC'
+
 print("Metric in use is %s" % metric_in_use)
+
+'''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
@@ -234,7 +236,7 @@ if binary == 'True':
 	svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'penalty':penalty_box, 'dual':dual}
 	loop_through(LinearSVC(), svm_random_grid2, 'linSVC')
 elif binary == 'False':
-	loop_through(LinearSVR(), svm_random_grid2, 'linSVM')	
+	loop_through(LinearSVR(), svm_random_grid2, 'linSVR')	
 
 #kf_outer = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42) #should result in the exact same split as was done in line 341 nested_cv_new_name.py
 #kf_outer.get_n_splits(X)
@@ -243,6 +245,7 @@ if binary == 'False' :
 	print("Performing RBG")
 	loop_through(SVR(), svm_random_grid, 'SVR')
 
+'''
 print("Performing LASSO")
 alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
@@ -253,7 +256,6 @@ alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":se
 ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
-lass_goal_dict, lass_time_dict = make_goal_dict(alpha_dict)
 if binary == 'False' :
 	loop_through(Lasso(), alpha_dict, 'LASSO')
 

@@ -10,3 +10,7 @@ git commit #for a longer commit with header and body this will open vim
 git push #upload to directory
 git log #show commit log in bash
 git show {commit code} #plug in the long code to get long-form view of commit
+
+#if hpc is downloading with git pull
+#try this "git remove -v" #check name of the remote you want to pull from
+then "git pull https://ciaranoceallaigh96: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@github.com/ciaranoceallaigh96/machine_learning2.git"
