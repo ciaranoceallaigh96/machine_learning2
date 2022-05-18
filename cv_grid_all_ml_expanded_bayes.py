@@ -1,3 +1,4 @@
+#BAYESIAN NESTED CROSS_VALIDATION
 #Warning : best model selected by NMAE and R2 might not be the same
 #can be binary or continoous trait
 #performs linear regression, logistic regression, neural network, svm and random forest, LASSO, RIDGE, CNN
@@ -18,9 +19,7 @@
 #with open('NCV_NN.pkl', 'rb') as f:
 #     red = pickle.load(f)
 
-print("Please remember to set the right set size in the nested_cv code")
 import sys
-
 num = sys.argv[1] #script number for saving out
 phenfile = str(sys.argv[2]) #txt file with phenotypes
 data = str(sys.argv[3]) #needs to be same size as set_size
@@ -40,7 +39,6 @@ else:
 	sys.path.insert(0, '/home/hers_en/rmclaughlin/tf/lib/python3.6/site-packages') ; sys.path.insert(0, '/hpc/local/CentOS7/modulefiles/python_libs/3.6.1'); sys.path.insert(0, '/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/envciaran2/lib/python3.6/site-packages')
 	from nested_cv2 import NestedCV
 
-#from sklearn.model_selection import cross_val_score
 import statistics
 import numpy as np
 import sklearn
@@ -96,23 +94,6 @@ sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-pack
 import dill as pickle
 from skopt import BayesSearchCV
 from skopt.plots import plot_objective, plot_histogram
-
-for i in range(1,len(sys.argv)):
-	print(sys.argv[i])
-
-if organism != 'mouse':
-	if not os.path.exists('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps):
-		os.makedirs('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
-
-	os.chdir('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
-else:
-	if not os.path.exists('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype):
-		os.makedirs('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype)
-	os.chdir('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/'  + phenotype)
-
-
-date_object = datetime.datetime.now().replace(second=0,microsecond=0)
-print(date_object)
 
 def coeff_determination(y_true, y_pred):
         SS_res = K.sum(K.square( y_true-y_pred ))
@@ -174,10 +155,10 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
         if model_name in ('FNN' , 'CNN'):
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         else:
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
-        result = model.fit(x_outer_train, y_outer_train.ravel())
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
+        result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
         print(result.best_index_)
         print("Best inner score for fold %s is %s" % (k, result.best_score_))
         best_params = result.best_params_
@@ -185,9 +166,7 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         outer_score = model.score(x_outer_test, y_outer_test)
         _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
         plt.show()
-        #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values
-        #plt.tight_layout(pad=0.4, w_pad=0.5, h_pad=1.0)
-        #plt.subplots_adjust(left=0, bottom=0, right=1, top=1)
+        #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
         fig = plt.gcf()
         fig.set_size_inches(27, 27)
         plt.subplots_adjust(left=0.2)
@@ -196,7 +175,7 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         return outer_score
 
 def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv()
-        """Loops thorugh each outer fold of the nested cv to run CK_nested_cv()"""
+        """Loops through each outer fold of the nested cv to run CK_nested_cv()"""
         outer_scores = []
         outer_ks = 4 #number of outer splits
         for k in range(1, outer_ks+1):
@@ -210,12 +189,30 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
         print("Outer scores of estimator is %s and mean is %s" % (outer_scores, np.mean(outer_scores)))
 
 
+for i in range(1,len(sys.argv)):
+        print(sys.argv[i])
+
+if organism != 'mouse':
+        if not os.path.exists('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps):
+                os.makedirs('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
+
+        os.chdir('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
+else:
+        if not os.path.exists('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype):
+                os.makedirs('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype)
+        os.chdir('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/'  + phenotype)
+
+
+date_object = datetime.datetime.now().replace(second=0,microsecond=0)
+print(date_object)
+
 #pickle.dump(scaler, open('scaler.pkl', 'wb'))
 #scaler = pickle.load(open('scaler.pkl', 'rb'))
 
 #metric_in_use = sklearn.metrics.r2_score if binary == 'False' else sklearn.metrics.roc_auc_score
 #################################################SVM####SVM#####SVM####################################################################
 metric_in_use = 'r2'
+print("Metric in use is %s" % metric_in_use)
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
@@ -315,7 +312,7 @@ tf.config.threading.set_intra_op_parallelism_threads(64)
 callback1 = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0)
 
 print("Performing Neural Network")
-param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100], 'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
 if binary == 'True': #overwrite variables
@@ -335,7 +332,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
         make_keras_picklable()
         model = Sequential()
         input_shape = (set_size,) if snps == 'shuf' else (set_size-1,)
-        model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape))
+        model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape, kernel_initializer=kernel_initializer))
         if rate != 0:
                 model.add(Dropout(rate=rate))
         for i in range(HP_NUM_HIDDEN_LAYERS-1):
