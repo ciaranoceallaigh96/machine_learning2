@@ -137,7 +137,9 @@ def baseline(x, y):
         return model
 
 
-def unpack(model, training_config, weights): ##https://github.com/tensorflow/tensorflow/issues/34697 #fixes an error that the early stopping callback throws up in the nested cv #something about the parralele fitting step needing everything to be pickle-able and the callback isnt 
+def unpack(model, training_config, weights): ##https://github.com/tensorflow/tensorflow/issues/34697 #
+    """fixes an error that the early stopping callback throws up in the nested cv 
+    Something about the parralele fitting step needing everything to be pickle-able and the callback isnt""" 
     restored_model = deserialize(model)
     if training_config is not None:
         restored_model.compile(
@@ -164,6 +166,9 @@ def make_keras_picklable():
 
 print("Warning: if you get this error: 'xi, yi = partial_dependence_1D(space, result.models[-1], ;  IndexError: list index out of range' then increase n_iteations to >= 10")
 def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name, k):
+        """Fits each Cross-validation fold within an inner loop. 
+            Applies best params to outer test set and reports results. 
+            Generates partial dependance plots."""
         for key in param_grid:
                 param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
@@ -190,7 +195,8 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         plt.clf() ; plt.close()
         return outer_score
 
-def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv
+def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv()
+        """Loops thorugh each outer fold of the nested cv to run CK_nested_cv()"""
         outer_scores = []
         outer_ks = 4 #number of outer splits
         for k in range(1, outer_ks+1):
