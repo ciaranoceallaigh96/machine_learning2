@@ -161,11 +161,11 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use, verbose=2) #verbose=2 gives more info
         result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
         print(result.best_index_)
-        print("Best inner score for fold %s is %s" % (k, result.best_score_))
+        print("Best %s inner score for fold %s is %s" % (model_name ,k, result.best_score_))
         best_params = result.best_params_
-        print("Best inner params for outer fold %s is %s" % (k, best_params))
+        print("Best %s inner params for outer fold %s is %s" % (model_name, k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
-        print("Score for outer fold %s is %s" % (k,outer_score))
+        print("Score for %s outer fold %s is %s" % (model_name, k,outer_score))
         _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
         plt.show()
         #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
