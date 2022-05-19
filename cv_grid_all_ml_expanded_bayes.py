@@ -144,20 +144,28 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         """Fits each Cross-validation fold within an inner loop. 
             Applies best params to outer test set and reports results. 
             Generates partial dependance plots."""
+        old_key = None #throws up sorting error during plotting
+        new_key = 0
         for key in param_grid:
-                param_grid[key] = sorted(param_grid[key]) #need to sort for plotting
+                if key == 'max_depth':   #RF
+                        param_grid['max_depth'] = [0 if element is None else element for element in param_grid['max_depth']] #need to replace None with 0 
+                param_grid[key] = sorted(param_grid[key]) #need to sort param values for plotting
+        if 'max_depth' in param_grid:
+                param_grid['max_depth'] = [None if element is 0 else element for element in param_grid['max_depth']]
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
+        print(kf_inner)
         if model_name in ('FNN' , 'CNN'):
                 model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         else:
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use, verbose=2) #verbose=2 gives more info
         result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
         print(result.best_index_)
         print("Best inner score for fold %s is %s" % (k, result.best_score_))
         best_params = result.best_params_
         print("Best inner params for outer fold %s is %s" % (k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
+        print("Score for outer fold %s is %s" % (k,outer_score))
         _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
         plt.show()
         #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
@@ -180,7 +188,7 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
                 outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name, k=k) #e.g SVR()
                 outer_scores.append(outer_score)
         print(outer_scores)
-        print("Outer scores of estimator is %s and mean is %s" % (outer_scores, np.mean(outer_scores)))
+        print("Outer scores of %s is %s and mean is %s" % (model_name, outer_scores, np.mean(outer_scores)))
 
 
 for i in range(1,len(sys.argv)):
@@ -213,7 +221,6 @@ elif binary == 'True':
 	metric_in_use = 'AUC'
 
 print("Metric in use is %s" % metric_in_use)
-
 '''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -245,7 +252,6 @@ if binary == 'False' :
 	print("Performing RBG")
 	loop_through(SVR(), svm_random_grid, 'SVR')
 
-'''
 print("Performing LASSO")
 alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
@@ -256,16 +262,17 @@ alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":se
 ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
 print(alpha_dict)
 alpha_name_dict = {'alpha':"Alpha"}
+
 if binary == 'False' :
 	loop_through(Lasso(), alpha_dict, 'LASSO')
 
 print("Performing Ridge")
-lass_goal_dict, lass_time_dict = make_goal_dict(ridge_alpha_dict)
 if binary == 'True':
 	loop_through(RidgeClassifier(), ridge_alpha_dict, 'Ridge')
 else:
 	loop_through(Ridge(), ridge_alpha_dict, 'Ridge')
 
+'''
 print("Performing Random Forests")
 n_estimators = [10,100,1000] # Number of features to consider at every split
 max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
@@ -283,13 +290,12 @@ random_grid = {'n_estimators': n_estimators,
                'max_features': max_features,
                'max_depth': max_depth,
                'min_samples_split': min_samples_split,
-               'min_samples_leaf': min_samples_leaf,
-               'bootstrap': bootstrap, 'max_samples':max_samples, 'max_leaf_nodes':max_leaf_nodes}
+               'min_samples_leaf': min_samples_leaf, 'bootstrap':bootstrap,
+               'max_samples':max_samples, 'max_leaf_nodes':max_leaf_nodes}
 print(random_grid)
 rf_name_dict = {"max_samples":"Maximum Fraction of Samples", "max_leaf_nodes":"Maximum Leaf Nodes", "n_estimators":"Number of Estimators", "n_snps":"Number of SNPs","max_features":"Maximum Number of Features", "max_depth":"Maximum Depth", "min_samples_split":"Minimum Number of Samples to Split", "min_samples_leaf":"Minimum Number of Samples in Leaf"}
 rf_param_dict = {'n_snps':'n_features', 'n_estimators':'n_estimators'}
 rf_param_list = ['n_estimators','max_features','max_depth','min_samples_split','min_samples_leaf','max_leaf_nodes', 'max_samples'] #dont have bootstrap here
-rf_goal_dict, rf_time_dict = make_goal_dict(random_grid)
 if binary == 'True':
 	loop_through(RandomForestClassifier(), random_grid, 'RF')
 else:
