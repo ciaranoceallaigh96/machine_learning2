@@ -180,8 +180,11 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 print(scores)
                 print(globals()[list_name])
                 plt.scatter(globals()[list_name], scores)
+                plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
+                plt.ylabel(metric_in_use.upper(), fontsize=10,fontweight='bold')
+                plt.title('%s Score vs %s' % (metric_in_use.upper(), param), fontsize=14, fontweight='bold')
                 if log_scale_dict[param] == True:
-                        plt.set_yscale('log')
+                        plt.xscale('log')
                 plt.show() ; plt.savefig("%s_%s_cv_%s_%s_%s.png" % (param, model_name, k, snps, num), dpi=300) ; plt.clf() ; plt.close()
         #_ = plot_objective(model.optimizer_results_[0],zscale='log', dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
         #plt.show()
