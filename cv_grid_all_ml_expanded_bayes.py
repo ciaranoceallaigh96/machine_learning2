@@ -91,6 +91,8 @@ sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-pack
 import dill as pickle
 from skopt import BayesSearchCV
 from skopt.plots import plot_objective, plot_histogram
+from skopt.space import Real, Categorical, Integer #https://scikit-optimize.github.io/stable/modules/space.html
+
 
 def coeff_determination(y_true, y_pred):
         SS_res = K.sum(K.square( y_true-y_pred ))
@@ -144,21 +146,21 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         """Fits each Cross-validation fold within an inner loop. 
             Applies best params to outer test set and reports results. 
             Generates partial dependance plots."""
-        old_key = None #throws up sorting error during plotting
-        new_key = 0
-        for key in param_grid:
-                if key == 'max_depth':   #RF
-                        param_grid['max_depth'] = [0 if element is None else element for element in param_grid['max_depth']] #need to replace None with 0 
-                param_grid[key] = sorted(param_grid[key]) #need to sort param values for plotting
-        if 'max_depth' in param_grid:
-                param_grid['max_depth'] = [None if element is 0 else element for element in param_grid['max_depth']]
+        #old_key = None #throws up sorting error during plotting
+        #new_key = 0
+        #for key in param_grid:
+        #        if key == 'max_depth':   #RF
+        #                param_grid['max_depth'] = [0 if element is None else element for element in param_grid['max_depth']] #need to replace None with 0 
+        #        param_grid[key] = sorted(param_grid[key]) #need to sort param values for plotting
+        #if 'max_depth' in param_grid:
+        #        param_grid['max_depth'] = [None if element is 0 else element for element in param_grid['max_depth']]
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
         print(kf_inner)
         if model_name in ('FNN' , 'CNN'):
                 model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         else:
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use, verbose=2) #verbose=2 gives more info
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
         result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
         print(result.best_index_)
         print("Best %s inner score for fold %s is %s" % (model_name ,k, result.best_score_))
@@ -166,14 +168,29 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         print("Best %s inner params for outer fold %s is %s" % (model_name, k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
         print("Score for %s outer fold %s is %s" % (model_name, k,outer_score))
-        _ = plot_objective(model.optimizer_results_[0],dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
-        plt.show()
-        #plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
-        fig = plt.gcf()
-        fig.set_size_inches(27, 27)
-        plt.subplots_adjust(left=0.2)
-        plt.savefig("%s_cv_%s_%s_%s.png" % (model_name, k, snps, num), dpi=300)
-        plt.clf() ; plt.close()
+        print(model.optimizer_results_[0])
+        print(best_params)
+        scores = model.cv_results_['split0_test_score'] + model.cv_results_['split1_test_score'] + model.cv_results_['split2_test_score'] + model.cv_results_['split3_test_score'] #edit to change with k
+        for param in model.cv_results_['params'][0].keys():
+                list_name = param + '_list' #create string 
+                globals()[list_name] = [] #convert string to a list with a variable name
+                for i in range(0,iterations):
+                        globals()[list_name].append(model.cv_results_['params'][i][param])
+                globals()[list_name] = globals()[list_name] * 4
+                print(scores)
+                print(globals()[list_name])
+                plt.scatter(globals()[list_name], scores)
+                if log_scale_dict[param] == True:
+                        plt.set_yscale('log')
+                plt.show() ; plt.savefig("%s_%s_cv_%s_%s_%s.png" % (param, model_name, k, snps, num), dpi=300) ; plt.clf() ; plt.close()
+        #_ = plot_objective(model.optimizer_results_[0],zscale='log', dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
+        #plt.show()
+        ########plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
+        #fig = plt.gcf()
+        #fig.set_size_inches(27, 27)
+        #plt.subplots_adjust(left=0.2)
+        #plt.savefig("%s_cv_%s_%s_%s.png" % (model_name, k, snps, num), dpi=300)
+        #plt.clf() ; plt.close()
         return outer_score
 
 def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv()
@@ -184,7 +201,7 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
                 x_outer_train, y_outer_train = load_data('train_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
                 x_outer_test, y_outer_test = load_data('test_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
                 scaler = preprocessing.StandardScaler().fit(y_outer_train) 
-                y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                #y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
                 outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name, k=k) #e.g SVR()
                 outer_scores.append(outer_score)
         print(outer_scores)
@@ -221,17 +238,19 @@ elif binary == 'True':
 	metric_in_use = 'AUC'
 
 print("Metric in use is %s" % metric_in_use)
-'''
+log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
+
 print("Performing SVM")
-c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
-gamma_param = [0.002,0.2,0.5,0.01] #ValueError: gamma < 0
-epsilon_param = [2e-5,2e-3,1,0]
+c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+gamma_param = Real(0.0001,1, prior='log_uniform') #ValueError: gamma < 0
+epsilon_param = Real(1e-6,1, prior='log_uniform')
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
 kernel_param = ['rbf', 'sigmoid'] #precompuited leads to square matrix error #temorarily removing poly for time reasons need to put it back in
-tolerance=[1e-3,1e-5,1e-1]
+tolerance= Real(1e-5,1, prior='log_uniform')
 shrinking=[True,False]
-cache_size=[100,200,400]#Specify the size of the kernel cache (in MB).
-degree = [1,2,3,0.1,100]
+cache_size= Integer(100,1000, prior='uniform')#Specify the size of the kernel cache (in MB).
+degree = Real(0.1,100, prior='log_uniform')
+
 svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
@@ -252,6 +271,8 @@ if binary == 'False' :
 	print("Performing RBG")
 	loop_through(SVR(), svm_random_grid, 'SVR')
 
+
+exit()
 print("Performing LASSO")
 alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
 max_iter=[1000,3000]
@@ -272,7 +293,7 @@ if binary == 'True':
 else:
 	loop_through(Ridge(), ridge_alpha_dict, 'Ridge')
 
-'''
+exit()
 print("Performing Random Forests")
 n_estimators = [10,100,1000] # Number of features to consider at every split
 max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
@@ -370,10 +391,10 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
         return model
 
 if binary == 'True':
-	nn_model = KerasClassifier(build_fn = build_nn, verbose=0)#, callbacks=[callback])
+	nn_model = KerasClassifier(build_fn = build_nn) #put fit params like verbose and callbacks in the CK_nested_cv() function
 	loop_through(nn_model, param_grid, 'FNN')
 else:
-	nn_model = KerasRegressor(build_fn = build_nn, verbose=0)# , callbacks=[callback])
+	nn_model = KerasRegressor(build_fn = build_nn) #put fit params like verbose and callbacks in the CK_nested_cv() function
 	loop_through(nn_model, param_grid, 'FNN')
 
 
