@@ -145,15 +145,7 @@ def make_keras_picklable():
 def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator, param_grid, model_name, k):
         """Fits each Cross-validation fold within an inner loop. 
             Applies best params to outer test set and reports results. 
-            Generates partial dependance plots."""
-        #old_key = None #throws up sorting error during plotting
-        #new_key = 0
-        #for key in param_grid:
-        #        if key == 'max_depth':   #RF
-        #                param_grid['max_depth'] = [0 if element is None else element for element in param_grid['max_depth']] #need to replace None with 0 
-        #        param_grid[key] = sorted(param_grid[key]) #need to sort param values for plotting
-        #if 'max_depth' in param_grid:
-        #        param_grid['max_depth'] = [None if element is 0 else element for element in param_grid['max_depth']]
+            Generates HP performance plots."""
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
         print(kf_inner)
@@ -168,32 +160,23 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         print("Best %s inner params for outer fold %s is %s" % (model_name, k, best_params))
         outer_score = model.score(x_outer_test, y_outer_test)
         print("Score for %s outer fold %s is %s" % (model_name, k,outer_score))
-        print(model.optimizer_results_[0])
         print(best_params)
-        scores = model.cv_results_['split0_test_score'] + model.cv_results_['split1_test_score'] + model.cv_results_['split2_test_score'] + model.cv_results_['split3_test_score'] #edit to change with k
+        scores = model.cv_results_['split0_test_score'] + model.cv_results_['split1_test_score'] + model.cv_results_['split2_test_score'] + model.cv_results_['split3_test_score'] #needs edit to change with k
         for param in model.cv_results_['params'][0].keys():
                 list_name = param + '_list' #create string 
                 globals()[list_name] = [] #convert string to a list with a variable name
                 for i in range(0,iterations):
                         globals()[list_name].append(model.cv_results_['params'][i][param])
                 globals()[list_name] = globals()[list_name] * 4
-                print(scores)
-                print(globals()[list_name])
                 plt.scatter(globals()[list_name], scores)
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
                 plt.ylabel(metric_in_use.upper(), fontsize=10,fontweight='bold')
+                if param == 'initialization':
+                        plt.xticks(fontsize=6)
                 plt.title('%s Score vs %s' % (metric_in_use.upper(), param), fontsize=14, fontweight='bold')
-                if log_scale_dict[param] == True:
+                if log_scale_dict[param] == True: #whether or not to use log-sclae for x-axis
                         plt.xscale('log')
                 plt.show() ; plt.savefig("%s_%s_cv_%s_%s_%s.png" % (param, model_name, k, snps, num), dpi=300) ; plt.clf() ; plt.close()
-        #_ = plot_objective(model.optimizer_results_[0],zscale='log', dimensions=list(best_params), n_minimum_search=int(1e8)) #partial dependance plots #will fail if under 10 iterations ("list index out of range") #will also fail if there any not multiple options for each param in the search space
-        #plt.show()
-        ########plt.subplots_adjust(bottom=0.2, left=0.4, top=0.9, right=0.8) # got through manual checking of values, below values are better (left=0.2)
-        #fig = plt.gcf()
-        #fig.set_size_inches(27, 27)
-        #plt.subplots_adjust(left=0.2)
-        #plt.savefig("%s_cv_%s_%s_%s.png" % (model_name, k, snps, num), dpi=300)
-        #plt.clf() ; plt.close()
         return outer_score
 
 def loop_through(estimator, param_grid, model_name): #should be able to merge this with CK_nested_cv()
