@@ -31,7 +31,7 @@ binary = str(sys.argv[8]) #True or False
 binary_boolean = True if binary == 'True' else False
 iterations = int(sys.argv[9])
 
-if organism != 'mouse':
+if organism not in ['mouse', 'als_nest2'] :
 	sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
 else:
 	sys.path.insert(0, '/home/hers_en/rmclaughlin/tf/lib/python3.6/site-packages') ; sys.path.insert(0, '/hpc/local/CentOS7/modulefiles/python_libs/3.6.1'); sys.path.insert(0, '/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/envciaran2/lib/python3.6/site-packages')
@@ -149,10 +149,14 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         kf_inner = sklearn.model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
         kf_inner.get_n_splits(x_outer_train) #split outer train set
         print(kf_inner)
+        if organism in ['mouse', 'als_nest_top2']:
+                num_jobs = 1
+        else:
+                num_jobs = 32
         if model_name in ('FNN' , 'CNN'):
                 model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         else:
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=32, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=num_jobs, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
         result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
         print(result.best_index_)
         print("Best %s inner score for fold %s is %s" % (model_name ,k, result.best_score_))
@@ -186,8 +190,9 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
         for k in range(1, outer_ks+1):
                 x_outer_train, y_outer_train = load_data('train_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
                 x_outer_test, y_outer_test = load_data('test_raw_plink_' + snps + '_' + str(k) + '_in_4_out.raw') #not standardized #already split
-                scaler = preprocessing.StandardScaler().fit(y_outer_train) 
-                #y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                if binary == 'False' : 
+                        scaler = preprocessing.StandardScaler().fit(y_outer_train) 
+                        y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
                 outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name, k=k) #e.g SVR()
                 outer_scores.append(outer_score)
         print(outer_scores)
@@ -197,7 +202,7 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
 for i in range(1,len(sys.argv)):
         print(sys.argv[i])
 
-if organism != 'mouse':
+if organism not in ['mouse', 'als_nest_top2']:
         if not os.path.exists('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps):
                 os.makedirs('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
 
@@ -221,7 +226,7 @@ print(date_object)
 if binary == 'False':
 	metric_in_use = 'r2' 
 elif binary == 'True':
-	metric_in_use = 'AUC'
+	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
 log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
