@@ -31,7 +31,7 @@ binary = str(sys.argv[8]) #True or False
 binary_boolean = True if binary == 'True' else False
 iterations = int(sys.argv[9])
 
-if organism not in ['mouse', 'als_nest2'] :
+if organism not in ['mouse', 'als_nest_top2'] :
 	sys.path.insert(1, '/external_storage/ciaran/Library/Python/3.7/python/site-packages/nested_cv')
 else:
 	sys.path.insert(0, '/home/hers_en/rmclaughlin/tf/lib/python3.6/site-packages') ; sys.path.insert(0, '/hpc/local/CentOS7/modulefiles/python_libs/3.6.1'); sys.path.insert(0, '/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/envciaran2/lib/python3.6/site-packages')
@@ -208,9 +208,9 @@ if organism not in ['mouse', 'als_nest_top2']:
 
         os.chdir('/external_storage/ciaran/' + organism + '/' + phenotype+ '/' + snps)
 else:
-        if not os.path.exists('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype):
-                os.makedirs('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/' + phenotype)
-        os.chdir('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism + '/'  + phenotype)
+        if not os.path.exists('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism ):
+                os.makedirs('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism )
+        os.chdir('/hpc/hers_en/rmclaughlin/ciaran/keras_tryout/nest/' + organism )
 
 
 print("Warning: if you get this error: 'xi, yi = partial_dependence_1D(space, result.models[-1], ;  IndexError: list index out of range' then increase n_iteations to >= 10")
@@ -229,7 +229,7 @@ elif binary == 'True':
 	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
-log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
+log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'dual':False,'penalty':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
 
 print("Performing SVM")
 c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
