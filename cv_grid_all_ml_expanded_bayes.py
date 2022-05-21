@@ -171,15 +171,16 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 globals()[list_name] = [] #convert string to a list with a variable name
                 for i in range(0,iterations):
                         globals()[list_name].append(model.cv_results_['params'][i][param])
-                globals()[list_name] = globals()[list_name] * kf.n_splits
+                globals()[list_name] = globals()[list_name] * kf_inner.n_splits
                 plt.scatter(globals()[list_name], scores)
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
                 plt.ylabel(metric_in_use.upper(), fontsize=10,fontweight='bold')
                 if param == 'initialization':
                         plt.xticks(fontsize=6)
                 plt.title('%s Score vs %s' % (metric_in_use.upper(), param), fontsize=14, fontweight='bold')
-                if param_grid[param].prior == 'log_uniform': #whether or not to use log-sclae for x-axis
-                        plt.xscale('log')
+                if hasattr(param_grid[param], 'prior'):
+                        if param_grid[param].prior == 'log_uniform': #whether or not to use log-sclae for x-axis
+                                plt.xscale('log')
                 plt.show() ; plt.savefig("%s_%s_cv_%s_%s_%s.png" % (param, model_name, k, snps, num), dpi=300) ; plt.clf() ; plt.close()
         return outer_score
 
@@ -193,6 +194,9 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
                 if binary == 'False' : 
                         scaler = preprocessing.StandardScaler().fit(y_outer_train) 
                         y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                if model_name == 'CNN':
+                        x_outer_train = x_outer_train.reshape(x_outer_train.shape[0],x_outer_train.shape[1],1)
+                        x_outer_test = x_outer_test.reshape(x_outer_test.shape[0],x_outer_test.shape[1],1)
                 outer_score = CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estimator=estimator, param_grid=param_grid, model_name=model_name, k=k) #e.g SVR()
                 outer_scores.append(outer_score)
         print(outer_scores)
@@ -224,12 +228,11 @@ print(date_object)
 #################################################SVM####SVM#####SVM####################################################################
 
 if binary == 'False':
-	metric_in_use = 'r2' 
+	metric_in_use = 'r2' #'neg_mean_squared_error' 
 elif binary == 'True':
 	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
-#log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'dual':False,'penalty':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
 
 print("Performing SVM")
 c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -311,15 +314,13 @@ else:
 	loop_through(RandomForestRegressor(), random_grid, 'RF')
 
 #base_grid = {"fit_intercept":["True"]}
-'''
-print("Performing Baseline")
-base_goal_dict = {}
-base_time_dict = {}
-model_type = LinearRegression() if binary == 'False' else LogisticRegression()
-BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
-BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
-ncv_results('baseline', BASELINE_NCV)
-'''
+#print("Performing Baseline")
+#base_goal_dict = {}
+#base_time_dict = {}
+#model_type = LinearRegression() if binary == 'False' else LogisticRegression()
+#BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
+#BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
+#ncv_results('baseline', BASELINE_NCV)
 METRIC_ACCURACY = coeff_determination
 dependencies = {'coeff_determination':coeff_determination}
 custom_objects = {"coeff_determination":coeff_determination}
@@ -327,7 +328,6 @@ tf.config.threading.set_inter_op_parallelism_threads(64)
 tf.config.threading.set_intra_op_parallelism_threads(64)
 
 callback1 = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0)
-
 print("Performing Neural Network")
 param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'),'learning_rate' : Real(1e-7, 1e-2, prior='log_uniform'),'HP_L1_REG' : Real(1e-6,0.1, prior='log_uniform'),'HP_L2_REG' : Real(1e-8,1e-1 ,prior='log_uniform'), 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2,5, prior='uniform'),'units' : Integer(100,1000, prior='uniform'), 'rate' : Real(float(0),0.5, prior='uniform'),'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
@@ -383,18 +383,17 @@ if binary == 'True':
 	loop_through(nn_model, param_grid, 'FNN')
 else:
 	nn_model = KerasRegressor(build_fn = build_nn) #put fit params like verbose and callbacks in the CK_nested_cv() function
-	loop_through(nn_model, param_grid, 'FNN')
-
+	#loop_through(nn_model, param_grid, 'FNN')
 
 print("Performing a convulutional neural network")
-cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'), 'learning_rate' : Real(0.0001, 0.01,prior='log_uniform'),'HP_L1_REG' : Real(0,0.001,prior='log_uniform'),'HP_L2_REG' : (0, 0.001,prior='log_uniform'),'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2, 5,prior='uniform'),'units' : Integer(100,1000,prior='uniform'), 'rate' : Real(float(0),0.5,prior='uniform'),'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':Integer(1,10,prior='uniform'),'strides':Integer(1,10, prior='uniform'),'pool':Integer(1,10, prior='uniform'),'kernel':Real(1,10, prior='uniform')}
+#can't have zeros in any of these params as it will throw up a "Not all points are within the bounds of the space." error
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'), 'learning_rate' : Real(0.0001, 0.01,prior='log_uniform'),'HP_L1_REG' : Real(0.000001,0.001,prior='log_uniform'),'HP_L2_REG' : Real(0.000001, 0.001,prior='log_uniform'),'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2, 5,prior='uniform'),'units' : Integer(100,1000,prior='uniform'), 'rate' : Real(float(0),0.5,prior='uniform'),'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':Integer(1,10,prior='uniform'),'strides':Integer(1,10, prior='uniform'),'pool':Integer(1,10, prior='uniform'),'kernel':Integer(1,10, prior='uniform')}
 if binary == 'True':
 	METRIC_ACCURACY = tf.metrics.AUC
 else:
 	METRIC_ACCURACY = 'coeff_determination'
 
 #not sure if strides is relevant
-print(x_train.shape)
 #K.set_image_dim_ordering('th') #Negative dimension size caused by subtracting 2 from 1 for 'MaxPool - fixes error
 K.set_image_data_format('channels_first') #prevents error					      
 def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rate, HP_L1_REG, HP_L2_REG, rate, kernel_initializer,strides,pool,filters,kernel, network_shape):
@@ -430,8 +429,8 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
 					      
 if binary == 'True':
         cnn_model = KerasClassifier(build_fn = conv_model, verbose=0)#, callbacks=[callback])
-        loop_through(nn_model, param_grid, 'CNN')
+        loop_through(cnn_model, cnn_param_grid, 'CNN')
 else:
         cnn_model = KerasRegressor(build_fn = conv_model, verbose=0)# , callbacks=[callback])
-        loop_through(nn_model, param_grid, 'CNN')
+        loop_through(cnn_model, cnn_param_grid, 'CNN')
 
