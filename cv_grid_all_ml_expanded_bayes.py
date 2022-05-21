@@ -102,7 +102,7 @@ def coeff_determination(y_true, y_pred):
 
 def load_data(data):
         dataset = np.loadtxt(data, skiprows=1, dtype='str')
-        x = dataset[: , 6:set_size+6].astype(np.int) if organism != 'Arabadopsis' else dataset[: , 6:set_size+6]/2 #Arabdopsis data is inbred to homozyotisity to be 2/0
+        x = dataset[: , 6:set_size+6].astype(np.int) if organism != 'Arabadopsis' else dataset[: , 6:set_size+6]/2 #Arabadopsis data is inbred to homozygotisity to be 2/0
         y = dataset[: , 5 ].astype(np.float)
         y = y.reshape(-1,1)
         #print("Performing split of raw data....")
@@ -171,14 +171,14 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
                 globals()[list_name] = [] #convert string to a list with a variable name
                 for i in range(0,iterations):
                         globals()[list_name].append(model.cv_results_['params'][i][param])
-                globals()[list_name] = globals()[list_name] * 4
+                globals()[list_name] = globals()[list_name] * kf.n_splits
                 plt.scatter(globals()[list_name], scores)
                 plt.xlabel(str(param).upper(), fontsize=10, fontweight='bold')
                 plt.ylabel(metric_in_use.upper(), fontsize=10,fontweight='bold')
                 if param == 'initialization':
                         plt.xticks(fontsize=6)
                 plt.title('%s Score vs %s' % (metric_in_use.upper(), param), fontsize=14, fontweight='bold')
-                if log_scale_dict[param] == True: #whether or not to use log-sclae for x-axis
+                if param_grid[param].prior == 'log_uniform': #whether or not to use log-sclae for x-axis
                         plt.xscale('log')
                 plt.show() ; plt.savefig("%s_%s_cv_%s_%s_%s.png" % (param, model_name, k, snps, num), dpi=300) ; plt.clf() ; plt.close()
         return outer_score
@@ -229,7 +229,7 @@ elif binary == 'True':
 	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
-log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'dual':False,'penalty':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
+#log_scale_dict = {'C' : True, 'gamma':True, 'epsilon':True, 'loss':False, 'dual':False,'penalty':False, 'kernel':False, "degree":True, "cache_size":False, "tol":True, "shrinking":False} #whether or not to plot X-axis on log scale
 
 print("Performing SVM")
 c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
@@ -263,12 +263,11 @@ if binary == 'False' :
 	loop_through(SVR(), svm_random_grid, 'SVR')
 
 
-exit()
 print("Performing LASSO")
-alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
-max_iter=[1000,3000]
-ridge_alpha = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, -1, -10, -100]
-tolerance=[1e-3,1e-5,1e-1]
+alpha = Integer(-100, 1000, prior='log_uniform')
+max_iter=Integer(1000,3000, prior='uniform')
+ridge_alpha = Integer(-100, 1000, prior='log_uniform')
+tolerance=Real(1e-5,1e-1, prior='uniform')
 selection=['cyclic','random']# default=’cyclic’
 alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
 ridge_alpha_dict = {'alpha':ridge_alpha, "tol":tolerance}
@@ -284,19 +283,17 @@ if binary == 'True':
 else:
 	loop_through(Ridge(), ridge_alpha_dict, 'Ridge')
 
-exit()
 print("Performing Random Forests")
-n_estimators = [10,100,1000] # Number of features to consider at every split
+n_estimators = Integer(10,1000, prior='log_uniform') # Number of features to consider at every split
 max_features = ['sqrt', 'log2'] # Maximum number of levels in tree
-max_depth = [1, 10, 50,100]
-max_depth.append(None) # Minimum number of samples required to split a node
+max_depth = Integer(1, 1000, prior='log_uniform')
 #min_samples_split = [int(x) for x in np.linspace(2, 2000, num = 100)]; min_samples_split.extend((5,10,20))
-min_samples_split = [2, 10, 100, 1000] # Minimum number of samples required at each leaf node
+min_samples_split = Integer(2,1000,prior='log_uniform') # Minimum number of samples required at each leaf node
 #min_samples_leaf = [int(x) for x in np.linspace(1, 2000, num = 200)] ; min_samples_leaf.extend((2,4,8,16, 32, 64)) # Method of selecting samples for training each tree
-min_samples_leaf = [1,2, 10, 100, 1000]
+min_samples_leaf = Integer(1,1000,prior='log_uniform')
 bootstrap = [False, True]
-max_leaf_nodes = [10, 100, 500] #; max_leaf_nodes.append(x_train.shape[0])
-max_samples = [0.5, 0.9, 0.1, 0.01]
+max_leaf_nodes = Integer(10,500,prior='log_uniform') #; max_leaf_nodes.append(x_train.shape[0])
+max_samples = Real(0.01, 0.99, prior='log_uniform')
 #{'max_depth': 46, 'max_leaf_nodes': 695, 'n_estimators': 2778, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'min_samples_split': 2, 'bootstrap': False, 'max_samples': 0.5}
 random_grid = {'n_estimators': n_estimators,
                'max_features': max_features,
@@ -332,7 +329,7 @@ tf.config.threading.set_intra_op_parallelism_threads(64)
 callback1 = tf.keras.callbacks.EarlyStopping(monitor='coeff_determination', patience=20, mode='max', baseline=0.0)
 
 print("Performing Neural Network")
-param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
+param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'),'learning_rate' : Real(1e-7, 1e-2, prior='log_uniform'),'HP_L1_REG' : Real(1e-6,0.1, prior='log_uniform'),'HP_L2_REG' : Real(1e-8,1e-1 ,prior='log_uniform'), 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2,5, prior='uniform'),'units' : Integer(100,1000, prior='uniform'), 'rate' : Real(float(0),0.5, prior='uniform'),'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
 #tf.config.experimental_run_functions_eagerly(True) #needed to avoid error # tensorflow.python.eager.core._SymbolicException
 
 if binary == 'True': #overwrite variables
@@ -390,7 +387,7 @@ else:
 
 
 print("Performing a convulutional neural network")
-cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
+cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'), 'learning_rate' : Real(0.0001, 0.01,prior='log_uniform'),'HP_L1_REG' : Real(0,0.001,prior='log_uniform'),'HP_L2_REG' : (0, 0.001,prior='log_uniform'),'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2, 5,prior='uniform'),'units' : Integer(100,1000,prior='uniform'), 'rate' : Real(float(0),0.5,prior='uniform'),'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':Integer(1,10,prior='uniform'),'strides':Integer(1,10, prior='uniform'),'pool':Integer(1,10, prior='uniform'),'kernel':Real(1,10, prior='uniform')}
 if binary == 'True':
 	METRIC_ACCURACY = tf.metrics.AUC
 else:
