@@ -154,7 +154,7 @@ def CK_nested_cv(x_outer_train, y_outer_train, x_outer_test, y_outer_test, estim
         else:
                 num_jobs = 32
         if model_name in ('FNN' , 'CNN'):
-                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'epochs':20, 'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
+                model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, fit_params={'verbose':0, 'callbacks': [callback1]}, n_jobs=1, n_points=12, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #n_jobs > 1 for NNs leads to a parallelism error "A task has failed to un-serialize"
         else:
                 model = BayesSearchCV(estimator=estimator, search_spaces=param_grid, n_jobs=num_jobs, n_points=1, n_iter=iterations, cv=kf_inner, refit=True, random_state=42, scoring=metric_in_use) #verbose=2 gives more info
         result = model.fit(x_outer_train, y_outer_train.ravel()) #raveling is reshaping
@@ -233,9 +233,10 @@ elif binary == 'True':
 	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
-
+'''
 print("Performing SVM")
 c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
+rbf_c = Real(2e-2,int(2e+8), prior='log_uniform')
 gamma_param = Real(0.0001,1, prior='log_uniform') #ValueError: gamma < 0
 epsilon_param = Real(1e-6,1, prior='log_uniform')
 loss_param = ['epsilon_insensitive', 'squared_epsilon_insensitive']
@@ -245,7 +246,7 @@ shrinking=[True,False]
 cache_size= Integer(100,1000, prior='uniform')#Specify the size of the kernel cache (in MB).
 degree = Real(0.1,100, prior='log_uniform')
 
-svm_random_grid = {'gamma':gamma_param, 'C':c_param,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
+svm_random_grid = {'gamma':gamma_param, 'C':rbf_c,'kernel':kernel_param, "degree":degree, 'epsilon':epsilon_param, "shrinking":shrinking,"tol":tolerance,"cache_size":cache_size}
 print(svm_random_grid)
 svm_random_grid2 = {'C' : c_param, 'loss':loss_param, 'epsilon':epsilon_param}
 print(svm_random_grid2)
@@ -267,9 +268,9 @@ if binary == 'False' :
 
 
 print("Performing LASSO")
-alpha = Integer(-100, 1000, prior='log_uniform')
+alpha = Real(-100, 1000, prior='log_uniform')
 max_iter=Integer(1000,3000, prior='uniform')
-ridge_alpha = Integer(-100, 1000, prior='log_uniform')
+ridge_alpha = Real(-100, 1000, prior='log_uniform')
 tolerance=Real(1e-5,1e-1, prior='uniform')
 selection=['cyclic','random']# default=’cyclic’
 alpha_dict = {'alpha':alpha,"max_iter":max_iter, "tol":tolerance, "selection":selection}
@@ -321,6 +322,7 @@ else:
 #BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 #BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 #ncv_results('baseline', BASELINE_NCV)
+'''
 METRIC_ACCURACY = coeff_determination
 dependencies = {'coeff_determination':coeff_determination}
 custom_objects = {"coeff_determination":coeff_determination}
@@ -383,8 +385,10 @@ if binary == 'True':
 	loop_through(nn_model, param_grid, 'FNN')
 else:
 	nn_model = KerasRegressor(build_fn = build_nn) #put fit params like verbose and callbacks in the CK_nested_cv() function
-	#loop_through(nn_model, param_grid, 'FNN')
+	loop_through(nn_model, param_grid, 'FNN')
 
+
+exit()
 print("Performing a convulutional neural network")
 #can't have zeros in any of these params as it will throw up a "Not all points are within the bounds of the space." error
 cnn_param_grid = {'network_shape':['brick', 'funnel','long_funnel'], 'epochs':Integer(50,500, prior='uniform'),'batch_size' : Integer(16,128, prior='uniform'), 'learning_rate' : Real(0.0001, 0.01,prior='log_uniform'),'HP_L1_REG' : Real(0.000001,0.001,prior='log_uniform'),'HP_L2_REG' : Real(0.000001, 0.001,prior='log_uniform'),'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : Integer(2, 5,prior='uniform'),'units' : Integer(100,1000,prior='uniform'), 'rate' : Real(float(0),0.5,prior='uniform'),'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':Integer(1,10,prior='uniform'),'strides':Integer(1,10, prior='uniform'),'pool':Integer(1,10, prior='uniform'),'kernel':Integer(1,10, prior='uniform')}
