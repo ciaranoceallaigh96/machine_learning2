@@ -194,6 +194,9 @@ def loop_through(estimator, param_grid, model_name): #should be able to merge th
                 if binary == 'False' : 
                         scaler = preprocessing.StandardScaler().fit(y_outer_train) 
                         y_outer_train = scaler.transform(y_outer_train) ; y_outer_test = scaler.transform(y_outer_test)
+                else:
+                        y_outer_train = (y_outer_train -1) ; y_outer_test =  (y_outer_test -1)
+                        #x_outer_train = (x_outer_train/2) ; x_outer_test = (x_outer_test/2)
                 if model_name == 'CNN':
                         x_outer_train = x_outer_train.reshape(x_outer_train.shape[0],x_outer_train.shape[1],1)
                         x_outer_test = x_outer_test.reshape(x_outer_test.shape[0],x_outer_test.shape[1],1)
@@ -350,7 +353,7 @@ def build_nn(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_rat
         long_funnel_count = 0 #keep widest shape for two layer
         make_keras_picklable()
         model = Sequential()
-        input_shape = (set_size,) if snps == 'shuf' else (set_size-1,)
+        input_shape = (set_size,) #if snps == 'shuf' else (set_size-1,)
         model.add(Dense(units=units, activation=activation, kernel_regularizer=reg, input_shape=input_shape, kernel_initializer=kernel_initializer))
         if rate != 0:
                 model.add(Dropout(rate=rate))
@@ -407,7 +410,7 @@ def conv_model(HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, activation, learning_r
         chosen_opt = getattr(tf.keras.optimizers,opt)
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         long_funnel_count = 0 #keep widest shape for two layers
-        input_shape = (set_size,1) if snps == 'shuf' else (set_size-1,1)
+        input_shape = (set_size,1) #if snps == 'shuf' else (set_size-1,1)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         model.add(Conv1D(filters=filters, strides=strides, input_shape=input_shape,  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))
