@@ -77,6 +77,57 @@ then
 
 fi
 
+if [ "$6" == "mlma20k" ]
+then
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
+        if [ ! -f train_grm_"$1"_in_"$2"_"$3".grm.bin ]; then
+                /home/ciaran/gcta64 --make-grm  --autosome-num 5 --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --thread-num 32 --out train_grm_"$1"_in_"$2"_"$3"
+        fi
+        if [ ! -f nested_cv_mlma_out_"$1"_in_"$2"_"$3".mlma ]; then
+        /home/ciaran/gcta64 --mlma --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --pheno $phenofile --thread-num 32 --keep name_vector_train.txt --out nested_cv_mlma_out_"$1"_in_"$2"_"$3"
+        fi
+
+        cat /external_storage/ciaran/machine_learning2/header2.txt <(sort -g -k 9,9 nested_cv_mlma_out_"$1"_in_"$2"_"$3".mlma | awk '{if ($9 != "-nan") print}' | tail -n +2) > mlma_results_"$1"_in_"$2"_"$3".gsorted
+        plink1.9 --keep name_vector_train.txt --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 0.05 --clump-p2 0.2 --clump-r2 0.1 --clump mlma_results_"$1"_in_"$2"_"$3".gsorted --out mlma_results_clumped_"$1"_in_"$2"_"$3"
+        head -n $5 mlma_results_clumped_"$1"_in_"$2"_"$3".clumped | awk '{print $3}'  > mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt
+        tmp=$(wc -l mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt | cut -d ' ' -f 1) ; if [ $tmp -lt $5 ] ; then echo "sleeping"; sleep 1d ; fi
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_mlma_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract mlma_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_mlma_"$1"_in_"$2"_"$3"
+
+fi
+
+if [ "$6" == "epi" ]
+then
+        pheno=$(cut -f 3 -d ' ' $4 | head -n 1)
+        echo "Pheno is $pheno"
+        phenofile="$4"
+        #sed "s/'/ /g" name_vector_train.txt | awk '{print $2, $3}' > name_vector_train2.txt; mv name_vector_train2.txt name_vector_train.txt
+        #sed "s/'/ /g" name_vector_test.txt | awk '{print $2, $3}' > name_vector_test2.txt; mv name_vector_test2.txt name_vector_test.txt
+#choose top set
+         shuf /home/ciaran/completed_big_matrix_binary_new_snps_ids.bim | awk '{print $2}' | head -n 100000 > epi_gwas_extract_snps.txt
+
+        plink1.9 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno" --allow-no-sex --epistasis --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --pheno $phenofile --extract epi_gwas_extract_snps.txt
+
+        if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
+        if test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
+
+        #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
+        #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
+        #cat header.txt gwas_results_"$1"_in_"$2"_"$3".gsorted.001 > gwas_results_"$1"_in_"$2"_"$3".gsorted.001.filter
+        #plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 0.0005 --clump-p2 0.001 --clump-r2 0.1 --clump gwas_results_"$1"_in_"$2"_"$3".gsorted --out gwas_results_clumped_"$1"_in_"$2"_"$3"
+
+        head -n $5 gwas_results_"$1"_in_"$2"_"$3".gsorted  > top_"$5"_snps_"$1"_in_"$2"_"$3".txt
+
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_epi_"$1"_in_"$2"_"$3"
+
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_epi_"$1"_in_"$2"_"$3"
+
+
+fi
+
+
 if [ "$6" == "top" ]
 then
         pheno=$(cut -f 3 -d ' ' $4 | head -n 1)

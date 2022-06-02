@@ -236,7 +236,6 @@ elif binary == 'True':
 	metric_in_use = 'roc_auc'
 
 print("Metric in use is %s" % metric_in_use)
-'''
 print("Performing SVM")
 c_param = Real(2e-2,int(2e+8), prior='log_uniform') #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 rbf_c = Real(2e-2,int(2e+8), prior='log_uniform')
@@ -325,7 +324,6 @@ else:
 #BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 #BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 #ncv_results('baseline', BASELINE_NCV)
-'''
 METRIC_ACCURACY = coeff_determination
 dependencies = {'coeff_determination':coeff_determination}
 custom_objects = {"coeff_determination":coeff_determination}
