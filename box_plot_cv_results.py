@@ -53,9 +53,18 @@ x = "Model"
 ax = sns.boxplot(data=floop, x=x, y=y, palette="Blues") #order = order
 ax2 = plt.gca() #get_current_axes
 ax2.set_ylim([0, 1])
-annotator = Annotator(ax, pairs, data=floop, x=x, y=y)
-annotator.set_custom_annotations(sig_levels) # or pavlues
-annotator.annotate()
+
+signif_result = str(input("Any significant results? [ YES or NO ] ")).lower()
+
+if signif_result == 'yes':
+        annotator = Annotator(ax, pairs, data=floop, x=x, y=y)
+        annotator.set_custom_annotations(sig_levels) # or pavlues
+        annotator.annotate()
+
+if signif_result not in ['yes', 'no']:
+        print("yes or no required; exiting!")
+        exit()
+
 
 #for x, val in zip(scatter_points, results):
 #	plt.scatter(x, val, alpha=0.4, color='b')
