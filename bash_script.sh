@@ -106,23 +106,25 @@ then
         #sed "s/'/ /g" name_vector_train.txt | awk '{print $2, $3}' > name_vector_train2.txt; mv name_vector_train2.txt name_vector_train.txt
         #sed "s/'/ /g" name_vector_test.txt | awk '{print $2, $3}' > name_vector_test2.txt; mv name_vector_test2.txt name_vector_test.txt
 #choose top set
+         '''
          shuf /home/ciaran/completed_big_matrix_binary_new_snps_ids.bim | awk '{print $2}' | head -n 100000 > epi_gwas_extract_snps.txt
-
+        '''
+        head -n 100000 gwas_results_"$1"_in_"$2"_"$3".gsorted > epi_gwas_extract_snps.txt
         plink1.9 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno" --allow-no-sex --epistasis --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --pheno $phenofile --extract epi_gwas_extract_snps.txt
 
-        if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
-        if test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic | awk '{if ($12 != "NA") print}' | tail -n +2) > gwas_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
+        if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | tail -n +2) > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
+        if test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic | awk '{if ($12 != "NA") print}' | tail -n +2) > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
 
         #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
         #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
         #cat header.txt gwas_results_"$1"_in_"$2"_"$3".gsorted.001 > gwas_results_"$1"_in_"$2"_"$3".gsorted.001.filter
         #plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --clump-kb 250 --clump-p1 0.0005 --clump-p2 0.001 --clump-r2 0.1 --clump gwas_results_"$1"_in_"$2"_"$3".gsorted --out gwas_results_clumped_"$1"_in_"$2"_"$3"
 
-        head -n $5 gwas_results_"$1"_in_"$2"_"$3".gsorted  > top_"$5"_snps_"$1"_in_"$2"_"$3".txt
+        head -n $5 epi_results_"$1"_in_"$2"_"$3".gsorted  > epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt
 
-        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_epi_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_epi_"$1"_in_"$2"_"$3"
 
-        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_epi_"$1"_in_"$2"_"$3"
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_epi_"$1"_in_"$2"_"$3"
 
 
 fi
