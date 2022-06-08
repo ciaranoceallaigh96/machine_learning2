@@ -109,7 +109,7 @@ then
          '''
          shuf /home/ciaran/completed_big_matrix_binary_new_snps_ids.bim | awk '{print $2}' | head -n 100000 > epi_gwas_extract_snps.txt
         '''
-        head -n 100000 gwas_results_"$1"_in_"$2"_"$3".gsorted > epi_gwas_extract_snps.txt
+        head -n 100000 mlma_results_"$1"_in_"$2"_"$3".gsorted > epi_gwas_extract_snps.txt #mlma_results or gwas_results
         plink1.9 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno" --allow-no-sex --epistasis --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --pheno $phenofile --extract epi_gwas_extract_snps.txt
 
         if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | tail -n +2) > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
