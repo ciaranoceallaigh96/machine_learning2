@@ -260,6 +260,7 @@ def nn_results(analysis, ncv_object):
                 pickle.dump(nn_list, ncvfile) #ncv_object = pickle.load(ncvfile)
         ncv_object.model.model.save("model_" + str(analysis) + '_' +  str(snps) + '_' + str(phenotype) + '_' + str(num) + ".h5")
 
+'''
 print("Performing SVM")
 c_param = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)] #can be negative #We found that trying exponentially growing sequences of C and γ is a practical method to identify good parameters https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf
 rbf_c = [2e-2,2e-4,2e-8, 1,int(2e+2),int(2e+4),int(2e+8)]
@@ -359,6 +360,7 @@ model_type = LinearRegression() if binary == 'False' else LogisticRegression()
 BASELINE_NCV = NestedCV(model_name='baseline', name_list=name_list, num=num , model=model_type,goal_dict=base_goal_dict, time_dict=base_time_dict, params_grid={}, outer_kfolds=4, inner_kfolds=4, n_jobs = 2,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 BASELINE_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='baseline',goal_dict=base_goal_dict, time_dict=base_time_dict)
 ncv_results('baseline', BASELINE_NCV)
+'''
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU'))) #If a TensorFlow operation has both CPU and GPU implementations, by default the GPU will be used by default.
 print("Performing Neural Network")
 param_grid = {'max_norm_reg':[True, False], 'decay_rate':[0.75, 0.5, 0.9], 'lr_schedule':[True, False], 'network_shape':['brick', 'funnel','long_funnel'], 'epochs' : [50,100,200],'batch_size' : [16,32, 128],'learning_rate' : [0.01, 0.001, 0.0001, 0.00001],'HP_L1_REG' : [1e-5,1e-6,1e-4, 1e-2, 0.1, 1e-3],'HP_L2_REG' : [1e-8, 1e-3, 1e-1, float(0)], 'kernel_initializer' : ['glorot_uniform', 'glorot_normal', 'random_normal', 'random_uniform', 'he_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3,5],'units' : [200, 100,1000], 'rate' : [float(0), 0.1, 0.3],'HP_OPTIMIZER' : ['Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad', 'SGD']}
@@ -399,7 +401,7 @@ def build_nn(input_shape, HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, units, max_norm_re
 	reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
 	long_funnel_count = 0 #keep widest shape for two layers
 	model = Sequential()
-	#input_shape = (x_train.shape[1]-1,) if snps == 'shuf' else (x_train.shape[1]-1,)
+	#input_shape = (x_train.shape[1]-7,) if snps == 'shuf' else (x_train.shape[1]-7,)
 	model.add(Dense(units=units, kernel_constraint=max_norm, activation=activation, kernel_regularizer=reg, input_shape=input_shape))
 	if rate != 0:
 		model.add(Dropout(rate=rate))	
@@ -435,10 +437,11 @@ if binary == 'True':
 else:
 	nn_model = KerasRegressor(build_fn = build_nn, verbose=0, callbacks=[callback])
 
-
+'''
 NN_NCV = NestedCV(model_name='nn_model', name_list=name_list, num=num, model=nn_model, goal_dict=nn_goal_dict, time_dict=nn_time_dict, params_grid=param_grid, outer_kfolds=4, inner_kfolds=4, n_jobs = 32,cv_options={'predict_proba':False,'randomized_search':True, 'randomized_search_iter':iterations, 'sqrt_of_score':False,'recursive_feature_elimination':False, 'metric':metric_in_use, 'metric_score_indicator_lower':False})
 NN_NCV.fit(x_train, y_train.ravel(), name_list=name_list, num=num, phenfile=phenfile, set_size=set_size, snps=snps, organism=organism, model_name='NN', goal_dict=nn_goal_dict, time_dict=nn_time_dict)
 nn_results('NN', NN_NCV)
+'''
 print("Performing a convulutional neural network")
 cnn_param_grid = {'decay_rate':[0.75, 0.5, 0.9], 'max_norm_reg':[True, False], 'lr_schedule':[True, False], 'network_shape':['brick', 'funnel','long_funnel'], 'epochs':[100, 50],'batch_size' : [16,64,128], 'learning_rate' : [0.01, 0.0001, 0.001],'HP_L1_REG' : [0.001, 0.0001,0.00001,0],'HP_L2_REG' : [0, 0.001,0.00001],'kernel_initializer' : ['glorot_normal', 'glorot_uniform', 'he_uniform', 'random_normal', 'random_uniform', 'he_normal'],'activation' : ['tanh', 'relu', 'elu'],'HP_NUM_HIDDEN_LAYERS' : [2,3, 5],'units' : [100,200,1000], 'rate' : [float(0), 0.1, 0.5],'HP_OPTIMIZER' : ['SGD','Ftrl', 'RMSprop', 'Adadelta', 'Adamax', 'Adam', 'Adagrad'], 'filters':[1,5],'strides':[1,2,3],'pool':[1,2,3],'kernel':[1,2,3]}
 cnn_goal_dict, cnn_time_dict = make_goal_dict(cnn_param_grid)
@@ -464,8 +467,9 @@ def conv_model(input_shape, HP_OPTIMIZER, HP_NUM_HIDDEN_LAYERS, lr_schedule, dec
                 max_norm = None
         reg = tf.keras.regularizers.l1_l2(l1=HP_L1_REG, l2=HP_L2_REG)
         long_funnel_count = 0 #keep widest shape for two layers
-        input_shape = (input_shape[0],1) 
-        #input_shape = (x_train.shape[1]-1,1) if snps == 'shuf' else (x_train.shape[1]-1,1)
+        input_shape = (input_shape[0],1)
+        print(input_shape)
+        #input_shape = (x_train.shape[1]-7,1) if snps == 'shuf' else (x_train.shape[1]-7,1)
         model = Sequential() # Only use dropout on fully-connected layers, and implement batch normalization between convolutions.
         model.add(Conv1D(filters=filters, strides=strides, input_shape=input_shape,  padding='same',data_format='channels_last', activation=activation, kernel_regularizer=reg, kernel_initializer=kernel_initializer, kernel_size=kernel))
         model.add(tf.keras.layers.MaxPool1D(pool_size=pool, strides=strides,padding='same',data_format='channels_last'))

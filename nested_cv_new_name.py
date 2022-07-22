@@ -255,7 +255,7 @@ class NestedCV():
         
         return best_score, best_parameters
 
-    def _parallel_fitting(self, X_train_inner, X_test_inner, y_train_inner, y_test_inner, param_dict):
+    def _parallel_fitting(self, X_train_inner, X_test_inner, y_train_inner, y_test_inner, param_dict, model_name):
                     log.debug(
                         '\n\tFitting these parameters:\n\t{0}'.format(param_dict))
                     # Set hyperparameters, train model on inner split, predict results.
@@ -263,6 +263,11 @@ class NestedCV():
                     print("Blue")
                     # Fit model with current hyperparameters and score it
                     if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
+                        if model_name == 'CNN':
+                            param_dict['input_shape'] = [X_train_inner.shape[1]] 
+                        else:
+                            param_dict['input_shape'] = [X_train_inner.shape[1]]
+                        self.model.set_params(**param_dict)
                         self.model.fit(X_train_inner, y_train_inner, validation_data=(X_test_inner, y_test_inner)) #will allow for learning curve plotting
                     else:
                         self.model.fit(X_train_inner, y_train_inner)
@@ -279,7 +284,7 @@ class NestedCV():
                         print("Hello world")
                         from tensorflow.keras import backend as K
                         K.clear_session()
-
+                    param_dict.pop('input_shape', None) # remove for graphs
                     return self._transform_score_format(inner_grid_score), param_dict, inner_grid_train_score
 
     def fit(self, X, y, name_list, num, model_name, goal_dict, time_dict, phenfile, set_size, snps, organism):
@@ -381,7 +386,7 @@ class NestedCV():
                 for parameters in param_func:
                   print(parameters)
                   tic = time.clock()
-                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters) #-1 on phen elsewhere
+                  inner_grid_score, param_dictionary,inner_train_score = self._parallel_fitting(X_train_inner, X_test_inner,y_train_inner.ravel(), y_test_inner.ravel(),param_dict=parameters, model_name=model_name) #-1 on phen elsewhere
                   toc = time.clock()
                   results.append((inner_grid_score,param_dictionary))
                   for key in param_dictionary:
@@ -413,7 +418,13 @@ class NestedCV():
                 X_train_outer = X_train_outer.reshape(X_train_outer.shape[0],X_train_outer.shape[1],1)
                 X_test_outer = X_test_outer.reshape(X_test_outer.shape[0],X_test_outer.shape[1],1)
             if(type(self.model).__name__ == 'KerasRegressor' or type(self.model).__name__ == 'KerasClassifier' or type(self.model).__name__ == 'Pipeline'):
+                if model_name == 'CNN':
+                    best_inner_params['input_shape'] = [X_train_outer.shape[1],1]
+                else:
+                    best_inner_params['input_shape'] = [X_train_outer.shape[1]]
+                self.model.set_params(**best_inner_params)
                 result = self.model.fit(X_train_outer, y_train_outer.ravel(), validation_data=(X_test_outer, y_test_outer))
+                best_inner_params.pop('input_shape', None)
                 object = result.model.history
                 plt.plot(object.history['loss'])
                 plt.plot(object.history['val_loss'])

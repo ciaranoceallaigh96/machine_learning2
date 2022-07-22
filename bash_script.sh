@@ -109,11 +109,12 @@ then
          '''
          shuf /home/ciaran/completed_big_matrix_binary_new_snps_ids.bim | awk '{print $2}' | head -n 100000 > epi_gwas_extract_snps.txt
         '''
-        head -n 100000 mlma_results_"$1"_in_"$2"_"$3".gsorted > epi_gwas_extract_snps.txt #mlma_results or gwas_results
+        cut -d ' ' -f 1-2 test_raw_plink_epi_"$1"_in_"$2"_"$3".raw2 > name_vector_test.txt
+        cut -d ' ' -f 1-2 train_raw_plink_epi_"$1"_in_"$2"_"$3".raw2 > name_vector_train.txt
+        head -n 200000 mlma_results_"$1"_in_"$2"_"$3".gsorted | awk '{print $2}' > epi_gwas_extract_snps.txt #mlma_results or gwas_results
         plink1.9 --out nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno" --allow-no-sex --epistasis --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --pheno $phenofile --extract epi_gwas_extract_snps.txt
 
-        if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | tail -n +2) > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
-        if test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic ; then cat /external_storage/ciaran/machine_learning2/header.txt <(sort -g -k 12,12 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".glm.logistic | awk '{if ($12 != "NA") print}' | tail -n +2) > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi #formatting
+        if  test -f nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary ; then sort -g -r -k 6,6 nested_cv_gwas_out_"$1"_in_"$2"_"$3"."$pheno".epi.qt.summary | awk '{if ($6 != "NA") print}' | awk '{print $2, $8}' | head -n $5 | sed 's/ /\n/g' | sort -u > epi_results_"$1"_in_"$2"_"$3".gsorted ; fi
 
         #awk '{if ($12 <= 0.01) print}' gwas_results_"$1"_in_"$2"_"$3".gsorted > gwas_results_"$1"_in_"$2"_"$3".gsorted.001
         #echo "WARNING FILTERING RESULTS OF GWAS KESS THAN 0.01"
@@ -124,9 +125,7 @@ then
 
         plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_train.txt --extract epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out train_raw_plink_epi_"$1"_in_"$2"_"$3"
 
-        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_epi_"$1"_in_"$2"_"$3"
-
-
+        plink1.9 --prune --allow-no-sex --pheno $phenofile --bfile /home/ciaran/completed_big_matrix_binary_new_snps_ids --keep name_vector_test.txt --extract epi_top_"$5"_snps_"$1"_in_"$2"_"$3".txt --recode A --out test_raw_plink_epi_"$1"_in_"$2"_"$3" 
 fi
 
 
